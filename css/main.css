@@ -151,6 +151,7 @@ pre {
   border-top: 5px solid #424242;
   border-bottom: 1px solid #e8e8e8;
   min-height: 56px;
+  background-image: url(header.jpg);
   position: relative; }
 
 .site-title {
@@ -159,9 +160,15 @@ pre {
   line-height: 56px;
   letter-spacing: -1px;
   margin-bottom: 0;
-  float: left; }
+  float: left;
+  color: #eee; }
   .site-title, .site-title:visited {
-    color: #424242; }
+    color: #eee; }
+
+.site-description {
+  font-size: 16px;
+  margin: 2px;
+  color: #eee; }
 
 .site-nav {
   float: right;
@@ -169,7 +176,7 @@ pre {
   .site-nav .menu-icon {
     display: none; }
   .site-nav .page-link {
-    color: #111;
+    color: #eee;
     line-height: 1.5; }
     .site-nav .page-link:not(:last-child) {
       margin-right: 20px; }
@@ -213,7 +220,8 @@ pre {
  */
 .site-footer {
   border-top: 1px solid #e8e8e8;
-  padding: 30px 0; }
+  padding: 30px 0;
+  background-color: #e8e8e8; }
 
 .footer-heading {
   font-size: 18px;
