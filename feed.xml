@@ -2,13 +2,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Stefan Nožinić</title>
-    <description>This is my blog where I will express my thoughts about everything which I&#39;m interested in.
+    <description>This is my blog where I will express my thoughts about everything which I'm interested in.
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 12 Mar 2017 01:15:17 +0100</pubDate>
-    <lastBuildDate>Sun, 12 Mar 2017 01:15:17 +0100</lastBuildDate>
-    <generator>Jekyll v3.1.0</generator>
+    <pubDate>Mon, 08 May 2017 11:02:16 +0200</pubDate>
+    <lastBuildDate>Mon, 08 May 2017 11:02:16 +0200</lastBuildDate>
+    <generator>Jekyll v3.4.3</generator>
     
       <item>
         <title>Kako izgleda rad na projektu u IS Petnica na seminaru računarstva - smernice za nove polaznike</title>
@@ -33,7 +33,7 @@ Ipak, važno je taj predlog tokom prijavljivanja na seminar napisati što bolje,
 
 &lt;p&gt;Ovde je pre svega važno biti svestan koji je cilj projekta i čime se Petnica bavi. Zbog ovoga, treba prvo da razmotrimo kog karaktera bi trebalo da bude projekat koji ćete izrađivati tokom godine.&lt;/p&gt;
 
-&lt;h1 id=&quot;nauni-metod&quot;&gt;Naučni metod&lt;/h1&gt;
+&lt;h1 id=&quot;naučni-metod&quot;&gt;Naučni metod&lt;/h1&gt;
 
 &lt;p&gt;Dakle, kao što joj i samo ime kaže, Petnica je naučno-istraživačka stanica. Ovo znači da se bavi edukacijom polaznika tako što ih uči 
 da zaključke donose na osnovu naučno prihvatljivih činjenica i na osnovu logike. Zbog ovoga se posebna pažnja posvećuje obrazovanju
@@ -51,7 +51,7 @@ polaznika kako da dolaze do rezultata i saznanja upotrebom naučne metodologije.
 
 &lt;p&gt;Odabir projekta se zapravo svodi na prvu fazu - postavljanje hipoteze.&lt;/p&gt;
 
-&lt;h1 id=&quot;nauni-metod-u-raunarstvu&quot;&gt;Naučni metod u računarstvu&lt;/h1&gt;
+&lt;h1 id=&quot;naučni-metod-u-računarstvu&quot;&gt;Naučni metod u računarstvu&lt;/h1&gt;
 
 &lt;p&gt;Ako ovo sve deluje previše opširno, evo malo konkretnih primera. Računarstvo je nauka, isto kao i astronomija, fizika, psihologija, istorija… Dakle, metode se primenjuje i na ovu oblast kao i na svaku drugu.&lt;/p&gt;
 
@@ -286,11 +286,11 @@ node* mi_get_destination(const char* path)
 void mi_split_path(const char* path, char* basename, char* name)
 {
 	int i = 0;
-	while (path[i] != &#39;\0&#39;) i++;
+	while (path[i] != '\0') i++;
 	
 	if (i &amp;gt; 1) // ommit on the end of path (e.g. &quot;/path/a/&quot; becomes &quot;/path/a&quot; but &quot;/&quot; stays &quot;/&quot;)
 	{
-		while (path[i-1] == &#39;/&#39;) 
+		while (path[i-1] == '/') 
 		{
 			i--;
 		}
@@ -298,19 +298,19 @@ void mi_split_path(const char* path, char* basename, char* name)
 	int len=i;
 	i--;
 
-	while (path[i] != &#39;/&#39;) i--;
+	while (path[i] != '/') i--;
 	int baselen = i;
 	int j;
 	for (j = 0; j&amp;lt;=baselen; j++) basename[j] = path[j];
-	basename[j] = &#39;\0&#39;;
+	basename[j] = '\0';
 	i++;
 	int l = 0;
-	while (path[i] != &#39;\0&#39; &amp;amp;&amp;amp; path[i] != &#39;/&#39;) 
+	while (path[i] != '\0' &amp;amp;&amp;amp; path[i] != '/') 
 	{
 		name[l] = path[i];
 		i++; l++;
 	}
-	name[l] = &#39;\0&#39;;
+	name[l] = '\0';
 }
 
 void mi_get_stat(node* n, struct stat* fstat) 
@@ -371,7 +371,7 @@ easily manage your containers.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM python:3.4
 ENV PYTHONUNBUFFERED 1
 # ssh-keygen is needed because some packages from requirements.txt are not available on pypy and are git cloned instead
-RUN ssh-keygen -q -t rsa -N &#39;&#39; -f id_rsa
+RUN ssh-keygen -q -t rsa -N '' -f id_rsa
 RUN apt-get update &amp;amp;&amp;amp; apt-get install netcat -y
 RUN mkdir /code
 WORKDIR /code
@@ -466,7 +466,7 @@ uwsgi --chdir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/code -s 0.0.0.0:&lt;
   &quot;clean&quot;: &quot;rm -rfv dist/&quot;,
   &quot;lint&quot;: &quot;jshint **.js&quot;,
   &quot;prebuild&quot;: &quot;npm run lint&quot;,
-  &quot;watch&quot;: &quot;watch &#39;npm run build&#39; ./app/ --filter=watch_filter&quot;,
+  &quot;watch&quot;: &quot;watch 'npm run build' ./app/ --filter=watch_filter&quot;,
   &quot;serve&quot;: &quot;http-server -p 9000 -a 0.0.0.0 ./app/&quot;,
   &quot;livereload&quot;: &quot;live-reload ./app/dist/ --port 9001&quot;
 },
