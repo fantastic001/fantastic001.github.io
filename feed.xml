@@ -6,9 +6,93 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 08 May 2017 11:02:16 +0200</pubDate>
-    <lastBuildDate>Mon, 08 May 2017 11:02:16 +0200</lastBuildDate>
+    <pubDate>Mon, 08 May 2017 23:17:42 +0200</pubDate>
+    <lastBuildDate>Mon, 08 May 2017 23:17:42 +0200</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>ScaPy - analiza protokola upotrebom Python-a</title>
+        <description>&lt;p&gt;ScaPy je biblioteka za Python koja pruža sastavljanje paketa od “parčića”. Na primer, možemo IP deo spojiti sa TCP delom i na kraju konkretan sadržaj paketa i to poslati serveru. Pored ovoga, ova biblioteka nam pruža i mogućnost “slušanja”
+dolazećih poruka i odgovaranje na njih.&lt;/p&gt;
+
+&lt;p&gt;U nastavku teksta je dato nekoliko primera upotrebe biblioteke.&lt;/p&gt;
+
+&lt;h2 id=&quot;uključivanje-paketa&quot;&gt;Uključivanje paketa&lt;/h2&gt;
+
+&lt;p&gt;pre svega mala napomena, da bismo koristili naredne funkcionalnosti, moramo imati administratorske privilegije. Možda ovo 
+može da se izbegne na neki način ali meni nije uspelo, ako neko uspe, napišite komentar. :)&lt;/p&gt;
+
+&lt;p&gt;Uključivanje biblioteke se radi na sledeći način:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from scapy.all import * 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;sastavljanje-paketa&quot;&gt;Sastavljanje paketa&lt;/h2&gt;
+
+&lt;p&gt;Ako želimo da sastavimo neki paket koji u svom IP delu sadrži adresu odredišta, u svom TCP delu sadrži odredišni port 
+sa sadržj datom kao string, to možemo učiniti na sledeći način:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pkt = IP(dst=&quot;192.168.4.5&quot;)/TCP(dport=55)/&quot;Poruka&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ovaj paket možemo poslati na sledeći način&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;send(pkt)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;a ako želimo da pošaljemo paket i da odmah dobijemo odgovor, to možemo ovako:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ans, unans = sr(pkt)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;promenljiva ans sadrži listu odgovora od servera.&lt;/p&gt;
+
+&lt;h2 id=&quot;nadzor-protoka&quot;&gt;Nadzor protoka&lt;/h2&gt;
+
+&lt;p&gt;Ako želimo da vršimo nadzor protoka, možemo koristiti funkciju sniff. Prvo implementiramo callback funkciju koja će se izvršiti svaki put kad željeni paket prođe filter odnosno kad stigne do nas.&lt;/p&gt;
+
+&lt;p&gt;Naredni primer ilustruje nadzor svih ARP paketa:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def arp_monitor_callback(pkt):
+    if ARP in pkt and pkt[ARP].op in (1,2): #who-has or is-at
+        op = &quot;&quot;
+        if pkt[ARP].op == 1: 
+            op = &quot;Who has &quot;
+        else:
+            op = &quot;Is at&quot;
+        return op + pkt.sprintf(&quot;%ARP.hwsrc% %ARP.psrc%&quot;)
+
+sniff(prn=arp_monitor_callback, filter=&quot;arp&quot;, store=0)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Drugi primer ilustruje nadzor svega na portu 80&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def tcp_func(pkt):
+    if TCP in pkt and pkt[TCP].dport == 80:
+        return str(pkt)
+
+sniff(prn=tcp_func, filter=&quot;tcp&quot;, store=0)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;za-više&quot;&gt;Za više&lt;/h2&gt;
+
+&lt;p&gt;ScaPy ima jako dobru dokumentaciju pa tako može se dosta primera videti. Ovde je obrađena najtrivijalnija upotreba. 
+Ipak, ovo je meni bilo dovoljno da radi ARP poisoning recimo. Happy coding.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 08 May 2017 18:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/python/2017/05/08/scapy.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/python/2017/05/08/scapy.html</guid>
+        
+        
+        <category>python</category>
+        
+      </item>
     
       <item>
         <title>Kako izgleda rad na projektu u IS Petnica na seminaru računarstva - smernice za nove polaznike</title>
