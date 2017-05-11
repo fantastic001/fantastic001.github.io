@@ -6,9 +6,121 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 08 May 2017 23:17:42 +0200</pubDate>
-    <lastBuildDate>Mon, 08 May 2017 23:17:42 +0200</lastBuildDate>
+    <pubDate>Thu, 11 May 2017 13:06:21 +0200</pubDate>
+    <lastBuildDate>Thu, 11 May 2017 13:06:21 +0200</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>Neke strukture podataka</title>
+        <description>&lt;p&gt;U ovom članku ću dati pregled nekih struktura podataka čije razumevanje je dosta važno za razumevanje algoritama i uopšteno za razumevanje dosta principa u računarstvu. Treba napomenuti da je dosta nabrojanih struktura opisano &lt;a href=&quot;https://github.com/fantastic001/alg-implementations&quot;&gt;ovde&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Za svaku strukturu je bitno znati koliko vremenski “koštaju” određene operacije. Ovo znači koliko vremenski traje određena implementacija da se izvrši. Naravno, vreme izvršavanja zavisi od mnogih faktora. Na primer, ako se pored naše aplikacije izvršava još neka aplikacija sasvim je jasno da CU neće operaciju izvršiti jednako brzo kao i kada bi se samo ta operacija izvršavala. Zbog ovoga, za opisivanje vremena se koristi &lt;a href=&quot;https://en.wikipedia.org/wiki/Big_O_notation&quot;&gt;O-notacija&lt;/a&gt;..&lt;/p&gt;
+
+&lt;p&gt;Pa da krenemo….&lt;/p&gt;
+
+&lt;h2 id=&quot;lista&quot;&gt;Lista&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://en.wikipedia.org/wiki/File:Doubly-linked-list.svg&quot; alt=&quot;Lista&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Lista se sadrži od struktura (čvorova) gde svaki čvor ima u sebi vrednost koju čuva i pokazivač na sledeći čvor u listi. Pored ovoga, čvor može imati i pokazivač na prethodni čvor u listi i tada je lista dvostruko povezana.&lt;/p&gt;
+
+&lt;p&gt;Implementacija čvora u programskom jeziku C bi izgledala ovako:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef int TYPE;
+typedef struct node_st 
+{
+	TYPE val; 
+	node_st *next;
+	node_st* prev; // za dvostruko povezanu listu 
+} node;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ovde smo koristili celobrojni tip kao primer tipa koju vrednost čvora može da ima. U ovom primeru je lista zapravo lista celobrojnih elemenata.&lt;/p&gt;
+
+&lt;p&gt;Listta podržava dodavanje elementa na kraj u O(1) vremenu, iteraciju kroz celu strukturu i pristupanje određenom 
+elementu u O(n) vremenu. Brisanje elementa se radi u O(1) ako nam je dat pokazivač na element koji treba da obrišemo
+ili u slučaju jednostruko povezane liste, pokazivač na prethodnika elementa koji treba obrisati.&lt;/p&gt;
+
+&lt;h2 id=&quot;stek&quot;&gt;Stek&lt;/h2&gt;
+
+&lt;p&gt;Ova struktura ima u sebi pokazivač na gornji element i podržava samo tri operacije: push, pop i top.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;push: dodavanje elementa na stek;&lt;/li&gt;
+  &lt;li&gt;pop: brisanje elementa sa vrha steka i;&lt;/li&gt;
+  &lt;li&gt;top: pristupanje elementu sa vrha steka.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Sve nabrojane operacije je moguće realizovati u O(1) vremenu.&lt;/p&gt;
+
+&lt;h2 id=&quot;red&quot;&gt;Red&lt;/h2&gt;
+
+&lt;p&gt;Ova struktura podržava dodavanje elemenata na početak reda, uklanjanje elemenata sa kraja reda i pristup elementima na krajevima i sve ove operacije se realizuju u O(1) vremenu.&lt;/p&gt;
+
+&lt;p&gt;I stek i red se mogu implementirati preko lista.&lt;/p&gt;
+
+&lt;p&gt;Pored ovih struktura postoje i još neke dosta značajne koje su zauzele ceo jedan tekst a to su: binarno stablo pretrage, hip, heš tabela i graf.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 10 May 2017 19:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures.html</guid>
+        
+        
+        <category>algorithms</category>
+        
+        <category>data-structures</category>
+        
+      </item>
+    
+      <item>
+        <title>SSH reversni tunel</title>
+        <description>&lt;p&gt;Ovaj članak objašnjava kako podesiti reversni SSh tunel i time omogućiti forvardovanje portova preko mreže. Ovo je 
+izuzetno korisno iz dva razloga:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Enkripcija neenkriptovanog protokola&lt;/li&gt;
+  &lt;li&gt;Zaobilaženje NAT-a&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Uzmimo za primer da želimo da pošaljemo poruku računaru A sa računara B. Računar A je iza NAT-a koji brani sve konekcije koje počinju sa porukom od B do A ali ne rani konekcije koje su inicijalizovane sa porukom od A do B.&lt;/p&gt;
+
+&lt;p&gt;Ovo se rešava tako što se računaru B od računara A pristupi preko SSH i uradi se mapiranje portova.&lt;/p&gt;
+
+&lt;p&gt;Primer ovoga je dat sledećom linijom:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh -fN -R 7000:localhost:50 username@B-ip
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Sada sve što se pošalje na port 7000 na računaru B, biće prosleđeno računaru A na port 50.&lt;/p&gt;
+
+&lt;p&gt;Na primer, da omogućimo SSh konekciju na računar A na port 22 sa porta 7000 možemo uraditi:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh -fN -R 7000:localhost:22 username@B-ip
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I sada na računaru B treba izvršiti&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh -p 22 username@localhost
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Pored svega ovoga, treba obratiti pažnju da li je mapiranje portova preko SSH odobreno u sshd.conf.&lt;/p&gt;
+
+&lt;p&gt;Ovim putem zaobilazimo NAT + dobijamo enkriptovanu komunikaciju.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 10 May 2017 18:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/ssh/networking/2017/05/10/ssh-tunnel.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/ssh/networking/2017/05/10/ssh-tunnel.html</guid>
+        
+        
+        <category>ssh</category>
+        
+        <category>networking</category>
+        
+      </item>
     
       <item>
         <title>ScaPy - analiza protokola upotrebom Python-a</title>
