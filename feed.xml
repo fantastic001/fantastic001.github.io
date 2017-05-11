@@ -6,9 +6,42 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 11 May 2017 18:42:29 +0200</pubDate>
-    <lastBuildDate>Thu, 11 May 2017 18:42:29 +0200</lastBuildDate>
+    <pubDate>Thu, 11 May 2017 18:45:42 +0200</pubDate>
+    <lastBuildDate>Thu, 11 May 2017 18:45:42 +0200</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>Neke strukture podataka - heš tabele</title>
+        <description>&lt;p&gt;Heš tabele su jedan od jako dobrih načina čuvanja podataka. Pretpostavimo da imamo ogromnu količinu podataka kojoj želimo
+da pristupamo jako brzo. Svaki element ima neku vrstu identifikacije. Na primer ako imamo podatke o osobama, identifikacija može biti
+JMBG osobe. Heš tabela je zapravo niz lista gde svaki element je lista koja sadrži elemente čiji se heš poklapa. E sada, šta nam je ovde heš? Iz primera sa osobama, znamo da imamo mnogo JMBG brojeva i znamo da sa običnom listom da bismo našli određenu osobu, treba da prođemo kroz celu listu dok je ne nađemo. Ovo može predstavljati problem ukoliko imamo veliki broj osoba. Drugo rešenje je da koristimo niz i da osobi pristupamo na osnovu njenog identifikacionog broja odnosno da identifikacioni broj osobe bude njen indeks u nizu. Ovo je ponovo teško realizovati ako se uzme u obzir veliki broj osoba pa samim tim bi i naš niz zauzimao mnogo memorije. Zbog ove dve činjenice, heš tabela predstavlja kompromis. Prvo, nemamo niz onoliko veliki koliko imamo osoba nego manji niz a svaka osoba ima svoj identifikacioni broj, mi kada želimo da pristupimo određenoj osobi mi njen identifikacioni broj transformišemo u indeks niza. Ovaj postupak se naziva
+heširanje. E sada, kako imamo mnogo osoba a manje mogućih indeksa, desiće se da dve osobe imaju isti indeks u nizu. Zbog ovoga svaki element niza je zapravo lista osoba koje imaju isti indeks u nizu (heš).&lt;/p&gt;
+
+&lt;p&gt;Sada se postavlja pitanje da li nam je isplativo da sve ovo implementiramo kad opet prolazimo kroz listu. Odgovor je da je ta lista mnogo manja nego lista svih osoba pa je prolazak kroz tu listu mnogo brži.&lt;/p&gt;
+
+&lt;p&gt;Dakle, ako želimo pristupiti osobi za identifikacionim brojem ID, tada prvo primenimo transformaciju hash(ID) pa pristupimo listi osoba
+sa tim hešom i onda u toj maloj listi nađemo osobu koja nas interesuje.&lt;/p&gt;
+
+&lt;p&gt;Najjednostavnija heš funkcija jeste zapravo deljenje sa prostim brojem pa uzimanje ostatka. Na primer:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hash(x) = x % 1000003
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;pored ovakve, postoji i mnogo drugih heš funkcija koje smanjuju mogućnost kolizije.&lt;/p&gt;
+
+&lt;p&gt;Vreme pristupa je probabilističko i zavisi od verovatnoće da se među dva elementa desi kolizija.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 11 May 2017 00:45:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-hash.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-hash.html</guid>
+        
+        
+        <category>algorithms</category>
+        
+        <category>data-structures</category>
+        
+      </item>
     
       <item>
         <title>SSH reversni tunel</title>
