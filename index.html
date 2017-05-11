@@ -83,11 +83,12 @@
         <span class="post-meta">May 10, 2017</span>
 
         <h2>
-          <a class="post-link" href="/algorithms/data-structures/2017/05/10/data-structures.html">Neke strukture podataka</a>
+          <a class="post-link" href="/ssh/networking/2017/05/10/ssh-tunnel.html">SSH reversni tunel</a>
         </h2>
 
 	<div class="post-excerpt">
-	  <p>U ovom članku ću dati pregled nekih struktura podataka čije razumevanje je dosta važno za razumevanje algoritama i uopšteno za razumevanje dosta principa u računarstvu. Treba napomenuti da je dosta nabrojanih struktura opisano <a href="https://github.com/fantastic001/alg-implementations">ovde</a>.</p>
+	  <p>Ovaj članak objašnjava kako podesiti reversni SSh tunel i time omogućiti forvardovanje portova preko mreže. Ovo je 
+izuzetno korisno iz dva razloga:</p>
 
 
 	</div>
@@ -97,12 +98,28 @@
         <span class="post-meta">May 10, 2017</span>
 
         <h2>
-          <a class="post-link" href="/ssh/networking/2017/05/10/ssh-tunnel.html">SSH reversni tunel</a>
+          <a class="post-link" href="/algorithms/data-structures/2017/05/10/data-structures-heap.html">Neke strukture podataka - hip</a>
         </h2>
 
 	<div class="post-excerpt">
-	  <p>Ovaj članak objašnjava kako podesiti reversni SSh tunel i time omogućiti forvardovanje portova preko mreže. Ovo je 
-izuzetno korisno iz dva razloga:</p>
+	  <p>Hip je struktura podataka koja nam omogućava da brzo i lako dođemo do maksimalnog elementa. Često se predstavlja kao stablo 
+zbog lakšeg objašnjavanja ali se tokom implementacije koristi niz. Hip se predstavlja kao stablo na sledeći način: za svaki čvor, njegova deca su uvek manja od tog čvora. Ovakva reprezentacija podataka nam omogućava da nam na vrhu stabla (korenu stabla) uvek bude najveći element. Slično, možemo i obrnuti situaciju, da za svaki čvor su njegova deca manja od tog čvora. U ovom slučaju dobijamo strukturu
+gde nam je na vrhu uvek najmanji element. U implementaciji, za izvedbu hipa koristimo niz tako da nam element a(i) bude čvor a elementi 
+a(2i+1) i a(2i + 2) su njegova deca. Isto tako, ako imamo čvor a(i) onda njegovom roditelju pristupamo kao elementu a((i-1)/2).</p>
+
+
+	</div>
+      </div>
+    
+      <div class="post-summary">
+        <span class="post-meta">May 10, 2017</span>
+
+        <h2>
+          <a class="post-link" href="/algorithms/data-structures/2017/05/10/data-structures.html">Neke strukture podataka</a>
+        </h2>
+
+	<div class="post-excerpt">
+	  <p>U ovom članku ću dati pregled nekih struktura podataka čije razumevanje je dosta važno za razumevanje algoritama i uopšteno za razumevanje dosta principa u računarstvu. Treba napomenuti da je dosta nabrojanih struktura opisano <a href="https://github.com/fantastic001/alg-implementations">ovde</a>.</p>
 
 
 	</div>
