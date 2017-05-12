@@ -6,9 +6,258 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 12 May 2017 14:25:28 +0200</pubDate>
-    <lastBuildDate>Fri, 12 May 2017 14:25:28 +0200</lastBuildDate>
+    <pubDate>Fri, 12 May 2017 14:26:59 +0200</pubDate>
+    <lastBuildDate>Fri, 12 May 2017 14:26:59 +0200</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>Šta je GDB i kako se koristi?</title>
+        <description>&lt;p&gt;Svako ko e ikada, bar malo, bavio programiranjem zna da prvi kod koji napišete nikada ne radi. Ako vam se desi da odmah proradi 
+ili pišete nešto sitno ili mislite da vam radi a zapravo ne radi. Kada napišemo našu prvu verziju bilo kog programa, potrebno je 
+da uočimo greške i da ih ispravimo. Proces traženja greške se naziva debagovanje i obavlja se alatom koji se naziva dibager (debuger).&lt;/p&gt;
+
+&lt;p&gt;Jedan od takvih alata je i GDB. On je konzolni alat (pokreće se iz komandne linije) i služi traženju grešaka u vašem programu. Ako ste već radili u komandnoj liniji (npr kompajlirali ručno pomoću GCC-a ili koristili neki konzolni editor kao što su Nano i Vim), 
+onda vam je princip rada ovakvih programa poznat. Ako niste, možete se upoznati detaljnije sa ovim načinom rada &lt;a href=&quot;http://linuxcommand.org/&quot;&gt;ovde gde je opisan rad na Linuksovoj komandnoj liniji&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;U ovom članku neće detaljno biti opisan rad u komandnoj liniji i biće pretpostavljeno da znate da napišete jednostavan program 
+u programskoj jeziku C kao i da taj napisani kod znate da kompajlirate upotrebom GCC kompajlera.&lt;/p&gt;
+
+&lt;p&gt;Prikazaćemo rad GDB-a kroz primere i objasniti neke njegove mogućnosti kako bismo lakše uočili greške u našem programu.&lt;/p&gt;
+
+&lt;p&gt;Pre nego što koristimo GDB, potrebno je da naš program kompajliramo sa potrebnim flagovima za GDB. To radimo upotrebom -g opcije prosleđene GCC-u na sledeći način:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gcc program.c -o izlazni_fajl -g 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Sada možemo pokrenuti GDB na sledeći način:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gdb izlazni_fajl
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Da bismo bolje razumeli kako radi GDB, uzmimo za primer program koji računa faktorijel rekurzivno ali koji ima grešku u sebi:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
+
+int fact(int n) 
+{
+	if (n==0) return 0;
+	int res = n * fact(n-1);
+	return res;
+}
+
+int main() 
+{
+	int f = fact(5);
+	printf(&quot;%d\n&quot;, f);
+	return 0; 
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ovde odmah vidimo grešku jer je trivijalna ali hajde da to pokušamo da uvidimo i upotrebom GDB-a.&lt;/p&gt;
+
+&lt;p&gt;Dakle, prvo kompajliramo naš program sa -g opcijom prosleđenom GCC-u a zatim pokrenemo GDB na gore-opisani način. Trebalo bi da dobijete nešto slično ovome:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GNU gdb (GDB) 7.12.1
+Copyright (C) 2017 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &amp;lt;http://gnu.org/licenses/gpl.html&amp;gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type &quot;show copying&quot;
+and &quot;show warranty&quot; for details.
+This GDB was configured as &quot;x86_64-pc-linux-gnu&quot;.
+Type &quot;show configuration&quot; for configuration details.
+For bug reporting instructions, please see:
+&amp;lt;http://www.gnu.org/software/gdb/bugs/&amp;gt;.
+Find the GDB manual and other documentation resources online at:
+&amp;lt;http://www.gnu.org/software/gdb/documentation/&amp;gt;.
+For help, type &quot;help&quot;.
+Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;...
+Reading symbols from a.out...done.
+(gdb)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Sada možemo početi izvršavanje našeg programa liniju po liniju i to radimo tako što kucamo komandu start:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(gdb) start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;i dobijamo nešto slično ovome:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Temporary breakpoint 1 at 0x40052f: file program.c, line 13.
+Starting program: /me/home/stefan/a.out 
+
+Temporary breakpoint 1, main () at program.c:13
+13		int f = fact(5);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Kao što vidimo, linija koju nam GDB izbaci je linija koja tek treba da se izvrši. Dakle, linija koja će se tek izvršiti je:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    13              int f = fact(5);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Da bismo je izvršili, kucamo komandu next ili skraćeno n:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(gdb) next 
+14		printf(&quot;%d\n&quot;, f);
+(gdb) 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Šta se sad desilo? Pa kako se naša linija izvršila, promenljivoj f je dodeljen rezultat funkcije fact. Da bismo odštampali vrednost promenljive f, koristimo komandu print ili skraćeno p:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(gdb) p f 
+$1 = 0
+(gdb) 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Kao što vidimo, vrednost promenljive f je 0 što se ne poklapa sa očekivanom vrednošću jer znamo da faktorijel od 5 nije nula. Dakle, greška se desila negde u liniji koju smo izvršili, tačnije, greška se dešava u funkciji koju smo napisali. Da bismo “ušli” u našu funkciju, umesto komande next treba koristiti komandu step (skraćeno s) i time izvršavamo ono unutar funkcije. Pošto smo tu liniju već izvršili, moramo pokrenuti naš program ponovo. To radimo tako što izađemo iz GDB-a komandom quit i pokrenemo GDB na isti način kao ranije:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(gdb) quit
+A debugging session is active.
+
+	Inferior 1 [process 11459] will be killed.
+
+Quit anyway? (y or n) y
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;pokretanjem ponovo GDB-a i pokretanjem programa sa komandom start, dolazimo ponovo do sledeće situacije:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(gdb) start 
+Temporary breakpoint 1 at 0x40052f: file program.c, line 13.
+Starting program: /me/home/stefan/a.out 
+
+Temporary breakpoint 1, main () at program.c:13
+13		int f = fact(5);
+(gdb) step
+fact (n=5) at program.c:6
+6		if (n==0) return 0;
+(gdb) 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Sada se izvršava linija po liniju u datoj funkciji. Kako je ova funkcija rekurzivna, ovo radimo dok ne uvidimo gde je greška:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(gdb) p n 
+$1 = 5
+(gdb) n
+7		int res = n * fact(n-1);
+(gdb) s
+fact (n=4) at program.c:6
+6		if (n==0) return 0;
+(gdb) n
+7		int res = n * fact(n-1);
+(gdb) s
+fact (n=3) at program.c:6
+6		if (n==0) return 0;
+(gdb) n
+7		int res = n * fact(n-1);
+(gdb) s
+fact (n=2) at program.c:6
+6		if (n==0) return 0;
+(gdb) p n 
+$2 = 2
+(gdb) n
+7		int res = n * fact(n-1);
+(gdb) s
+fact (n=1) at program.c:6
+6		if (n==0) return 0;
+(gdb) p n 
+$3 = 1
+(gdb) n
+7		int res = n * fact(n-1);
+(gdb) s
+fact (n=0) at program.c:6
+6		if (n==0) return 0;
+(gdb) p n 
+$4 = 0
+(gdb) n
+9	}
+(gdb) n
+8		return res;
+(gdb) p res
+$5 = 0
+(gdb) 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Posle debagovanja uočavamo da ako je n jednako nuli, da funkcija vraća nulu pa samim tim množenje sa nulom je uvek nula.&lt;/p&gt;
+
+&lt;p&gt;Razmotrimo sada slučaj kada želimo da program debagujemo samo u jednom njegovom delu, bez izvršavanja liniju po liniju od samog početka. Za ovo nam služi breakpoint. Dakle, kada pokrenemo GDB, umesto start kucamo break n gde je n broj linije gde želimo da se izvršavanje zaustavi. Kada to uradimo pokrenemo izvršavanje sa run.&lt;/p&gt;
+
+&lt;p&gt;Na primer, razmotrimo sledeći program:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
+
+
+int main() 
+{
+	int i; 
+	int n; 
+	scanf(&quot; %d&quot;, &amp;amp;n);
+	int fib[100]; 
+	fib[0] = 0; 
+	fib[1] = 1; 
+	for (i=2; i&amp;lt;n; i++) 
+	{
+		fib[i] = fib[i-1] + fib[i-2];
+	}
+	printf(&quot;%d\n&quot;, fib[n]);
+	return 0; 
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ovaj program iterativno računa n-ti Fibonačijev broj. Kada otvorimo GDB i kada uradimo break na liniji gde treba ispisati rešenje, i kada tu ispišemo vrednosti fib[5] i fib[4], uočavamo sledeće:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(gdb) b 17 
+Breakpoint 1 at 0x4005dc: file program.c, line 17.
+(gdb) run 
+Starting program: /me/home/stefan/a.out 
+5
+
+Breakpoint 1, main () at program.c:17
+17		printf(&quot;%d\n&quot;, fib[n]);
+(gdb) p fib[5]
+$1 = 32767
+(gdb) p fib[4]
+$2 = 3
+(gdb) 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Dakle, fib[4] je u redu dok je fib[5] neka čudna vrednost koja se ne poklapa sa očekivanom, iz ovoga zaključujemo da nam računanje Fibonačijevog broja radi za 0 1 2 3 i 4 ali ne radi za 5. Kada probamo neki drugi ulaz, na primer 7, uočavamo da nam računanje radi za 0 1 2 3 4 5 i 6 ali da ne radi za 7. Greška je u uslovu zaustavljanja for ciklusa pa to ispravimo da je uslov i&amp;lt;=n i time otklanjamo grešku.&lt;/p&gt;
+
+&lt;p&gt;Iz ovog primera vidimo da GDB lepo radi i kada koristimo funkcije poput scanf i printf i da upotrebom scanf funkcije, normalno unosimo željeni ulaz i kad pritisnemo Enter, GDB normalno nastavlja sa radom.&lt;/p&gt;
+
+&lt;p&gt;Ovim je demonstrirano neko osnovno korišćenje GDB-a. Za više informacija, postoji dobra dokumentacija a možete krenuti tako što u konzolu kucate sledeće:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;man gdb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Za one koji preferiraju više grafičko okruženje, postoji grafički wrapper za GDB koji se zove DDD. Nisam se upuštao u upotrebu dotičnog jer meni lično GDB radi posao ali vidim da ga asistenti na faksu dosta koriste tako da ne verujem da je preterano loš.&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 12 May 2017 13:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/programming/debug/tools/2017/05/12/gdb.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/programming/debug/tools/2017/05/12/gdb.html</guid>
+        
+        
+        <category>programming</category>
+        
+        <category>debug</category>
+        
+        <category>tools</category>
+        
+      </item>
     
       <item>
         <title>Neke strukture podataka - heš tabele</title>
@@ -873,33 +1122,6 @@ to this way of doing things but it means we have topic to discuss. :)&lt;/p&gt;
         
         
         <category>web</category>
-        
-      </item>
-    
-      <item>
-        <title>Hello world!</title>
-        <description>&lt;p&gt;Hello! I am Stefan and this will be place where I will express my ideas, experiences and thoughts. I have tried to write a blog 
-few years ago and that blog is still alive. That blog has been written in Serbian which is my native language and has been hosted 
-on Wordpress. Since then, I have been a little busy so I couldn’t write anything useful on blog. I have been writing for LiBRE! magazine since 2013. and I cannot express enough how much I’m proud of these articles written there. The problem with magazine is 
-that you cannot express your subjective opinion and you have to focus on objective articles. This is the reason why I started maintaining
-this blog, in English, hosted on github as github page, as static site. You may ask why this choice of technology. Simple answer is
-that I want minimalism in maintaining platform and I can use git well enough to make it work for this purpose. Another reason is 
-because I’m building stuff. My friends like Git, I like Git and everyone should like Git because Git is great. Use it everywhere. 
-GitHub is fantastic place to host your projects even if it is your own blog.&lt;/p&gt;
-
-&lt;p&gt;You are probably wondering why I picked such a nickname. Well, when I was in 6th grade, I picked random nickname to register on Freenode IRC server to visit LUGoNS channel. It remained and it would be difficult to change it since then people couldn’t recognize me on IRC so easily. Bad habits remain, you know. Recently I’ve started to like it because it has history. Years of  contributing to above-mentioned LiBRE! and LUGoNS. I’m proud of it.&lt;/p&gt;
-
-&lt;p&gt;Why anyone cares for this shit I am writing about, you may ask. Well, I don’t know, these are my thoughts expressed on GitHub page, if you like it, you are free to quote and share. Let me know if you like or dislike it. I am very happy to discuss various topics which I am going to write about in next few months. I hope this time I will make it work. I hope that this time I will write at least one article per month, if there’s more, it will be great!&lt;/p&gt;
-
-&lt;p&gt;I am planning to add option to comment but it will take time because I currently have no time to experiment with various systems and 
-to integrate them on blog.&lt;/p&gt;
-</description>
-        <pubDate>Mon, 01 Feb 2016 23:00:00 +0100</pubDate>
-        <link>http://fantastic001.github.io/hello/2016/02/01/hello-world.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/hello/2016/02/01/hello-world.html</guid>
-        
-        
-        <category>hello</category>
         
       </item>
     

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Šta je GDB i kako se koristi?</title>
+  <meta name="description" content="Svako ko e ikada, bar malo, bavio programiranjem zna da prvi kod koji napišete nikada ne radi. Ako vam se desi da odmah proradi ili pišete nešto sitno ili mi...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://fantastic001.github.io/programming/debug/tools/2017/05/12/gdb.html">
+  <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
+</head>
+
+  <!-- Begin Jekyll SEO tag v2.2.3 -->
+<title>Šta je GDB i kako se koristi? | Stefan Nožinić</title>
+<meta property="og:title" content="Šta je GDB i kako se koristi?" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Svako ko e ikada, bar malo, bavio programiranjem zna da prvi kod koji napišete nikada ne radi. Ako vam se desi da odmah proradi ili pišete nešto sitno ili mislite da vam radi a zapravo ne radi. Kada napišemo našu prvu verziju bilo kog programa, potrebno je da uočimo greške i da ih ispravimo. Proces traženja greške se naziva debagovanje i obavlja se alatom koji se naziva dibager (debuger)." />
+<meta property="og:description" content="Svako ko e ikada, bar malo, bavio programiranjem zna da prvi kod koji napišete nikada ne radi. Ako vam se desi da odmah proradi ili pišete nešto sitno ili mislite da vam radi a zapravo ne radi. Kada napišemo našu prvu verziju bilo kog programa, potrebno je da uočimo greške i da ih ispravimo. Proces traženja greške se naziva debagovanje i obavlja se alatom koji se naziva dibager (debuger)." />
+<link rel="canonical" href="http://fantastic001.github.io/programming/debug/tools/2017/05/12/gdb.html" />
+<meta property="og:url" content="http://fantastic001.github.io/programming/debug/tools/2017/05/12/gdb.html" />
+<meta property="og:site_name" content="Stefan Nožinić" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-05-12T13:15:00+02:00" />
+<script type="application/ld+json">
+{"@context":"http://schema.org","@type":"BlogPosting","headline":"Šta je GDB i kako se koristi?","datePublished":"2017-05-12T13:15:00+02:00","dateModified":"2017-05-12T13:15:00+02:00","description":"Svako ko e ikada, bar malo, bavio programiranjem zna da prvi kod koji napišete nikada ne radi. Ako vam se desi da odmah proradi ili pišete nešto sitno ili mislite da vam radi a zapravo ne radi. Kada napišemo našu prvu verziju bilo kog programa, potrebno je da uočimo greške i da ih ispravimo. Proces traženja greške se naziva debagovanje i obavlja se alatom koji se naziva dibager (debuger).","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/programming/debug/tools/2017/05/12/gdb.html"},"url":"http://fantastic001.github.io/programming/debug/tools/2017/05/12/gdb.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Stefan Nožinić</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+<!--
+    <div class="site-description">
+      <p>This is my blog where I will express my thoughts about everything which I'm interested in.
+</p>
+    </div>
+-->
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Šta je GDB i kako se koristi?</h1>
+    <p class="post-meta"><time datetime="2017-05-12T13:15:00+02:00" itemprop="datePublished">May 12, 2017</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Svako ko e ikada, bar malo, bavio programiranjem zna da prvi kod koji napišete nikada ne radi. Ako vam se desi da odmah proradi 
+ili pišete nešto sitno ili mislite da vam radi a zapravo ne radi. Kada napišemo našu prvu verziju bilo kog programa, potrebno je 
+da uočimo greške i da ih ispravimo. Proces traženja greške se naziva debagovanje i obavlja se alatom koji se naziva dibager (debuger).</p>
+
+<p>Jedan od takvih alata je i GDB. On je konzolni alat (pokreće se iz komandne linije) i služi traženju grešaka u vašem programu. Ako ste već radili u komandnoj liniji (npr kompajlirali ručno pomoću GCC-a ili koristili neki konzolni editor kao što su Nano i Vim), 
+onda vam je princip rada ovakvih programa poznat. Ako niste, možete se upoznati detaljnije sa ovim načinom rada <a href="http://linuxcommand.org/">ovde gde je opisan rad na Linuksovoj komandnoj liniji</a>.</p>
+
+<p>U ovom članku neće detaljno biti opisan rad u komandnoj liniji i biće pretpostavljeno da znate da napišete jednostavan program 
+u programskoj jeziku C kao i da taj napisani kod znate da kompajlirate upotrebom GCC kompajlera.</p>
+
+<p>Prikazaćemo rad GDB-a kroz primere i objasniti neke njegove mogućnosti kako bismo lakše uočili greške u našem programu.</p>
+
+<p>Pre nego što koristimo GDB, potrebno je da naš program kompajliramo sa potrebnim flagovima za GDB. To radimo upotrebom -g opcije prosleđene GCC-u na sledeći način:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>gcc program.c -o izlazni_fajl -g 
+</code></pre>
+</div>
+
+<p>Sada možemo pokrenuti GDB na sledeći način:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>gdb izlazni_fajl
+</code></pre>
+</div>
+
+<p>Da bismo bolje razumeli kako radi GDB, uzmimo za primer program koji računa faktorijel rekurzivno ali koji ima grešku u sebi:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#include &lt;stdio.h&gt;
+
+int fact(int n) 
+{
+	if (n==0) return 0;
+	int res = n * fact(n-1);
+	return res;
+}
+
+int main() 
+{
+	int f = fact(5);
+	printf("%d\n", f);
+	return 0; 
+}
+</code></pre>
+</div>
+
+<p>Ovde odmah vidimo grešku jer je trivijalna ali hajde da to pokušamo da uvidimo i upotrebom GDB-a.</p>
+
+<p>Dakle, prvo kompajliramo naš program sa -g opcijom prosleđenom GCC-u a zatim pokrenemo GDB na gore-opisani način. Trebalo bi da dobijete nešto slično ovome:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>GNU gdb (GDB) 7.12.1
+Copyright (C) 2017 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-pc-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+&lt;http://www.gnu.org/software/gdb/bugs/&gt;.
+Find the GDB manual and other documentation resources online at:
+&lt;http://www.gnu.org/software/gdb/documentation/&gt;.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from a.out...done.
+(gdb)
+</code></pre>
+</div>
+
+<p>Sada možemo početi izvršavanje našeg programa liniju po liniju i to radimo tako što kucamo komandu start:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(gdb) start
+</code></pre>
+</div>
+
+<p>i dobijamo nešto slično ovome:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Temporary breakpoint 1 at 0x40052f: file program.c, line 13.
+Starting program: /me/home/stefan/a.out 
+
+Temporary breakpoint 1, main () at program.c:13
+13		int f = fact(5);
+</code></pre>
+</div>
+
+<p>Kao što vidimo, linija koju nam GDB izbaci je linija koja tek treba da se izvrši. Dakle, linija koja će se tek izvršiti je:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    13              int f = fact(5);
+</code></pre>
+</div>
+
+<p>Da bismo je izvršili, kucamo komandu next ili skraćeno n:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(gdb) next 
+14		printf("%d\n", f);
+(gdb) 
+</code></pre>
+</div>
+
+<p>Šta se sad desilo? Pa kako se naša linija izvršila, promenljivoj f je dodeljen rezultat funkcije fact. Da bismo odštampali vrednost promenljive f, koristimo komandu print ili skraćeno p:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(gdb) p f 
+$1 = 0
+(gdb) 
+</code></pre>
+</div>
+
+<p>Kao što vidimo, vrednost promenljive f je 0 što se ne poklapa sa očekivanom vrednošću jer znamo da faktorijel od 5 nije nula. Dakle, greška se desila negde u liniji koju smo izvršili, tačnije, greška se dešava u funkciji koju smo napisali. Da bismo “ušli” u našu funkciju, umesto komande next treba koristiti komandu step (skraćeno s) i time izvršavamo ono unutar funkcije. Pošto smo tu liniju već izvršili, moramo pokrenuti naš program ponovo. To radimo tako što izađemo iz GDB-a komandom quit i pokrenemo GDB na isti način kao ranije:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(gdb) quit
+A debugging session is active.
+
+	Inferior 1 [process 11459] will be killed.
+
+Quit anyway? (y or n) y
+</code></pre>
+</div>
+
+<p>pokretanjem ponovo GDB-a i pokretanjem programa sa komandom start, dolazimo ponovo do sledeće situacije:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(gdb) start 
+Temporary breakpoint 1 at 0x40052f: file program.c, line 13.
+Starting program: /me/home/stefan/a.out 
+
+Temporary breakpoint 1, main () at program.c:13
+13		int f = fact(5);
+(gdb) step
+fact (n=5) at program.c:6
+6		if (n==0) return 0;
+(gdb) 
+</code></pre>
+</div>
+
+<p>Sada se izvršava linija po liniju u datoj funkciji. Kako je ova funkcija rekurzivna, ovo radimo dok ne uvidimo gde je greška:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(gdb) p n 
+$1 = 5
+(gdb) n
+7		int res = n * fact(n-1);
+(gdb) s
+fact (n=4) at program.c:6
+6		if (n==0) return 0;
+(gdb) n
+7		int res = n * fact(n-1);
+(gdb) s
+fact (n=3) at program.c:6
+6		if (n==0) return 0;
+(gdb) n
+7		int res = n * fact(n-1);
+(gdb) s
+fact (n=2) at program.c:6
+6		if (n==0) return 0;
+(gdb) p n 
+$2 = 2
+(gdb) n
+7		int res = n * fact(n-1);
+(gdb) s
+fact (n=1) at program.c:6
+6		if (n==0) return 0;
+(gdb) p n 
+$3 = 1
+(gdb) n
+7		int res = n * fact(n-1);
+(gdb) s
+fact (n=0) at program.c:6
+6		if (n==0) return 0;
+(gdb) p n 
+$4 = 0
+(gdb) n
+9	}
+(gdb) n
+8		return res;
+(gdb) p res
+$5 = 0
+(gdb) 
+</code></pre>
+</div>
+
+<p>Posle debagovanja uočavamo da ako je n jednako nuli, da funkcija vraća nulu pa samim tim množenje sa nulom je uvek nula.</p>
+
+<p>Razmotrimo sada slučaj kada želimo da program debagujemo samo u jednom njegovom delu, bez izvršavanja liniju po liniju od samog početka. Za ovo nam služi breakpoint. Dakle, kada pokrenemo GDB, umesto start kucamo break n gde je n broj linije gde želimo da se izvršavanje zaustavi. Kada to uradimo pokrenemo izvršavanje sa run.</p>
+
+<p>Na primer, razmotrimo sledeći program:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#include &lt;stdio.h&gt;
+
+
+int main() 
+{
+	int i; 
+	int n; 
+	scanf(" %d", &amp;n);
+	int fib[100]; 
+	fib[0] = 0; 
+	fib[1] = 1; 
+	for (i=2; i&lt;n; i++) 
+	{
+		fib[i] = fib[i-1] + fib[i-2];
+	}
+	printf("%d\n", fib[n]);
+	return 0; 
+}
+</code></pre>
+</div>
+
+<p>Ovaj program iterativno računa n-ti Fibonačijev broj. Kada otvorimo GDB i kada uradimo break na liniji gde treba ispisati rešenje, i kada tu ispišemo vrednosti fib[5] i fib[4], uočavamo sledeće:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(gdb) b 17 
+Breakpoint 1 at 0x4005dc: file program.c, line 17.
+(gdb) run 
+Starting program: /me/home/stefan/a.out 
+5
+
+Breakpoint 1, main () at program.c:17
+17		printf("%d\n", fib[n]);
+(gdb) p fib[5]
+$1 = 32767
+(gdb) p fib[4]
+$2 = 3
+(gdb) 
+</code></pre>
+</div>
+
+<p>Dakle, fib[4] je u redu dok je fib[5] neka čudna vrednost koja se ne poklapa sa očekivanom, iz ovoga zaključujemo da nam računanje Fibonačijevog broja radi za 0 1 2 3 i 4 ali ne radi za 5. Kada probamo neki drugi ulaz, na primer 7, uočavamo da nam računanje radi za 0 1 2 3 4 5 i 6 ali da ne radi za 7. Greška je u uslovu zaustavljanja for ciklusa pa to ispravimo da je uslov i&lt;=n i time otklanjamo grešku.</p>
+
+<p>Iz ovog primera vidimo da GDB lepo radi i kada koristimo funkcije poput scanf i printf i da upotrebom scanf funkcije, normalno unosimo željeni ulaz i kad pritisnemo Enter, GDB normalno nastavlja sa radom.</p>
+
+<p>Ovim je demonstrirano neko osnovno korišćenje GDB-a. Za više informacija, postoji dobra dokumentacija a možete krenuti tako što u konzolu kucate sledeće:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>man gdb
+</code></pre>
+</div>
+
+<p>Za one koji preferiraju više grafičko okruženje, postoji grafički wrapper za GDB koji se zove DDD. Nisam se upuštao u upotrebu dotičnog jer meni lično GDB radi posao ali vidim da ga asistenti na faksu dosta koriste tako da ne verujem da je preterano loš.</p>
+
+
+  </div>
+
+</article>
+
+<div id="comment-section">
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    
+    var disqus_config = function () {
+        this.page.url = "http://fantastic001.github.io/programming/debug/tools/2017/05/12/gdb.html";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "/programming/debug/tools/2017/05/12/gdb"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//fantastic001.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Stefan Nožinić</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Stefan Nožinić</li>
+          <li><a href="mailto:stefan@lugons.org">stefan@lugons.org</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/fantastic001"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">fantastic001</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/snstefan5"><span class="icon icon--twitter"><svg viewBox="0 0 16 16"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">snstefan5</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
