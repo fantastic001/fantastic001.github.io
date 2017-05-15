@@ -6,9 +6,52 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 13 May 2017 15:17:36 +0200</pubDate>
-    <lastBuildDate>Sat, 13 May 2017 15:17:36 +0200</lastBuildDate>
+    <pubDate>Mon, 15 May 2017 20:54:22 +0200</pubDate>
+    <lastBuildDate>Mon, 15 May 2017 20:54:22 +0200</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>Bog vs Darvin - bitka bez pobednika ili kako nismo razumeli svrhu obrazovanja</title>
+        <description>&lt;p&gt;Ovih dana se ponovo pojavila &lt;a href=&quot;http://rs.n1info.com/a246892/Vesti/Vesti/Posle-13-godina-Srbija-ponovo-muci-muku-s-Darvinom.html&quot;&gt;polemika&lt;/a&gt; o tome da li deca, uzrasta osmog razreda, treba da izučavaju teoriju evolucije. Da je vrag pojeo šalu, to pokazuje i činjenica da je ova peticija koju potpisuju akademici i doktori, stigla i do Ministarstva i do Skupštinskog odbora za obrazovanje. Pored ovih institucija, reagovali su i Univerzitet u Beogradu i Centar za promociju nauke.&lt;/p&gt;
+
+&lt;p&gt;Međutim, da se ne lažemo, nisu samo kreacionisti u ofanzivnoj fazi. Pre su se mogle pronaći i peticije koje zahtevaju obrnuto - da se verska nastava ukloni iz obrazovnog sistema. Sada običan građanin, obična majka deteta može slobodno da se zapita: šta naša deca uče i da li uče prave stvari.&lt;/p&gt;
+
+&lt;p&gt;Peticije sa obe strane rade upravo ono što niko ne želi - ugrožavaju opštost obrazovanja. Pre 13 godina, ministarka prosvete je isto 
+htela da ukloni teoriju evolucije iz nastave biologije sa argumentom “da decu ne treba zbunjivati sa različitim teorijama”. Oni koji žele da uklone versku nastavu imaju drugačiji stav a to je da verska nastava nije obrazovanje iz nauke te da nečija religijska opredeljenja
+treba da ostanu u 4 zida porodice. Verovatno kao što neki kažu i da LGBT zajednica treba da ostane u svoja 4 zida.&lt;/p&gt;
+
+&lt;p&gt;Sada se postavlja pitanje šta ukloniti, šta dodati i kako izaći na kraj sa toliko teorija, informacija i podataka? Pa prvo, treba da razjasnimo kao društvo čemu obrazovanje uopšte služi, šta očekujemo od istog i na kraju kako ćemo doći do željenog cilja.&lt;/p&gt;
+
+&lt;p&gt;Iz &lt;a href=&quot;http://www.mpn.gov.rs/wp-content/uploads/2015/08/Akcioni_plan.pdf&quot;&gt;Akcionog plana razvoja sistema obrazovanja&lt;/a&gt; se mogu izvući šta smo kao država definisali za ciljeve i čemu želimo da težimo, u ovom tekstu ću citirati bitan deo iz ovog plana:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://fantastic001.github.io/images/citat.png&quot; alt=&quot;Citat iz akcionog plana&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Dakle, naš cilj je da kroz obrazovanje naučimo učenike da su sposobni da donose odluke u životu bazirane na znanju. Drugim rečima, mi treba da se fokusiramo na koncepte odlučivanja a ne na ponuđene mogućnosti. Kako sada ovo primeniti na dati primer o izbacivanju Darvina iz udžbenika. Prvo, treba se vratiti na argument bivše ministarke prosvete i tu treba da se složimo da on nema nikakvu osnovu iz prostog razloga što, ako pitate svakog pedagoga, on će vam reći da deca u tom uzrastu mogu da shvate da:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;postoji više pretpostavki o nastanku,&lt;/li&gt;
+  &lt;li&gt;nauka se bavi izučavanjem sveta oko nas i aproksimacijom prirodnih pojava na jednostavne matematičke modele,&lt;/li&gt;
+  &lt;li&gt;primenom datih modela za nove hipoteze koje se kasnije eksperimentalno dokazuju pa na osnovu njih se prave novi modeli,&lt;/li&gt;
+  &lt;li&gt;proces se ponavlja.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Izbacivanje bilo koje teorije pod izgovorom da je nepotrebna nije naučni pristup i neće doprineti da decu osposobimo da nauče da razmišljaju, da donose odluke bazirane na činjenicama i da budu svestrane ličnosti.&lt;/p&gt;
+
+&lt;p&gt;U obrazovanje je potrebno uvesti jasna pravila, potrebno je držati se ciljeva i na kraju dobro implementirati zadate ciljeve. 
+U gradivo treba da uđe svaka teorija, da se izučava način razmišljanja, naučni proces, da se izučava način odlučivanja i da se deca ohrabre da podržavaju različitosti i da ih prevazilaze. Jedino tako ćemo postati zdravo i humano društvo i jedino tako će svaka individua imati mogućnost da sprovede svoje ciljeve.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 15 May 2017 19:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/opinion/education/science/2017/05/15/creationism-vs-evolution.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/opinion/education/science/2017/05/15/creationism-vs-evolution.html</guid>
+        
+        
+        <category>opinion</category>
+        
+        <category>education</category>
+        
+        <category>science</category>
+        
+      </item>
     
       <item>
         <title>Git + CMake + unit testovi = kako se softver pravilno razvija</title>
@@ -974,156 +1017,6 @@ void mi_get_stat(node* n, struct stat* fstat)
         
         
         <category>osdev</category>
-        
-      </item>
-    
-      <item>
-        <title>Deploying your web application based on REST API</title>
-        <description>&lt;p&gt;Well, you have developed your first version of your super-mega-giga web app and you want to deploy it. Your application consists of
-two parts: API (backend) and your javascript code (frontend). In this article, I am going to explain how to deploy your API
-written in Django and your frontend written in AngularJS with a little bit of help of NodeJS and npm.&lt;/p&gt;
-
-&lt;h2 id=&quot;api-deployment---docker-configuration&quot;&gt;API deployment - Docker configuration&lt;/h2&gt;
-
-&lt;p&gt;It is good practice to use docker to isolate your environment for every app you are planning to use. We will set up 2 docker containers: one for Django app and one for database we use in our backend.&lt;/p&gt;
-
-&lt;p&gt;When you have situation like this: to have more containers bound in some way, it is always recommanded to use docker-compose to 
-easily manage your containers.&lt;/p&gt;
-
-&lt;p&gt;First, we will make Dockerfile for our container serving our Django API&lt;/p&gt;
-
-&lt;p&gt;Here is an example of Dockerfile to use:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM python:3.4
-ENV PYTHONUNBUFFERED 1
-# ssh-keygen is needed because some packages from requirements.txt are not available on pypy and are git cloned instead
-RUN ssh-keygen -q -t rsa -N '' -f id_rsa
-RUN apt-get update &amp;amp;&amp;amp; apt-get install netcat -y
-RUN mkdir /code
-WORKDIR /code
-ADD requirements.txt /code/
-ADD requirements-dev.txt /code/
-RUN pip install -r requirements.txt &amp;amp;&amp;amp; pip install -r requirements-dev.txt &amp;amp;&amp;amp; pip install uwsgi
-ADD . /code/
-RUN groupadd -r youruser &amp;amp;&amp;amp; useradd -r -g youruser youruser
-USER youruser
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This image will download and install needed packages for deployment and install all libraries listed in requirements.txt as well as in
-requirements-dev.txt. Just list your dependencies by their name in Python package index.&lt;/p&gt;
-
-&lt;p&gt;Now, you have to configure your docker-compose.yml:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;db:
-    image: postgres
-web:
-    build: .
-    command: sh bin/production.sh 9005
-    volumes:
-        - .:/code
-    ports:
-        - &quot;9005:9005&quot;
-    links:
-        - db
-    environment:
-        - DJANGO_SETTINGS_MODULE=project.settings_docker
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;as you can see, we are listening to port 9005 and we run our production script. bin/production.sh script just runs uwsgi
-bound to specified port from the first argument to the script&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
-
-python manage.py migrate --noinput
-python manage.py collectstatic
-uwsgi --chdir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/code -s 0.0.0.0:&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; --module&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;project.wsgi:application
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;And it’s done! Just run your containers now:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose up 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h1 id=&quot;deploying-api-to-nginx&quot;&gt;Deploying API to NGinx&lt;/h1&gt;
-
-&lt;p&gt;In your Nginx configuration, just add this location:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location /api/ {
-	uwsgi_pass 127.0.0.1:9005;
-	include uwsgi_params;
-	uwsgi_modifier1 30;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Make sure that all your API urls defined in urls.py begin with “/api/”&lt;/p&gt;
-
-&lt;p&gt;For admin interface, you can do the same but for different location, “admin” instead of “api”:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location /admin/ {
-	uwsgi_pass 127.0.0.1:9005;
-	include uwsgi_params;
-	uwsgi_modifier1 30;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Also, you will have to serve your static files:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location /static/ {
-	alias /path/to/your/app/code/static/;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h1 id=&quot;deploying-frontend&quot;&gt;Deploying frontend&lt;/h1&gt;
-
-&lt;p&gt;Frontend deployment with NPM is easy, first you have to set up your package.json properly:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;....
-&quot;scripts&quot;: {
-  &quot;build:js&quot;: &quot;cp node_modules/jquery/dist/* app/dist/ &amp;amp;&amp;amp; browserify app/scripts/app.js &amp;gt; app/dist/liberator.js&quot;,
-  &quot;build:bootstrap&quot;: &quot;cp -rv node_modules/bootstrap/dist/* app/dist/&quot;,
-  &quot;build&quot;: &quot;mkdir app/dist -p &amp;amp;&amp;amp; npm run build:js &amp;amp;&amp;amp; npm run build:bootstrap&quot;,
-  &quot;clean&quot;: &quot;rm -rfv dist/&quot;,
-  &quot;lint&quot;: &quot;jshint **.js&quot;,
-  &quot;prebuild&quot;: &quot;npm run lint&quot;,
-  &quot;watch&quot;: &quot;watch 'npm run build' ./app/ --filter=watch_filter&quot;,
-  &quot;serve&quot;: &quot;http-server -p 9000 -a 0.0.0.0 ./app/&quot;,
-  &quot;livereload&quot;: &quot;live-reload ./app/dist/ --port 9001&quot;
-},
-....
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;And just run&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run build
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;and your distribution will be held in app/ directory (where dist directory is located) so just configure NGinx to alias to that location:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location / {
-	alias /path/to/frontend/app/;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;And that’s it! Restart NGinx and enjoy testing your app in production. :)&lt;/p&gt;
-
-&lt;p&gt;If you have some suggestions or if you want to remind me on some issues, just fill comment form below.&lt;/p&gt;
-</description>
-        <pubDate>Mon, 23 May 2016 01:02:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/web/2016/05/23/nginx-django-deployment.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/web/2016/05/23/nginx-django-deployment.html</guid>
-        
-        
-        <category>web</category>
         
       </item>
     
