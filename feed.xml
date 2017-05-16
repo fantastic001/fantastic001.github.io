@@ -6,9 +6,36 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 15 May 2017 20:54:22 +0200</pubDate>
-    <lastBuildDate>Mon, 15 May 2017 20:54:22 +0200</lastBuildDate>
+    <pubDate>Tue, 16 May 2017 15:06:17 +0200</pubDate>
+    <lastBuildDate>Tue, 16 May 2017 15:06:17 +0200</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>Jedna greška koju pravimo pri donošenju odluka</title>
+        <description>&lt;p&gt;Tokom svog života, veliki deo vremena provedemo u odlučivanju. To nas prati od samog početka života. Još kao mali donosimo 
+odluke koju igračku želimo da dobijemo, sa kim želimo da se igramo. Kada malo porastemo, kada krenemo u školu, tu dolazimo do odluka koju ćemo školu da upišemo. Posle fakulteta ili srednje škole, donosimo odluke čime želimo da se bavimo dalje. Tokom obavljanja posla, gde god radili, donosimo odluke o tome kako želimo da radimo i na čemu. Kada dobijemo decu, kada imamo porodicu, donoimo odluke od kojih zavii i budućnost te dece. Posle e to prenosi i na naše unuke kad ostarimo. Zbog svega ovoga, pravilno donošenje odluka je 
+jako važno. Ipak u školi nam nikad ne kažu jednu jako važnu lekciju a to je kako da odluke donosimo kako treba. To se indirektno provuče kroz život nekako mislimo da nam je to urođeno. Problem je što nije.&lt;/p&gt;
+
+&lt;p&gt;Društveni pritisci i pritisci okruženja nas često teraju da donosimo odluke. Svi žele da znaju naše mišljenje, naše stavove 
+i naše planove. Zbog ovoga smo postali mašine za odgovaranje samo sa dva odgovora: “da” ili “ne”.&lt;/p&gt;
+
+&lt;p&gt;U svoj toj trci da damo odgovor gde su nam ponuđena samo dva moguća odgovora, često zaboravimo da postoji i treći odgovor: “ne znam”.&lt;/p&gt;
+
+&lt;p&gt;Ljudi često zaborave i da odlučivanje mogu i da odlože dok nemaju dovoljan broj informacija. Umesto da slušamo intuiciju i da 
+suvo sledimo neke vodiče, treba više da govorimo “ne znam”, odložimo odlučivanje, dobijemo potrebne informacije i tek na osnovu 
+njih damo zaključke. Na taj način ćemo smanjiti broj pogrešnih odluka. Strpljenje je važno a na to smo zaboravili. Živimo u brzom svetu
+i povodom toga ne možemo ništa da uradimo ali isto tako živimo u svetu informacija pa treba iskoristiti tu činjenicu kako da donesemo
+ispravnije odluke, bazirane na podacima a ne na verovanju i ubeđenjima.&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 16 May 2017 14:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/life/2017/05/16/decisions.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/life/2017/05/16/decisions.html</guid>
+        
+        
+        <category>life</category>
+        
+      </item>
     
       <item>
         <title>Bog vs Darvin - bitka bez pobednika ili kako nismo razumeli svrhu obrazovanja</title>
@@ -858,165 +885,6 @@ vaše oblasti, da naučite da napravite poster i prezentaciju.&lt;/p&gt;
         
         
         <category>petnica</category>
-        
-      </item>
-    
-      <item>
-        <title>Implementing file system with FUSE</title>
-        <description>&lt;p&gt;During summer camp at &lt;a href=&quot;http://petnica.rs/&quot;&gt;Petnica Science Center&lt;/a&gt; you can get a chance to build something and work on your own research project. On computer science course, we usually do, well, computer science (sometimes it is multidisciplinary) so my friend decided 
-to work on building her own file system. This is open source project and can be found &lt;a href=&quot;https://github.com/ivanovicM/mi-file-system&quot;&gt;here on GitHub&lt;/a&gt;. This is proof of concept of how file system work and it is built as stand-alone command-line application which has its own shell and uses RAM as its storage for data. Structure and organization of data is specific to project but it looks pretty much as first implementations of file systems.&lt;/p&gt;
-
-&lt;p&gt;You can copy files from your system’s file system to mi-fs but not vice-versa. The main problem is that it was a command-line application so we decided to implement our own kernel module for mi-fs. The problem with that approach is trouble with all kernelrelated development stuff. You have to be careful to avoid making kernel panic and so on. We found &lt;a href=&quot;https://github.com/libfuse/libfuse&quot;&gt;FUSE&lt;/a&gt; - File system in user space. You simply implement all operations you want your file system to support and start it as normal desktop app. FUSE kernel module will handle requests from outside world and redirect them to your application to handle requests. Your application responds with numerical return value and FUSE handles that response and then it knows what to do next. It is pretty simple (at least simpler than making your own kernel module and taking care of memory allocation and how to not make damage). I have to say that I am not happy about its documentation Documentation is auto-generated from code and sometimes it was very hard to understand what writer meant.&lt;/p&gt;
-
-&lt;p&gt;The whole thing is based of some kind C-style virtual function. You have structure with pointers to function, you implement these functions, set fields in that structure, call FUSE init function with that structure as argument and let FUSE handle all the stuff that follows.&lt;/p&gt;
-
-&lt;p&gt;This is an example of our main function:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#define FUSE_USE_VERSION 30
-
-#include &quot;interface.h&quot; 
-
-static struct fuse_operations mi_ops;
-
-int main(int argc, char* argv[]) 
-{
-	mi_ops.getattr = mi_getattr;
-	mi_ops.mkdir = mi_mkdir;
-	mi_ops.mknod = mi_mknod;
-	mi_ops.rmdir = mi_rmdir;
-	mi_ops.rename = mi_rename;
-	mi_ops.open = mi_open;
-	mi_ops.read = mi_read;
-	mi_ops.write = mi_write;
-	mi_ops.opendir = mi_opendir;
-	mi_ops.readdir = mi_readdir;
-	mi_ops.init = mi_init;
-	mi_ops.utimens = mi_utimens;
-        mi_ops.unlink = mi_unlink;
-	return fuse_main(argc, argv, &amp;amp;mi_ops, NULL);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;As you can see, we create structure and then we have to assign needed pointers to our functions. Functions are declared in interface.h so we can use them here. I will not explain how to implement every function alone and I will exaplin that in some other blogpost aimed for that. I will just leave one example of implementation of function getattr as well as implementation of functions used in this implementation:&lt;/p&gt;
-
-&lt;p&gt;getattr.cpp:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &quot;interface.h&quot;
-#include &quot;context.h&quot;
-#include &amp;lt;sys/stat.h&amp;gt;
-
-int mi_getattr(const char *path, struct stat * fstat) 
-{
-	char base[256] = {0};
-	char name[64] = {0};
-	mi_split_path(path, base, name);
-	node* curr = mi_get_destination(path);
-	if (curr == NULL) return -ENOENT;
-
-	mi_get_stat(curr, fstat);
-
-	return 0;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;context.cpp:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
-node* mi_get_destination(const char* path) 
-{
-	if (strlen(path) == 1) return mi_get_context()-&amp;gt;root;
-	else 
-	{
-		char base[256];
-		char name[64]; 
-		mi_split_path(path, base, name);
-		node* curr = mi_get_destination(base);
-		if (curr == NULL) return NULL;
-		else 
-		{
-			bool found = false;
-			node* nxt = curr-&amp;gt;younger;
-			while (nxt != NULL &amp;amp;&amp;amp; !found)
-			{
-				if (!strcmp(nxt-&amp;gt;name, name)) {
-					found = true;
-					return nxt;
-				}
-				nxt = nxt-&amp;gt;older_to;
-			}
-			if (!found) return NULL;
-		}
-	}
-	return NULL;
-}
-
-void mi_split_path(const char* path, char* basename, char* name)
-{
-	int i = 0;
-	while (path[i] != '\0') i++;
-	
-	if (i &amp;gt; 1) // ommit on the end of path (e.g. &quot;/path/a/&quot; becomes &quot;/path/a&quot; but &quot;/&quot; stays &quot;/&quot;)
-	{
-		while (path[i-1] == '/') 
-		{
-			i--;
-		}
-	}
-	int len=i;
-	i--;
-
-	while (path[i] != '/') i--;
-	int baselen = i;
-	int j;
-	for (j = 0; j&amp;lt;=baselen; j++) basename[j] = path[j];
-	basename[j] = '\0';
-	i++;
-	int l = 0;
-	while (path[i] != '\0' &amp;amp;&amp;amp; path[i] != '/') 
-	{
-		name[l] = path[i];
-		i++; l++;
-	}
-	name[l] = '\0';
-}
-
-void mi_get_stat(node* n, struct stat* fstat) 
-{
-	fstat-&amp;gt;st_dev = 166;
-	fstat-&amp;gt;st_ino = 0;
-	fstat-&amp;gt;st_mode = S_IRWXU | S_IRWXG | S_IRWXO;
-	if (n-&amp;gt;folder || n == mi_get_context()-&amp;gt;root) fstat-&amp;gt;st_mode |= S_IFDIR;
-	else fstat-&amp;gt;st_mode |= S_IFREG;
-	fstat-&amp;gt;st_nlink = 1;
-	fstat-&amp;gt;st_uid = 1000;
-	fstat-&amp;gt;st_gid = 1000;
-	fstat-&amp;gt;st_rdev = 0;
-	fstat-&amp;gt;st_size = 0;
-	fstat-&amp;gt;st_blksize = 4096;
-	fstat-&amp;gt;st_blocks = 1;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;I have ommited some debugging code to make it more readable.&lt;/p&gt;
-
-&lt;p&gt;Implementation of these function was easy because we already had structure and implementation of file system behaviour. We only had to make interface to FUSE.&lt;/p&gt;
-
-&lt;p&gt;You can see complete implementation &lt;a href=&quot;https://github.com/fantastic001/mi-file-system/tree/fuse&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;NOTE:&lt;/em&gt; We haven’t implemented read to work so, in some kind, we have write-only file system (I am not kidding, see for yourself). This is because we couldn’t understand documentation so well and somehow FUSE refuses to work as we think it should. Maybe the problem is with FUSE but I doubt so. If you find where we are wrong, feel free to contact me to email or submit pull request on GitHub.&lt;/p&gt;
-
-&lt;p&gt;I bet we are all proud to our child, even if it does not work as we wanted. Thanks to &lt;a href=&quot;https://github.com/ivanovicM&quot;&gt;Marina Ivanović&lt;/a&gt; who made file system structure and implemented file handling in memory and to &lt;a href=&quot;https://github.com/profMagija&quot;&gt;Nikola Bebić&lt;/a&gt; who helped me to make interface to FUSE.&lt;/p&gt;
-
-</description>
-        <pubDate>Thu, 22 Dec 2016 22:00:00 +0100</pubDate>
-        <link>http://fantastic001.github.io/osdev/2016/12/22/fuse.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/osdev/2016/12/22/fuse.html</guid>
-        
-        
-        <category>osdev</category>
         
       </item>
     
