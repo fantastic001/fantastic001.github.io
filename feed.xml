@@ -6,9 +6,128 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 04 Jul 2017 23:07:55 +0200</pubDate>
-    <lastBuildDate>Tue, 04 Jul 2017 23:07:55 +0200</lastBuildDate>
+    <pubDate>Sat, 29 Jul 2017 23:19:48 +0200</pubDate>
+    <lastBuildDate>Sat, 29 Jul 2017 23:19:48 +0200</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>Introducing Mako - small but rich organization tool which breaks UNIX philosophy</title>
+        <description>&lt;p&gt;&lt;img src=&quot;/images/mako.png&quot; alt=&quot;Mako screenshot&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In the past few months I have been developing my own tool for managing tasks, schedules and To-Do lists. 
+The main reasong I decided to develop my own tool instead of using available tools is simple - I haven’t found any tool which 
+has all-in-one setup and works on Linux, from CLI and has sync to some cloud. There’s additional thing, I am strong believer in privacy of individual’s data so I do not trust other services enough to upload my organizational data to their cloud systems. So I decided to make a tool which will be able to keep data in the cloud but keep it safe too. This is not implemented yet in Mako but I am working on that. Catch is to use encryption which is done on your computer and then upload encrypted data. Since Mako is open source, it is trusted that is is really on the client side.&lt;/p&gt;
+
+&lt;p&gt;So what is Mako and what it does?&lt;/p&gt;
+
+&lt;p&gt;Mako is a tool for keeping track of your tasks, To-Do lists, weekly schedules. It can also measure various things such that
+you are able to keep track of progress on projects and it can generate monthly and quartely reports of how your time is spent.&lt;/p&gt;
+
+&lt;p&gt;Since I strongly believe in UNIX philosophy for hte most part of software world, I have to say that when this kind of tool
+is concerned, this philosophy doesn’t work for me so Mako breaks this philosophy of having specific tool for specific task.&lt;/p&gt;
+
+&lt;h1 id=&quot;installation&quot;&gt;Installation&lt;/h1&gt;
+
+&lt;p&gt;Mako can be installed using pip or can be downloaded on &lt;a href=&quot;https://github.com/fantastic001/Mako&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;if you decide to clone Git repository, just run setup.py install as root and there you are.&lt;/p&gt;
+
+&lt;h1 id=&quot;basic-usage&quot;&gt;Basic usage&lt;/h1&gt;
+
+&lt;p&gt;When you install Mako you are able to use it without any initialization part and configuration. So let’s exaplin basic 
+infrastructure how database is organized.&lt;/p&gt;
+
+&lt;p&gt;Set of tasks is divided into projects where every project has its subprojects. For example, you can have university project and 
+then subproject for every course you are attending on the university. So, in university project, you can have algebra subproject 
+and every task related to algebra on the university can be placed here. So let’s create our first project:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako projects add university
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;so now when you list your projects, it will show that you have one project:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ mako projects 
+Projects:
+_________________
+university
+~ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now it’s time to add some subprojects to our university project:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subprojects add algebra
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;now we can list subprojects of university project:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subprojects 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;When we have project and its subprojects we can add individual tasks to them:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra tasks add &quot;Read chapter 1&quot; 2017-08-21 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;First argument to task add option is desciption of the task, second is due date and third is estimated time to complete given task. This is important since Mako will calculate how much time you are spending on tasks and hoow this time relates to your expectations.&lt;/p&gt;
+
+&lt;p&gt;Now we cna list tasks:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra tasks
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;to increase spent time on a task, do the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra task 1 do 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;first you specify task index given by task list and after “do” you specify how much time did you spend doing particular task, this will increase spent time on a task every time you run “do” command.&lt;/p&gt;
+
+&lt;p&gt;To mark task as done:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra task 1 done 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now, when you list tasks, you will see that our task is green instead of red which means it is marked as done.&lt;/p&gt;
+
+&lt;h1 id=&quot;getting-help&quot;&gt;Getting help&lt;/h1&gt;
+
+&lt;p&gt;Since one blogpost is not enough to explain whole functionality and since I explained just a little bit of this tool, I suggest to run:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako help
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;to see what you can use.&lt;/p&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;This project is still in development and in the moment of writing this article, there is no documentation. Next steps are 
+fixing reported bugs and writing documentation as well as implementing additional features which will be concerned with DropBox sync.&lt;/p&gt;
+
+&lt;p&gt;In the future, I plan implementing Android app and iOS app as well.&lt;/p&gt;
+
+&lt;p&gt;If you are interested in development, writing documentation or just want to report bug, please contact me via email or 
+fork project on GitHub and send pull requests.&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 29 Jul 2017 23:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/organization/mako/2017/07/29/mako.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/organization/mako/2017/07/29/mako.html</guid>
+        
+        
+        <category>organization</category>
+        
+        <category>mako</category>
+        
+      </item>
     
       <item>
         <title>Git - kako se koristi?</title>
@@ -814,90 +933,6 @@ ili u slučaju jednostruko povezane liste, pokazivač na prethodnika elementa ko
         <category>algorithms</category>
         
         <category>data-structures</category>
-        
-      </item>
-    
-      <item>
-        <title>ScaPy - analiza protokola upotrebom Python-a</title>
-        <description>&lt;p&gt;ScaPy je biblioteka za Python koja pruža sastavljanje paketa od “parčića”. Na primer, možemo IP deo spojiti sa TCP delom i na kraju konkretan sadržaj paketa i to poslati serveru. Pored ovoga, ova biblioteka nam pruža i mogućnost “slušanja”
-dolazećih poruka i odgovaranje na njih.&lt;/p&gt;
-
-&lt;p&gt;U nastavku teksta je dato nekoliko primera upotrebe biblioteke.&lt;/p&gt;
-
-&lt;h2 id=&quot;uključivanje-paketa&quot;&gt;Uključivanje paketa&lt;/h2&gt;
-
-&lt;p&gt;pre svega mala napomena, da bismo koristili naredne funkcionalnosti, moramo imati administratorske privilegije. Možda ovo 
-može da se izbegne na neki način ali meni nije uspelo, ako neko uspe, napišite komentar. :)&lt;/p&gt;
-
-&lt;p&gt;Uključivanje biblioteke se radi na sledeći način:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from scapy.all import * 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;sastavljanje-paketa&quot;&gt;Sastavljanje paketa&lt;/h2&gt;
-
-&lt;p&gt;Ako želimo da sastavimo neki paket koji u svom IP delu sadrži adresu odredišta, u svom TCP delu sadrži odredišni port 
-sa sadržj datom kao string, to možemo učiniti na sledeći način:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pkt = IP(dst=&quot;192.168.4.5&quot;)/TCP(dport=55)/&quot;Poruka&quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Ovaj paket možemo poslati na sledeći način&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;send(pkt)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;a ako želimo da pošaljemo paket i da odmah dobijemo odgovor, to možemo ovako:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ans, unans = sr(pkt)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;promenljiva ans sadrži listu odgovora od servera.&lt;/p&gt;
-
-&lt;h2 id=&quot;nadzor-protoka&quot;&gt;Nadzor protoka&lt;/h2&gt;
-
-&lt;p&gt;Ako želimo da vršimo nadzor protoka, možemo koristiti funkciju sniff. Prvo implementiramo callback funkciju koja će se izvršiti svaki put kad željeni paket prođe filter odnosno kad stigne do nas.&lt;/p&gt;
-
-&lt;p&gt;Naredni primer ilustruje nadzor svih ARP paketa:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def arp_monitor_callback(pkt):
-    if ARP in pkt and pkt[ARP].op in (1,2): #who-has or is-at
-        op = &quot;&quot;
-        if pkt[ARP].op == 1: 
-            op = &quot;Who has &quot;
-        else:
-            op = &quot;Is at&quot;
-        return op + pkt.sprintf(&quot;%ARP.hwsrc% %ARP.psrc%&quot;)
-
-sniff(prn=arp_monitor_callback, filter=&quot;arp&quot;, store=0)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Drugi primer ilustruje nadzor svega na portu 80&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def tcp_func(pkt):
-    if TCP in pkt and pkt[TCP].dport == 80:
-        return str(pkt)
-
-sniff(prn=tcp_func, filter=&quot;tcp&quot;, store=0)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;za-više&quot;&gt;Za više&lt;/h2&gt;
-
-&lt;p&gt;ScaPy ima jako dobru dokumentaciju pa tako može se dosta primera videti. Ovde je obrađena najtrivijalnija upotreba. 
-Ipak, ovo je meni bilo dovoljno da radi ARP poisoning recimo. Happy coding.&lt;/p&gt;
-</description>
-        <pubDate>Mon, 08 May 2017 18:15:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/python/2017/05/08/scapy.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/python/2017/05/08/scapy.html</guid>
-        
-        
-        <category>python</category>
         
       </item>
     
