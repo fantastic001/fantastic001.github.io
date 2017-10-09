@@ -6,9 +6,46 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 29 Jul 2017 23:19:48 +0200</pubDate>
-    <lastBuildDate>Sat, 29 Jul 2017 23:19:48 +0200</lastBuildDate>
+    <pubDate>Mon, 09 Oct 2017 23:55:29 +0200</pubDate>
+    <lastBuildDate>Mon, 09 Oct 2017 23:55:29 +0200</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>Tehnologija, posao i žene</title>
+        <description>&lt;p&gt;Već duže vreme planiram ovaj tekst da napišem ali nekako uvek ima nešto preče. Krene faks, počnem da radim a evo sad kad mi je ceo dan
+popunjen ja napisah i ovaj tekst. :D&lt;/p&gt;
+
+&lt;p&gt;Ideja za ovakav članak se rodila nakon što je StartIt objavio svoje &lt;a href=&quot;https://startit.rs/programerke-i-programeri-zene-duplo-jace-u-formalnom-obrazovanju-muskarci-30-u-zaradi/&quot;&gt;istraživanje&lt;/a&gt; gde su se mogle videti neke, pa reklo bi se, uobičajene stvari. Jedna od njih je da imamo situaciju da su žene zastupljene u IT sektoru značajno manje nego muškarci. To svi znamo i to svi vidimo. Verujemo i da je loše (ima izuzetaka koji misle da je to dobro) i povodom toga ne radimo ništa jer je uvek lakše držati status quo. Ono što nije uobičajeno i što je mene iznenadilo jeste da su žene mnogo bolje u formalnom obrazovanju i da imaju više doktorata od muškaraca. Pored toga, njihova plata je niža za 30% u odnosu na muškarce. Kako sad to? Zar plata ne bi trebalo da bude nezavisna od pola? Kako je moguće da neko (statistički gledano) sa višim obrazovanjem ima manju platu i to osetno manju platu?&lt;/p&gt;
+
+&lt;p&gt;Ovde dolazimo do ključnih pitanja koje muče svakog direktora kompanije. Iako je to tabu, svaki direktor o tome razmišlja. Žena može da zatrudni a sa trudnoćom ide i trudničko. E kako sad da ne radiš a da ti mi platimo, gde to ima? E pa ima u svakoj drugoj industriji i u tim industrijama je raspodela polova mnogo više jednaka od naše u IT-u. Dakle, nije trudničko toliki problem a pogotovo ne za kompanije koje posluju sa ogromnim profitima kakav je slučaj u IT-u.&lt;/p&gt;
+
+&lt;p&gt;Zanimljivo je to i da organizacija Girls Who Code je objavila izveštaj gde kaže da je većina devojaka u ranom detinjstvu zainteresovano za STEM oblasti (science, engineering, technology and math). Tamo negde početkom srednje škole to interesovanje spadne pa na fakultetu spadne još više. Dakle, nije manjak devojaka zato što je IT “muški posao”. Kako i može biti muški posao ako ti se posao svodi na razmišljanje i pisanje programskog koda, ponekad i dokumentacije i testiranje. Nigde nema zavrtanja, okretanja i sl (pričam za softver koji se razvija u većini kompanija). Dakle, način rada se sasvim poklapa sa, recimo, ekonomistom. Taj ekonomista isto nešto kuca na računaru, napiše neki izveštaj i to je to.&lt;/p&gt;
+
+&lt;p&gt;Dakle problem je negde drugde, možda je problem u kulturi koju smo sagradili? A jeste sad, zašto ne može slika Star Wars-a da bude na zidu kancelarije??? Ne mislim na taj deo kulture iako ima i onih “pametnih” koji samtraju da je razlog što devojke ne biraju IT
+za budduće zanimanje taj što “učionice nisu prilagođene ženama”. Takve u poseban krug pakla.&lt;/p&gt;
+
+&lt;p&gt;Prvo, kulturu smo sagradili takvu da odbijamo žene i to mitom o kontinuiranom učenju. 
+Koliko god težili tome, mi smo daleko od civilizacije kakvu zamišljamo. I u Americi i Kanadi nije ništa bolje. I danas se od žene očekuje da skuva i čuva dete. Ako neće da kuva, onda bar da čuva dete. Jel to suviše konzervativno? Pa jeste al šta ćeš. E sada, kada toj ženi kažete da pored toga što se od nje očekuje da čuva dete (što nije ni malo jednostavno), vi joj kažete i da celog života mora da 
+uči kako bi zadržala svoj posao (i time prehranila svoju porodicu), ona će omdah da razmišlja o alternativama. E sada se postavlja
+pitanje, kako to da se samo u IT sektoru diže tolika fama oko ovoga? Pa diže se jer ljudi u IT-u očigledno žele da sebe predstave
+kao nešto najbolje što je ovaj svet imao. Zamisli ti to, pa oni uče celog života kako bi opstali na tržištu! Da je ovo glupo pokazuje
+činjenica da se i dan danas koriste programski jezici napravljeni pre 20-30 godina. Paradigme programiranja su recimo još starije čak i do 50 godina! Arhitektura se nije promenila od nastanka iste (bilo je tu par odskakanja al danas se ustalilo na Von Nojmanovoj arhitekturi). Pa čak i kompanije za koje kažemo da su inovativne nisu baš inovativne. Recimo imate Google Drive koji je našminkani FTP (o ovome ide poseban tekst, zasluženi hejt). Dakle, o kakvom vi učenju pričate kada se ništa novo i nema naučiti a da je značajno drugačije od onoga što već znamo? E ovo su smislili ljudi koji su očigledno imali pogrešno obrazovanje u računarstvu i koji su stekli utisak da svaka nova tehnologija i jeste zaista nova. To što nisu sposobni da uvide obrazac i paradigmu, to je njihov problem i to će nnjih koštati posla a ne ove koji ne uče ništa. Ne kažem da ne treba raditi na sebi, samo kažem da preterano insistiranje na nečemu što se i ne razlikuje značajno od drugih industrija nema smisla.&lt;/p&gt;
+
+&lt;p&gt;Podatak da su žene bolje u formalnom obrazovanju pokazuje i da, kada dobiju sistem i jasna pravila žene u većem broju biraju određenu odluku, U formalnom obrazovanju se zna plan i program, imaju standardi, imaju principi i načini merenja. E sada, pokušajte da pitate nekog programera ovo: “Koji je jezik najbolji za početnike?”. Sada uzmete kokice i posmatrate svađu njih 5 koji se raspravljaju između C, C++, Python, Java ili PHP. Posle 3 sata odlične predstave koja više liči na rijaliti, sa donešenom odlukom da učite Algol (common ground svega navedenog jbg), postavljate pitanje koji editor da koristite. U tom trenutku se javlja Vim, Emacs, Visual Studio i po neki XCode (jer je Epl zajebao stvar, jbg). Mi ni ne znamo kako da uputimo te eventualne devojke šta da rade. Muškarci se tu snalaze jer nekako su 
+od malih nogu naviknuti na haos. Naviknuti da je nešto prljavo i umazano i po mogućstvu pokvareno. Ako nije pokvareno, pokvarićemo da bismo posle imali opravdanje da popravljamo. E nama je sada industrija i prljava i pokvarena i u tom haosu svako vuče na svoju stranu. Ako je dovlačenje devojaka motiv da popravimo sve to, onda je to super. Ako nećemo devojke, nemamo ni motiv. Ako nećemo ovo popravljati uskoro ćemo imati još veći haos i sve tako dok neko ne napravi program koji će da pobije stadion a za koji nećemo znati kako se desilo.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 09 Oct 2017 22:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/girls/tech/opinion/2017/10/09/tech.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/girls/tech/opinion/2017/10/09/tech.html</guid>
+        
+        
+        <category>girls</category>
+        
+        <category>tech</category>
+        
+        <category>opinion</category>
+        
+      </item>
     
       <item>
         <title>Introducing Mako - small but rich organization tool which breaks UNIX philosophy</title>
@@ -865,69 +902,6 @@ func build_heap(A):
         <pubDate>Wed, 10 May 2017 23:00:00 +0200</pubDate>
         <link>http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-heap.html</link>
         <guid isPermaLink="true">http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-heap.html</guid>
-        
-        
-        <category>algorithms</category>
-        
-        <category>data-structures</category>
-        
-      </item>
-    
-      <item>
-        <title>Neke strukture podataka</title>
-        <description>&lt;p&gt;U ovom članku ću dati pregled nekih struktura podataka čije razumevanje je dosta važno za razumevanje algoritama i uopšteno za razumevanje dosta principa u računarstvu. Treba napomenuti da je dosta nabrojanih struktura opisano &lt;a href=&quot;https://github.com/fantastic001/alg-implementations&quot;&gt;ovde&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Za svaku strukturu je bitno znati koliko vremenski “koštaju” određene operacije. Ovo znači koliko vremenski traje određena implementacija da se izvrši. Naravno, vreme izvršavanja zavisi od mnogih faktora. Na primer, ako se pored naše aplikacije izvršava još neka aplikacija sasvim je jasno da CU neće operaciju izvršiti jednako brzo kao i kada bi se samo ta operacija izvršavala. Zbog ovoga, za opisivanje vremena se koristi &lt;a href=&quot;https://en.wikipedia.org/wiki/Big_O_notation&quot;&gt;O-notacija&lt;/a&gt;..&lt;/p&gt;
-
-&lt;p&gt;Pa da krenemo….&lt;/p&gt;
-
-&lt;h2 id=&quot;lista&quot;&gt;Lista&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://en.wikipedia.org/wiki/File:Doubly-linked-list.svg&quot; alt=&quot;Lista&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Lista se sadrži od struktura (čvorova) gde svaki čvor ima u sebi vrednost koju čuva i pokazivač na sledeći čvor u listi. Pored ovoga, čvor može imati i pokazivač na prethodni čvor u listi i tada je lista dvostruko povezana.&lt;/p&gt;
-
-&lt;p&gt;Implementacija čvora u programskom jeziku C bi izgledala ovako:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef int TYPE;
-typedef struct node_st 
-{
-	TYPE val; 
-	node_st *next;
-	node_st* prev; // za dvostruko povezanu listu 
-} node;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Ovde smo koristili celobrojni tip kao primer tipa koju vrednost čvora može da ima. U ovom primeru je lista zapravo lista celobrojnih elemenata.&lt;/p&gt;
-
-&lt;p&gt;Listta podržava dodavanje elementa na kraj u O(1) vremenu, iteraciju kroz celu strukturu i pristupanje određenom 
-elementu u O(n) vremenu. Brisanje elementa se radi u O(1) ako nam je dat pokazivač na element koji treba da obrišemo
-ili u slučaju jednostruko povezane liste, pokazivač na prethodnika elementa koji treba obrisati.&lt;/p&gt;
-
-&lt;h2 id=&quot;stek&quot;&gt;Stek&lt;/h2&gt;
-
-&lt;p&gt;Ova struktura ima u sebi pokazivač na gornji element i podržava samo tri operacije: push, pop i top.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;push: dodavanje elementa na stek;&lt;/li&gt;
-  &lt;li&gt;pop: brisanje elementa sa vrha steka i;&lt;/li&gt;
-  &lt;li&gt;top: pristupanje elementu sa vrha steka.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Sve nabrojane operacije je moguće realizovati u O(1) vremenu.&lt;/p&gt;
-
-&lt;h2 id=&quot;red&quot;&gt;Red&lt;/h2&gt;
-
-&lt;p&gt;Ova struktura podržava dodavanje elemenata na početak reda, uklanjanje elemenata sa kraja reda i pristup elementima na krajevima i sve ove operacije se realizuju u O(1) vremenu.&lt;/p&gt;
-
-&lt;p&gt;I stek i red se mogu implementirati preko lista.&lt;/p&gt;
-
-&lt;p&gt;Pored ovih struktura postoje i još neke dosta značajne koje su zauzele ceo jedan tekst a to su: binarno stablo pretrage, hip, heš tabela i graf.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 10 May 2017 19:15:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures.html</guid>
         
         
         <category>algorithms</category>
