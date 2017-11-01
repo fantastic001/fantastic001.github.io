@@ -6,9 +6,89 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 09 Oct 2017 23:55:29 +0200</pubDate>
-    <lastBuildDate>Mon, 09 Oct 2017 23:55:29 +0200</lastBuildDate>
+    <pubDate>Wed, 01 Nov 2017 21:15:59 +0100</pubDate>
+    <lastBuildDate>Wed, 01 Nov 2017 21:15:59 +0100</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>Emacs org-mode</title>
+        <description>&lt;p&gt;Već nekoliko godina koristim Emacs. Eto priznao sam. :D Ja sam Vim korisnik koji koristi Emacs. Emacs koristim samo u svrhu za koju
+ne koristim Vim a to je za sve ostalo što nije pisanje koda. Toliko ga koristim da sam napravio i &lt;a href=&quot;https://github.com/fantastic001/YAPyOrg&quot;&gt;Python biblioteku&lt;/a&gt; za parsiranje Emacs org dokumenata. Dakle, Emacs koristim prvenstveno za organizaciju i pisanje dokumenata. U tome mi pomaže &lt;a href=&quot;http://orgmode.org/&quot;&gt;Emacs org-mode&lt;/a&gt;. Ovaj dodatak za Emacs je postao must-have na mom računaru. Bez ovoga ne idem nigde. Toliko je važno da hoću da sve što imam ima integraciju sa ovim. Plan mi je da i ovaj blog krenem da pišem u njemu.&lt;/p&gt;
+
+&lt;p&gt;Dakle, šta je tu zanimljivo? Pa da krenemo…&lt;/p&gt;
+
+&lt;h2 id=&quot;todo-liste&quot;&gt;TODO liste&lt;/h2&gt;
+
+&lt;p&gt;Prva stvar koju možete videti kad ga uključite (napravite i otvorite .org fajl) je mogućnost da pravite lako TODO liste. Sintaksa je slefeća:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* TODO nešto 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ako pritisnete kombinaciju ‘Control+t’ stavka se markira kao DONE. Ako ponovo pritisnete datu kombinaciju stavka se briše pa ako opet pritisnete dobijate opet marker “TODO”. Ako lupite alt+enter, dobijate novu stavku. Ove stavke su zapravo sekcije, ispod njih kada pišete vi 
+zapravo pišete sadržaj sekcije. Sekciju možete “sakriti” tako što se kursorom namestite na naslov sekcije (to sa zvezdicom) i kliknete &lt;TAB&gt;.&lt;/TAB&gt;&lt;/p&gt;
+
+&lt;p&gt;Ako držite Alt i kliknete strelicu na desno, sekcija postaje podsekcija a na levo dižete nivo sekcije.&lt;/p&gt;
+
+&lt;p&gt;Liste se prave sa znakom “+”:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ item 1 
++ item 2
+....
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;lupite alt+enter i dobijate novu stavku liste.&lt;/p&gt;
+
+&lt;p&gt;U dokumentima možete pisati i matematičke formule uz pomoć LaTeX-a. Njih ogradite sa “$$”, npr:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$$ a^2 = \int f(x)dx $$ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;renderovanje formula se vrši sa Control+c pa onda Control+x pa pritisnete “l”.&lt;/p&gt;
+
+&lt;p&gt;Org-mode takođe podržava i export u različite formate, na primer u HTML. To možete uraditi tako što pritisnete Control+c Control+e.
+Izlazi vam prozor gde su vam dati tasteri koje treba pritisnuti za eksport u određeni format.&lt;/p&gt;
+
+&lt;p&gt;Možete uključiti (navezati, “inkludovati”) druga org-mode dokumenta pa će u eksportovanom delu biti eksportovano sve. Zbogdno ako pišete veći dokument ili možda čak i knjigu. :)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+INCLUDE: &quot;putanja/do/fajla.org&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;A da isključite sadržaj u eksportovanom dokumentu:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+OPTIONS: toc:nil
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Da u eksportovanom dokumentu matematičke formule snimite kao slike (zgodno za pretraživače koji imaju problema sa matematičkim formulama ili recimo za Kindl):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+OPTIONS: tex:dvipng
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Da otvorite blok za izvorni kod upišete “&amp;lt;s” pa lupite TAB i onda samo u nastavku upišete jezik koji hoćete, i bloku kad pozicionirate kursor i pritisnete Control+c pa onda ‘ (jednostruki navodnik), otvara  se prozor za pisanje koda, sa sve obojenom sintaksom datog jezika. :D Da zatvorite prozor i sačuvate kod, upotrebite istu kombinaciju tastera.&lt;/p&gt;
+
+&lt;p&gt;Org-mode podržava i tabele sa sve mogućnošću pisanja formula i automatskog izračunavanja.&lt;/p&gt;
+
+&lt;p&gt;Ovo su samo neki tips and tricks, za više info valja posetiti stranicu i zvaničnu dokumentaciju alata.&lt;/p&gt;
+
+&lt;p&gt;Eto, napisao na brzinu tekstić, nahvalih ga lepo, sad je red da sami istražujete. Probajte i zavolećete ga.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 01 Nov 2017 21:15:00 +0100</pubDate>
+        <link>http://fantastic001.github.io/emacs/organization/utilities/2017/11/01/org-mode.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/emacs/organization/utilities/2017/11/01/org-mode.html</guid>
+        
+        
+        <category>emacs</category>
+        
+        <category>organization</category>
+        
+        <category>utilities</category>
+        
+      </item>
     
       <item>
         <title>Tehnologija, posao i žene</title>
@@ -814,99 +894,6 @@ izuzetno korisno iz dva razloga:&lt;/p&gt;
         <category>ssh</category>
         
         <category>networking</category>
-        
-      </item>
-    
-      <item>
-        <title>Neke strukture podataka - hip</title>
-        <description>&lt;p&gt;Hip je struktura podataka koja nam omogućava da brzo i lako dođemo do maksimalnog elementa. Često se predstavlja kao stablo 
-zbog lakšeg objašnjavanja ali se tokom implementacije koristi niz. Hip se predstavlja kao stablo na sledeći način: za svaki čvor, njegova deca su uvek manja od tog čvora. Ovakva reprezentacija podataka nam omogućava da nam na vrhu stabla (korenu stabla) uvek bude najveći element. Slično, možemo i obrnuti situaciju, da za svaki čvor su njegova deca manja od tog čvora. U ovom slučaju dobijamo strukturu
-gde nam je na vrhu uvek najmanji element. U implementaciji, za izvedbu hipa koristimo niz tako da nam element a(i) bude čvor a elementi 
-a(2i+1) i a(2i + 2) su njegova deca. Isto tako, ako imamo čvor a(i) onda njegovom roditelju pristupamo kao elementu a((i-1)/2).&lt;/p&gt;
-
-&lt;p&gt;Hip nam omogućava dodavanje elemenata u O(n log n) vremenu kao i brisanje u O(n log n) vremenu. Ipak, ako želimo najveći (najmanji) element onda to možemo dobiti u O(1) vremenu, mnogo brže nego u listi gde moramo proći kroz celu listu da bismo našli najveći element. 
-U hipu da bismo našli najveći element, dovoljno je da pristupimo njegovom čvoru, tačnije elementu a(0) jer znamo da su svi ostali sigurno manji od njega.&lt;/p&gt;
-
-&lt;p&gt;Kako koristimo niz da u njemu čuvamo naše podatke, ovo znači da od bilo kog niza možemo napraviti hip. Kako se ovo izvodi? Pretpostavimo da želimo da napravimo hip u nizu od indeksa i pa do kraja. Ovo radimo na sledeći način:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Vidimo koji je najveći element od elemenata a(i), a(2i) i a(2i+1), uzmemo njegov indeks i nazovemo ga j&lt;/li&gt;
-  &lt;li&gt;zamenimo elemente na indeksima i i j&lt;/li&gt;
-  &lt;li&gt;pozovemo funkciju za izradu hipa rekurzivno za dati niz sa početnim indeksom j&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Da od celog niza napravimo hip, potrebno je da krenemo od n/2-tog elementa i sve do početka niza pozivamo funkciju za izradu hipa.&lt;/p&gt;
-
-&lt;p&gt;U pseudokodu bi to izgledalo ovako:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func max_heapify(A, i):
-	l,r = 2*i, 2*i+1
-	m = max(A(i), A(l), A(r))
-	j = 0 
-	if A(i) = max: j = i
-	if A(l) = max: j = l
-	if A(r) = max: j = r
-	swap(A(i), A(j))
-	max_heapify(A, j)
-
-func build_heap(A):
-	n = A.size 
-	for i=n/2 downto 1:
-		max_heapify(A, i)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Funkcija za određivanje maksimalnog elementa bi onda u tom slučaju bila ovako:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func maximum(A):
-	return A(1)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Pored toga, imamo u funkciju za brisanje maksimalnog elementa:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func max_extract(A):
-	max = A(1)
-	n = A.size 
-	swap(A(1), A(n))
-	A.size = A.size - 1
-	max_heapify(A, 1)
-	return max
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;za ubacivanje elementa u hip:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func insert(A, x):
-	A.size = A.size + 1
-	A(A.size) = x
-	i = A.size
-	while i&amp;gt;1 and A(i/2) &amp;lt; A(i):
-		swap(A(i/2), A(i))
-		i = i/2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Dakle ova funkcija ubaci element na dno hipa i podiže ga gore sve dok mu je trenutni roditelj manji od datog elementa.&lt;/p&gt;
-
-&lt;p&gt;Sada e može lako implementirati i jedan algoritam za sortiranje koji je baziran na upotrebi hipa (heapsort). On se svodi na sledeće:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Želimo da sortiramo niz A&lt;/li&gt;
-  &lt;li&gt;Napravimo niz B koji će nam biti rezultat sortiranja&lt;/li&gt;
-  &lt;li&gt;Napravimo hip od niza A(1…n)&lt;/li&gt;
-  &lt;li&gt;radimo extract sve dok ne ispraznimo hip A, maksimalne elemente ubacujemo u niz B&lt;/li&gt;
-&lt;/ol&gt;
-
-</description>
-        <pubDate>Wed, 10 May 2017 23:00:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-heap.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-heap.html</guid>
-        
-        
-        <category>algorithms</category>
-        
-        <category>data-structures</category>
         
       </item>
     
