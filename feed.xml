@@ -6,9 +6,198 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 21 Nov 2017 22:18:46 +0100</pubDate>
-    <lastBuildDate>Tue, 21 Nov 2017 22:18:46 +0100</lastBuildDate>
+    <pubDate>Sun, 26 Nov 2017 21:51:13 +0100</pubDate>
+    <lastBuildDate>Sun, 26 Nov 2017 21:51:13 +0100</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>Object-oriented design patterns</title>
+        <description>&lt;p&gt;In software engineering you often need to make some design decisions such that your software is extenable and easily maintainable. 
+After some time of software development, industry has come up with repeating patterns of design that makes sense for some application. 
+Still, you need to choose particular design pattern but overall task is much simplified because you are deciding on finite number
+of patterns with small modifications if needed. I doubt you are trying to solve problem which is not solvable with these patterns
+described below. At least, in one part of your software you can use some of these patterns. The purpose if this aarticle is to 
+present some design patterns with explanation and examples where they are helpful. In this process, you also have to follow 
+&lt;a href=&quot;/agile/oop/programming/software/2017/11/20/SOLID-principles.html&quot;&gt;SOLID principles&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here they are:&lt;/p&gt;
+
+&lt;h1 id=&quot;builder&quot;&gt;Builder&lt;/h1&gt;
+
+&lt;p&gt;This pattern is used when you have to construct object and that object recieves many parameters. It is nice thing to have builder
+class that is responsible for object creation. For example, let’s say you have some class in which constructor it recieves many parameters. You want to have default values for some parameters. In most programming languages you can define default value for parameter. 
+The problem arises if you want to have different default value for parameter A based on passed value for parameter B. Another
+case is when you want to have multiple ways of constructing some object and you see you are aving many constructors which basically 
+do the same thing in general with little modifications.&lt;/p&gt;
+
+&lt;p&gt;Another use case for builder if you want to build complex data structures or documents. For example, building of XML 
+can be implemented with builder design pattern. Building SQL query is another example.&lt;/p&gt;
+
+&lt;p&gt;Another case is when you want to have default parameters and vary them if needed. Take for example this piece of code:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClass(int a, int b, int c=5, intd=4) ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;What if we want to set values for a,b and d but take c as default. In C++, we need to set value of c such that we are able to set value
+of d.&lt;/p&gt;
+
+&lt;p&gt;Builder is implemented as follows: Implement Builder class which in constructor can recieve all its parameters and also has empty constructor which sets up default parameters. For every parameter, implement “setX” method which returns new instance of Builder with changed
+specified parameter. Also, you will have to implement build() function which returns concrete object. This class can be used like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClass my_object = MyClassBuilder()
+	.setA(2)
+	.setB(3)
+	.setD(4)
+	.build();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;so every call to set method will return new instance of builder and last call will build concrete object from lastly created builder instance which has all parameters. The real magic comes when you want to make some default values and then create objects with one parameter changed:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClassBuilder builder = MyClassBuilder()
+	.setA(2)
+	.setB(3);
+
+MyClass myobj1 = builder.setD(7).build();
+MyClass myobj2 = builder.setD(10).build();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;abstract-factory&quot;&gt;Abstract factory&lt;/h1&gt;
+
+&lt;p&gt;This kind of pattern is used when you want to separate class and its construction. The difference between abstract factory and 
+builder is that abstract factory is sublcassed and every subclass implement construction different subclasses of some set of 
+abstract classes. For example, you want to have support for multiple coloring systems in your software. You can implement
+the following abstract classes: AbstractWindow, AbstractButton, AbstractText.&lt;/p&gt;
+
+&lt;p&gt;For every color you want to have, you subclass and implement these classes. So you will have something like: DarkWindow, DarkButton, DarkText, LightWindow, LightButton and LightText.&lt;/p&gt;
+
+&lt;p&gt;So now you want to use dark buttons only with dark windows. These classes share the same interface but construction is different.&lt;/p&gt;
+
+&lt;p&gt;This can be easily solved using abstract factory and then having in its interface the following mmethods: getutton(), getWindow() and getText().&lt;/p&gt;
+
+&lt;p&gt;so then you can subcass this class and makeDarkFactory and LightFactory, every in its implementation returns needed class instances for
+button, window and text. Now you can use it like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;AbstractFactory theme = DarkFactory()
+AbstractButton btn = theme.getButton(); 
+AbstractWindow win = theme.getWindow();
+
+...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;when structuring all this in directories, pay attention to put concrete factory and objects which are created by that factory at the same place if possible&lt;/p&gt;
+
+&lt;p&gt;this is best done when we use only one instance of factory in system, factory can be provided from singleton or something like that.&lt;/p&gt;
+
+&lt;h1 id=&quot;adapter&quot;&gt;Adapter&lt;/h1&gt;
+
+&lt;p&gt;Class which recieves one object in its constructor and converts it to other objects by its methods&lt;/p&gt;
+
+&lt;p&gt;This pattern can be used to:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;convert one object to another&lt;/li&gt;
+  &lt;li&gt;to make glue between different, non-compatible parts of software&lt;/li&gt;
+  &lt;li&gt;wrap existing class with a new interface: recieves object in constructor and exposes new interface&lt;/li&gt;
+  &lt;li&gt;match legacy component to a new system&lt;/li&gt;
+  &lt;li&gt;match new component to a old system&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&quot;composite&quot;&gt;Composite&lt;/h1&gt;
+
+&lt;p&gt;Tihs pattern is used when we want to compose some objects in a group. For example, in graphical user interface, Window object 
+is of composite type. When we move window on screen, all widgets on that window are also moved. It is implemented very easily. You 
+can pass inner objects using constructor, using Builder, abstract factory or by invoking some kind of add(CompositeChild) method.&lt;/p&gt;
+
+&lt;h1 id=&quot;decorator&quot;&gt;Decorator&lt;/h1&gt;
+
+&lt;p&gt;Used to add functionality to individual objects and when needed features grow exponentialy as number of small features grows.&lt;/p&gt;
+
+&lt;p&gt;Basically, it has same interface as class it is decorating and in every method, method of decorated object is called with additional actions above and below calling this method of concrete object(). For example we want to make some kind of simulator. We want to 
+implement later some kind of logging. We can make decorator class which, before calls its child’s method, write log in a file
+or to the standard output. The we just need to decorate our existing simulator object:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Simulator* simulator = new Simulator(); // logging turned off 
+simulator = new DebugDecorator(simulator); // we turn on logging
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;hain-of-responsibility&quot;&gt;hain of responsibility&lt;/h1&gt;
+
+&lt;p&gt;This kind of pattern is used when we want to implement some kind of checking or multi layer processing.&lt;/p&gt;
+
+&lt;p&gt;How does it work? Define abstract Process and implement individual processes. Implement method process() or check() and implement method getNext().&lt;/p&gt;
+
+&lt;p&gt;Now we have to implement our class which is chain of responsibility. It gets specific request (object to handle, object to check etc…)
+and it passes this request to processes. It first starts at root process and then calls getNext() method of root process and then passes request to next process and so on until it gets to the end of chain.&lt;/p&gt;
+
+&lt;p&gt;This concept can be handy in parsing and creating trees or lists.&lt;/p&gt;
+
+&lt;p&gt;use cases:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;middleware classes that control security&lt;/li&gt;
+  &lt;li&gt;pattern recognition - recognize pattern in data and return aproprirate object to handle it (or proper Factory)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&quot;command&quot;&gt;Command&lt;/h1&gt;
+
+&lt;p&gt;Tihs is used hand-by-hand with previous pattern. Tihs command is basically process. You have to make one abstract interface 
+for command and then implement individual commands. These individual commmands can recieve additional parameters in its constructors
+or can be gained from some factory.&lt;/p&gt;
+
+&lt;p&gt;Also, this pattern is useful if you want to make “undo” operation. Every command instance changes state and every 
+class implementing Command interface has to implement undo() method. After that, you just have to save history of commands 
+(which is basically list of Command instances) and when you want to invoke undo functionality, just call undo() method of lastly
+executed command and remove it from list.&lt;/p&gt;
+
+&lt;h1 id=&quot;observer&quot;&gt;Observer&lt;/h1&gt;
+
+&lt;p&gt;In this pattern, there is two types of classes: observers and subjects. Subject observes state (which is usually its own state)
+and notifies observer when state is changed.&lt;/p&gt;
+
+&lt;p&gt;One common example is Subject which keeps data model, Observers (views) register to that subject and watch for changes. This is 
+often used in MVC (Model-View-Controller) architecture which is often used in GUI applications and web frontends.&lt;/p&gt;
+
+&lt;h1 id=&quot;strategy&quot;&gt;Strategy&lt;/h1&gt;
+
+&lt;p&gt;Here we have one abstract class and other classes inherit it.
+Abstract class defines interface and each class implements it.&lt;/p&gt;
+
+&lt;p&gt;For example, different algorithms which solve the same problem.&lt;/p&gt;
+
+&lt;h1 id=&quot;template-method&quot;&gt;Template method&lt;/h1&gt;
+
+&lt;p&gt;This is often used when we have some kind of algoritmh with multiple steps and every step can be implemented differently. 
+In this case, we can make class which recieves different Strategy instances for different steps. For example, in speech recognition
+we can have feature extraction and model fitting. We can make FeatureExtractionStrategy and implement concrete strategies for 
+feature extraction and then we can also make ModelFittingStrategy and implement concrete model fitting algorithms such as 
+neural networks, HMM etc…&lt;/p&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;This is very limmited set of design patterns, you can find a lot of examples and descriptions online. I do not recommend reading
+books about this topic because this stuff is best grased by practice and real world examples and real world projects. You can 
+look at open source software and see how others do things and get some idea of how you could start your design process.&lt;/p&gt;
+
+</description>
+        <pubDate>Sun, 26 Nov 2017 18:15:00 +0100</pubDate>
+        <link>http://fantastic001.github.io/agile/oop/programming/software/2017/11/26/oo-design-patterns.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/agile/oop/programming/software/2017/11/26/oo-design-patterns.html</guid>
+        
+        
+        <category>agile</category>
+        
+        <category>oop</category>
+        
+        <category>programming</category>
+        
+        <category>software</category>
+        
+      </item>
     
       <item>
         <title>SOLID design principles</title>
@@ -938,39 +1127,6 @@ $2 = 3
         <category>debug</category>
         
         <category>tools</category>
-        
-      </item>
-    
-      <item>
-        <title>Neke strukture podataka - heš tabele</title>
-        <description>&lt;p&gt;Heš tabele su jedan od jako dobrih načina čuvanja podataka. Pretpostavimo da imamo ogromnu količinu podataka kojoj želimo
-da pristupamo jako brzo. Svaki element ima neku vrstu identifikacije. Na primer ako imamo podatke o osobama, identifikacija može biti
-JMBG osobe. Heš tabela je zapravo niz lista gde svaki element je lista koja sadrži elemente čiji se heš poklapa. E sada, šta nam je ovde heš? Iz primera sa osobama, znamo da imamo mnogo JMBG brojeva i znamo da sa običnom listom da bismo našli određenu osobu, treba da prođemo kroz celu listu dok je ne nađemo. Ovo može predstavljati problem ukoliko imamo veliki broj osoba. Drugo rešenje je da koristimo niz i da osobi pristupamo na osnovu njenog identifikacionog broja odnosno da identifikacioni broj osobe bude njen indeks u nizu. Ovo je ponovo teško realizovati ako se uzme u obzir veliki broj osoba pa samim tim bi i naš niz zauzimao mnogo memorije. Zbog ove dve činjenice, heš tabela predstavlja kompromis. Prvo, nemamo niz onoliko veliki koliko imamo osoba nego manji niz a svaka osoba ima svoj identifikacioni broj, mi kada želimo da pristupimo određenoj osobi mi njen identifikacioni broj transformišemo u indeks niza. Ovaj postupak se naziva
-heširanje. E sada, kako imamo mnogo osoba a manje mogućih indeksa, desiće se da dve osobe imaju isti indeks u nizu. Zbog ovoga svaki element niza je zapravo lista osoba koje imaju isti indeks u nizu (heš).&lt;/p&gt;
-
-&lt;p&gt;Sada se postavlja pitanje da li nam je isplativo da sve ovo implementiramo kad opet prolazimo kroz listu. Odgovor je da je ta lista mnogo manja nego lista svih osoba pa je prolazak kroz tu listu mnogo brži.&lt;/p&gt;
-
-&lt;p&gt;Dakle, ako želimo pristupiti osobi za identifikacionim brojem ID, tada prvo primenimo transformaciju hash(ID) pa pristupimo listi osoba
-sa tim hešom i onda u toj maloj listi nađemo osobu koja nas interesuje.&lt;/p&gt;
-
-&lt;p&gt;Najjednostavnija heš funkcija jeste zapravo deljenje sa prostim brojem pa uzimanje ostatka. Na primer:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hash(x) = x % 1000003
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;pored ovakve, postoji i mnogo drugih heš funkcija koje smanjuju mogućnost kolizije.&lt;/p&gt;
-
-&lt;p&gt;Vreme pristupa je probabilističko i zavisi od verovatnoće da se među dva elementa desi kolizija.&lt;/p&gt;
-</description>
-        <pubDate>Thu, 11 May 2017 00:45:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-hash.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-hash.html</guid>
-        
-        
-        <category>algorithms</category>
-        
-        <category>data-structures</category>
         
       </item>
     
