@@ -6,9 +6,566 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 16 May 2017 15:06:17 +0200</pubDate>
-    <lastBuildDate>Tue, 16 May 2017 15:06:17 +0200</lastBuildDate>
+    <pubDate>Tue, 21 Nov 2017 22:18:46 +0100</pubDate>
+    <lastBuildDate>Tue, 21 Nov 2017 22:18:46 +0100</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>SOLID design principles</title>
+        <description>&lt;p&gt;In this article it will be explained one design process which really fascinated me and held me awake during nights while 
+thinking of how much is it cool and powerful. First of all, these principles are set of design decision during software development
+which are intended to boost maintainability of software and make software development continious and easily 
+adaptable to new specifications by its users.&lt;/p&gt;
+
+&lt;p&gt;This set of principles is promoted by Robert C. Martin. He’s fascinating man and you should watch all of his talks. This 
+guy knows what to say and how industry works. He knows that he is talking about, really.&lt;/p&gt;
+
+&lt;p&gt;So, I will briefly explain every principle with examples of how are they applicable to concrete cases. Let’s start:&lt;/p&gt;
+
+&lt;h1 id=&quot;single-responsibility-principle&quot;&gt;Single responsibility principle&lt;/h1&gt;
+
+&lt;p&gt;This principle tells us that class in particular module should have only one responsibility. This means only one reason to change. 
+Think about it as follows: if you have class A in your module and, let’s say, your CFO tells you new specification that causes 
+changes to class A. In the same time, your COO tells you additional requirement and you have to change class A again. 
+You can see that you are changing class for different reason. Two different departments have requirements that cause change to the
+same class. When you are in this situation you can guess that you are not satisfying this principle.&lt;/p&gt;
+
+&lt;p&gt;Let’s say particular example how to make this right. Let’s say you want to calculate something, for example to generate 
+some kind of report to the user. You will make three classes. One class will represent structure of the report, another class
+will generate our report object and last one will format it and show it on console or in graphical user interface.&lt;/p&gt;
+
+&lt;p&gt;You can go further by having multiple classes for generating different parts of report and then you combine these classes 
+to create final report.&lt;/p&gt;
+
+&lt;h1 id=&quot;openclosed-principle&quot;&gt;Open/closed principle&lt;/h1&gt;
+
+&lt;p&gt;This principle basically says thet design should be open for extensions and closed for modifications. This means it is better 
+to add new feature by adding new class than by changing existing classes. For example, you are developing some kind of software 
+that will compute something based on different methods. This could be some machine learning software or bot for games. In the
+future, you want to support adding additional algorithms. You should implement every algorithms as separate class that share common
+interface. This nicely picks on above principle because if you have, for example, interface for report view class, you can add
+additional view by adding additional class, not by modifying existing classes.&lt;/p&gt;
+
+&lt;p&gt;This is easily done by inheritance. You should never change class, especially its interface which is seen by user.&lt;/p&gt;
+
+&lt;p&gt;One way to achieve this is by making abstract class for one process or operatio and to implement this class for particular case. 
+You should abstract everything and soon you will see that new features are handled by adding stuff, not changing existing stuff.&lt;/p&gt;
+
+&lt;p&gt;If you use some framework for GUI, abstract its behaviour and implement concrete class using this framework. When you want to 
+change framework, you basically add new implementation of abstract class. Same thing goes for databases and for 
+file formats. If you make networking application which uses some kind of protocol, make abstract class for that protocol and
+implement concrete protocol. When you want to support new protocol, you will be able to add just another implementation
+of your abstract class. If you are developing application that needs to render 3D, you can make abstract class for 3D engine and then 
+implement concrete engine you want. If you want to change engine, you just add another class.&lt;/p&gt;
+
+&lt;p&gt;One more thing, let’s say you want to add additional functionality to every 3D engine you support. This in some sense requires changing
+existing stuff but you will do it nicely. You just need to add additional method to abstract class and implement that method
+in its subclasses. This does not require that you change existing methods.&lt;/p&gt;
+
+&lt;h1 id=&quot;liskov-substitution-principle&quot;&gt;Liskov substitution principle&lt;/h1&gt;
+
+&lt;p&gt;If if have two classes. One T and one S which is inherited from T. This principle says that we always can replace objects of type T
+with objects of type S and we will maintain correctness of a program.&lt;/p&gt;
+
+&lt;p&gt;So, what this actually mean? Let’s say we have our two classes mentioned above. Every method of T has its own preconditions, 
+postconditions and invariants.&lt;/p&gt;
+
+&lt;p&gt;Your subtype must satisfy the following criteria:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Preconditions cannot be strengthened in a subtype.&lt;/li&gt;
+  &lt;li&gt;Postconditions cannot be weakened in a subtype.&lt;/li&gt;
+  &lt;li&gt;Invariants (conditions held true) of the supertype must be preserved in a subtype.&lt;/li&gt;
+  &lt;li&gt;immutability cannot be subtyped to mutable class&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Let’s say we have class Rectangle and then we make subclass Square. This breaks Liskov substitution principle because 
+Rectangle has two methods: setHeight and setWidth. The problem is when user calls setHeight, he expects that width is not changed
+which is happening with Square objects. This can be solved by separating these two as different types and not using inheritance
+for this kind of thing. Maybe it seems logical that Square should be subclassed from Rectangle but this kind of 
+design breaks this principle. If it is needed to have common type for Rectangle and Square then the right interface can be 
+Drawable since we are probably talking about drawable objects.&lt;/p&gt;
+
+&lt;p&gt;You can always use only immutable objects to make this requirement easy to maintain. This is because immutability does not break 
+this principle.&lt;/p&gt;
+
+&lt;h1 id=&quot;interface-segregation-principle&quot;&gt;Interface segregation principle&lt;/h1&gt;
+
+&lt;p&gt;This principle basically states that it is better to have more small interfaces than one big interface with all methods. 
+One example which demonstrates breaking of this principle is when you try to design system capable of reading and writing multiple file
+formats. The problem arises when you have file formats which you want to support only reading. Of course, you can 
+fake writing methods using “pass” in Python for instance. The problem with this approach is when someone else uses your class, it is
+visible to the user of class that there’s write method and user does not know if it is implemented or just fake. The solution
+to this problem is to make two interfaces: Writable and Readable. If you want to implement both reading and writing, you just implement
+both interfaces but if you want to implement only reading, you can do so without implementing writing. 
+Now, in your save() function, you need only Writable and in your open() function you need only Readable. Someone who does 
+implementation of save or export functionality, does not care and does not know about writing methods. The user of Readable sees
+only methods for reading.&lt;/p&gt;
+
+&lt;h1 id=&quot;dependency-inversion-principle&quot;&gt;Dependency inversion principle&lt;/h1&gt;
+
+&lt;p&gt;This principle states that high level modules shouldn’t depend on low level modules. This seems confusing at first. The key
+thing here is to use abstract classes and interfaces. Both low level and high level modules depend on interfaces. Low level 
+modules inherit and implement interfaces while high level modules use these interfaces (no matter what implements them).&lt;/p&gt;
+
+&lt;p&gt;Classical example is when you try to implement file browser and you want to support multiple file systems or remote file browsing
+like FTP. The idea here is to make browsing interface which will call concrete implementation if needed.&lt;/p&gt;
+
+&lt;p&gt;The most popular pattern which supports this principle is MVC (Model, View, Controller). In this scenarion, different modules
+handle data representation, graphical interface or data visualization and data handling and manipulation.&lt;/p&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;Sometimes it is hard to follow all these principles. Also, new (old) paradigms arrive such as functional programming which aims to solve
+some problems we are facing with OOP. At least, when you try to follow these principles, you have better software development and 
+you make changes really quickly. If you are lazy, this is thing for you, trust me. I am lazy and I love when I don’t need to code
+so much.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 20 Nov 2017 23:15:00 +0100</pubDate>
+        <link>http://fantastic001.github.io/agile/oop/programming/software/2017/11/20/SOLID-principles.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/agile/oop/programming/software/2017/11/20/SOLID-principles.html</guid>
+        
+        
+        <category>agile</category>
+        
+        <category>oop</category>
+        
+        <category>programming</category>
+        
+        <category>software</category>
+        
+      </item>
+    
+      <item>
+        <title>Emacs org-mode</title>
+        <description>&lt;p&gt;Već nekoliko godina koristim Emacs. Eto priznao sam. :D Ja sam Vim korisnik koji koristi Emacs. Emacs koristim samo u svrhu za koju
+ne koristim Vim a to je za sve ostalo što nije pisanje koda. Toliko ga koristim da sam napravio i &lt;a href=&quot;https://github.com/fantastic001/YAPyOrg&quot;&gt;Python biblioteku&lt;/a&gt; za parsiranje Emacs org dokumenata. Dakle, Emacs koristim prvenstveno za organizaciju i pisanje dokumenata. U tome mi pomaže &lt;a href=&quot;http://orgmode.org/&quot;&gt;Emacs org-mode&lt;/a&gt;. Ovaj dodatak za Emacs je postao must-have na mom računaru. Bez ovoga ne idem nigde. Toliko je važno da hoću da sve što imam ima integraciju sa ovim. Plan mi je da i ovaj blog krenem da pišem u njemu.&lt;/p&gt;
+
+&lt;p&gt;Dakle, šta je tu zanimljivo? Pa da krenemo…&lt;/p&gt;
+
+&lt;h2 id=&quot;todo-liste&quot;&gt;TODO liste&lt;/h2&gt;
+
+&lt;p&gt;Prva stvar koju možete videti kad ga uključite (napravite i otvorite .org fajl) je mogućnost da pravite lako TODO liste. Sintaksa je slefeća:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* TODO nešto 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ako pritisnete kombinaciju ‘Control+t’ stavka se markira kao DONE. Ako ponovo pritisnete datu kombinaciju stavka se briše pa ako opet pritisnete dobijate opet marker “TODO”. Ako lupite alt+enter, dobijate novu stavku. Ove stavke su zapravo sekcije, ispod njih kada pišete vi 
+zapravo pišete sadržaj sekcije. Sekciju možete “sakriti” tako što se kursorom namestite na naslov sekcije (to sa zvezdicom) i kliknete &lt;TAB&gt;.&lt;/TAB&gt;&lt;/p&gt;
+
+&lt;p&gt;Ako držite Alt i kliknete strelicu na desno, sekcija postaje podsekcija a na levo dižete nivo sekcije.&lt;/p&gt;
+
+&lt;p&gt;Liste se prave sa znakom “+”:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ item 1 
++ item 2
+....
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;lupite alt+enter i dobijate novu stavku liste.&lt;/p&gt;
+
+&lt;p&gt;U dokumentima možete pisati i matematičke formule uz pomoć LaTeX-a. Njih ogradite sa “$$”, npr:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$$ a^2 = \int f(x)dx $$ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;renderovanje formula se vrši sa Control+c pa onda Control+x pa pritisnete “l”.&lt;/p&gt;
+
+&lt;p&gt;Org-mode takođe podržava i export u različite formate, na primer u HTML. To možete uraditi tako što pritisnete Control+c Control+e.
+Izlazi vam prozor gde su vam dati tasteri koje treba pritisnuti za eksport u određeni format.&lt;/p&gt;
+
+&lt;p&gt;Možete uključiti (navezati, “inkludovati”) druga org-mode dokumenta pa će u eksportovanom delu biti eksportovano sve. Zbogdno ako pišete veći dokument ili možda čak i knjigu. :)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+INCLUDE: &quot;putanja/do/fajla.org&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;A da isključite sadržaj u eksportovanom dokumentu:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+OPTIONS: toc:nil
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Da u eksportovanom dokumentu matematičke formule snimite kao slike (zgodno za pretraživače koji imaju problema sa matematičkim formulama ili recimo za Kindl):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+OPTIONS: tex:dvipng
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Da otvorite blok za izvorni kod upišete “&amp;lt;s” pa lupite TAB i onda samo u nastavku upišete jezik koji hoćete, i bloku kad pozicionirate kursor i pritisnete Control+c pa onda ‘ (jednostruki navodnik), otvara  se prozor za pisanje koda, sa sve obojenom sintaksom datog jezika. :D Da zatvorite prozor i sačuvate kod, upotrebite istu kombinaciju tastera.&lt;/p&gt;
+
+&lt;p&gt;Org-mode podržava i tabele sa sve mogućnošću pisanja formula i automatskog izračunavanja.&lt;/p&gt;
+
+&lt;p&gt;Ovo su samo neki tips and tricks, za više info valja posetiti stranicu i zvaničnu dokumentaciju alata.&lt;/p&gt;
+
+&lt;p&gt;Eto, napisao na brzinu tekstić, nahvalih ga lepo, sad je red da sami istražujete. Probajte i zavolećete ga.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 01 Nov 2017 21:15:00 +0100</pubDate>
+        <link>http://fantastic001.github.io/emacs/organization/utilities/2017/11/01/org-mode.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/emacs/organization/utilities/2017/11/01/org-mode.html</guid>
+        
+        
+        <category>emacs</category>
+        
+        <category>organization</category>
+        
+        <category>utilities</category>
+        
+      </item>
+    
+      <item>
+        <title>Tehnologija, posao i žene</title>
+        <description>&lt;p&gt;Već duže vreme planiram ovaj tekst da napišem ali nekako uvek ima nešto preče. Krene faks, počnem da radim a evo sad kad mi je ceo dan
+popunjen ja napisah i ovaj tekst. :D&lt;/p&gt;
+
+&lt;p&gt;Ideja za ovakav članak se rodila nakon što je StartIt objavio svoje &lt;a href=&quot;https://startit.rs/programerke-i-programeri-zene-duplo-jace-u-formalnom-obrazovanju-muskarci-30-u-zaradi/&quot;&gt;istraživanje&lt;/a&gt; gde su se mogle videti neke, pa reklo bi se, uobičajene stvari. Jedna od njih je da imamo situaciju da su žene zastupljene u IT sektoru značajno manje nego muškarci. To svi znamo i to svi vidimo. Verujemo i da je loše (ima izuzetaka koji misle da je to dobro) i povodom toga ne radimo ništa jer je uvek lakše držati status quo. Ono što nije uobičajeno i što je mene iznenadilo jeste da su žene mnogo bolje u formalnom obrazovanju i da imaju više doktorata od muškaraca. Pored toga, njihova plata je niža za 30% u odnosu na muškarce. Kako sad to? Zar plata ne bi trebalo da bude nezavisna od pola? Kako je moguće da neko (statistički gledano) sa višim obrazovanjem ima manju platu i to osetno manju platu?&lt;/p&gt;
+
+&lt;p&gt;Ovde dolazimo do ključnih pitanja koje muče svakog direktora kompanije. Iako je to tabu, svaki direktor o tome razmišlja. Žena može da zatrudni a sa trudnoćom ide i trudničko. E kako sad da ne radiš a da ti mi platimo, gde to ima? E pa ima u svakoj drugoj industriji i u tim industrijama je raspodela polova mnogo više jednaka od naše u IT-u. Dakle, nije trudničko toliki problem a pogotovo ne za kompanije koje posluju sa ogromnim profitima kakav je slučaj u IT-u.&lt;/p&gt;
+
+&lt;p&gt;Zanimljivo je to i da organizacija Girls Who Code je objavila izveštaj gde kaže da je većina devojaka u ranom detinjstvu zainteresovano za STEM oblasti (science, engineering, technology and math). Tamo negde početkom srednje škole to interesovanje spadne pa na fakultetu spadne još više. Dakle, nije manjak devojaka zato što je IT “muški posao”. Kako i može biti muški posao ako ti se posao svodi na razmišljanje i pisanje programskog koda, ponekad i dokumentacije i testiranje. Nigde nema zavrtanja, okretanja i sl (pričam za softver koji se razvija u većini kompanija). Dakle, način rada se sasvim poklapa sa, recimo, ekonomistom. Taj ekonomista isto nešto kuca na računaru, napiše neki izveštaj i to je to.&lt;/p&gt;
+
+&lt;p&gt;Dakle problem je negde drugde, možda je problem u kulturi koju smo sagradili? A jeste sad, zašto ne može slika Star Wars-a da bude na zidu kancelarije??? Ne mislim na taj deo kulture iako ima i onih “pametnih” koji samtraju da je razlog što devojke ne biraju IT
+za budduće zanimanje taj što “učionice nisu prilagođene ženama”. Takve u poseban krug pakla.&lt;/p&gt;
+
+&lt;p&gt;Prvo, kulturu smo sagradili takvu da odbijamo žene i to mitom o kontinuiranom učenju. 
+Koliko god težili tome, mi smo daleko od civilizacije kakvu zamišljamo. I u Americi i Kanadi nije ništa bolje. I danas se od žene očekuje da skuva i čuva dete. Ako neće da kuva, onda bar da čuva dete. Jel to suviše konzervativno? Pa jeste al šta ćeš. E sada, kada toj ženi kažete da pored toga što se od nje očekuje da čuva dete (što nije ni malo jednostavno), vi joj kažete i da celog života mora da 
+uči kako bi zadržala svoj posao (i time prehranila svoju porodicu), ona će omdah da razmišlja o alternativama. E sada se postavlja
+pitanje, kako to da se samo u IT sektoru diže tolika fama oko ovoga? Pa diže se jer ljudi u IT-u očigledno žele da sebe predstave
+kao nešto najbolje što je ovaj svet imao. Zamisli ti to, pa oni uče celog života kako bi opstali na tržištu! Da je ovo glupo pokazuje
+činjenica da se i dan danas koriste programski jezici napravljeni pre 20-30 godina. Paradigme programiranja su recimo još starije čak i do 50 godina! Arhitektura se nije promenila od nastanka iste (bilo je tu par odskakanja al danas se ustalilo na Von Nojmanovoj arhitekturi). Pa čak i kompanije za koje kažemo da su inovativne nisu baš inovativne. Recimo imate Google Drive koji je našminkani FTP (o ovome ide poseban tekst, zasluženi hejt). Dakle, o kakvom vi učenju pričate kada se ništa novo i nema naučiti a da je značajno drugačije od onoga što već znamo? E ovo su smislili ljudi koji su očigledno imali pogrešno obrazovanje u računarstvu i koji su stekli utisak da svaka nova tehnologija i jeste zaista nova. To što nisu sposobni da uvide obrazac i paradigmu, to je njihov problem i to će nnjih koštati posla a ne ove koji ne uče ništa. Ne kažem da ne treba raditi na sebi, samo kažem da preterano insistiranje na nečemu što se i ne razlikuje značajno od drugih industrija nema smisla.&lt;/p&gt;
+
+&lt;p&gt;Podatak da su žene bolje u formalnom obrazovanju pokazuje i da, kada dobiju sistem i jasna pravila žene u većem broju biraju određenu odluku, U formalnom obrazovanju se zna plan i program, imaju standardi, imaju principi i načini merenja. E sada, pokušajte da pitate nekog programera ovo: “Koji je jezik najbolji za početnike?”. Sada uzmete kokice i posmatrate svađu njih 5 koji se raspravljaju između C, C++, Python, Java ili PHP. Posle 3 sata odlične predstave koja više liči na rijaliti, sa donešenom odlukom da učite Algol (common ground svega navedenog jbg), postavljate pitanje koji editor da koristite. U tom trenutku se javlja Vim, Emacs, Visual Studio i po neki XCode (jer je Epl zajebao stvar, jbg). Mi ni ne znamo kako da uputimo te eventualne devojke šta da rade. Muškarci se tu snalaze jer nekako su 
+od malih nogu naviknuti na haos. Naviknuti da je nešto prljavo i umazano i po mogućstvu pokvareno. Ako nije pokvareno, pokvarićemo da bismo posle imali opravdanje da popravljamo. E nama je sada industrija i prljava i pokvarena i u tom haosu svako vuče na svoju stranu. Ako je dovlačenje devojaka motiv da popravimo sve to, onda je to super. Ako nećemo devojke, nemamo ni motiv. Ako nećemo ovo popravljati uskoro ćemo imati još veći haos i sve tako dok neko ne napravi program koji će da pobije stadion a za koji nećemo znati kako se desilo.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 09 Oct 2017 22:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/girls/tech/opinion/2017/10/09/tech.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/girls/tech/opinion/2017/10/09/tech.html</guid>
+        
+        
+        <category>girls</category>
+        
+        <category>tech</category>
+        
+        <category>opinion</category>
+        
+      </item>
+    
+      <item>
+        <title>Introducing Mako - small but rich organization tool which breaks UNIX philosophy</title>
+        <description>&lt;p&gt;&lt;img src=&quot;/images/mako.png&quot; alt=&quot;Mako screenshot&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In the past few months I have been developing my own tool for managing tasks, schedules and To-Do lists. 
+The main reasong I decided to develop my own tool instead of using available tools is simple - I haven’t found any tool which 
+has all-in-one setup and works on Linux, from CLI and has sync to some cloud. There’s additional thing, I am strong believer in privacy of individual’s data so I do not trust other services enough to upload my organizational data to their cloud systems. So I decided to make a tool which will be able to keep data in the cloud but keep it safe too. This is not implemented yet in Mako but I am working on that. Catch is to use encryption which is done on your computer and then upload encrypted data. Since Mako is open source, it is trusted that is is really on the client side.&lt;/p&gt;
+
+&lt;p&gt;So what is Mako and what it does?&lt;/p&gt;
+
+&lt;p&gt;Mako is a tool for keeping track of your tasks, To-Do lists, weekly schedules. It can also measure various things such that
+you are able to keep track of progress on projects and it can generate monthly and quartely reports of how your time is spent.&lt;/p&gt;
+
+&lt;p&gt;Since I strongly believe in UNIX philosophy for hte most part of software world, I have to say that when this kind of tool
+is concerned, this philosophy doesn’t work for me so Mako breaks this philosophy of having specific tool for specific task.&lt;/p&gt;
+
+&lt;h1 id=&quot;installation&quot;&gt;Installation&lt;/h1&gt;
+
+&lt;p&gt;Mako can be installed using pip or can be downloaded on &lt;a href=&quot;https://github.com/fantastic001/Mako&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;if you decide to clone Git repository, just run setup.py install as root and there you are.&lt;/p&gt;
+
+&lt;h1 id=&quot;basic-usage&quot;&gt;Basic usage&lt;/h1&gt;
+
+&lt;p&gt;When you install Mako you are able to use it without any initialization part and configuration. So let’s exaplin basic 
+infrastructure how database is organized.&lt;/p&gt;
+
+&lt;p&gt;Set of tasks is divided into projects where every project has its subprojects. For example, you can have university project and 
+then subproject for every course you are attending on the university. So, in university project, you can have algebra subproject 
+and every task related to algebra on the university can be placed here. So let’s create our first project:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako projects add university
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;so now when you list your projects, it will show that you have one project:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ mako projects 
+Projects:
+_________________
+university
+~ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now it’s time to add some subprojects to our university project:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subprojects add algebra
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;now we can list subprojects of university project:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subprojects 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;When we have project and its subprojects we can add individual tasks to them:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra tasks add &quot;Read chapter 1&quot; 2017-08-21 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;First argument to task add option is desciption of the task, second is due date and third is estimated time to complete given task. This is important since Mako will calculate how much time you are spending on tasks and hoow this time relates to your expectations.&lt;/p&gt;
+
+&lt;p&gt;Now we cna list tasks:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra tasks
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;to increase spent time on a task, do the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra task 1 do 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;first you specify task index given by task list and after “do” you specify how much time did you spend doing particular task, this will increase spent time on a task every time you run “do” command.&lt;/p&gt;
+
+&lt;p&gt;To mark task as done:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra task 1 done 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now, when you list tasks, you will see that our task is green instead of red which means it is marked as done.&lt;/p&gt;
+
+&lt;h1 id=&quot;getting-help&quot;&gt;Getting help&lt;/h1&gt;
+
+&lt;p&gt;Since one blogpost is not enough to explain whole functionality and since I explained just a little bit of this tool, I suggest to run:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako help
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;to see what you can use.&lt;/p&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;This project is still in development and in the moment of writing this article, there is no documentation. Next steps are 
+fixing reported bugs and writing documentation as well as implementing additional features which will be concerned with DropBox sync.&lt;/p&gt;
+
+&lt;p&gt;In the future, I plan implementing Android app and iOS app as well.&lt;/p&gt;
+
+&lt;p&gt;If you are interested in development, writing documentation or just want to report bug, please contact me via email or 
+fork project on GitHub and send pull requests.&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 29 Jul 2017 23:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/organization/mako/2017/07/29/mako.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/organization/mako/2017/07/29/mako.html</guid>
+        
+        
+        <category>organization</category>
+        
+        <category>mako</category>
+        
+      </item>
+    
+      <item>
+        <title>Git - kako se koristi?</title>
+        <description>&lt;h1 id=&quot;uvod&quot;&gt;Uvod&lt;/h1&gt;
+
+&lt;p&gt;Tokom razvoja softvera često imamo potrebu da razvoj podelimo na više ljudi. Ovde nastaju problemi sinhronizacije kao i problem kontrole koje su se izmene desile tokom razvoja. Pored ovoga, često se dešava da želimo da se vratimo na prethodnu verziju. Sve ove probleme rešava version control system.&lt;/p&gt;
+
+&lt;p&gt;Sistem za kontrolu verzija nam služi da vodimo evidenciju o izmenama, da sinhronizujemo rad na softveru u slučaju kada se softver razvija od strane tima itd. Iako je namenjen za timove, sistem za kontrolu verzija se često koristi i za slučajeve kada se razvoj obavlja samo od strane jedne osobe jer pruža lak način povratka na prethodne verzije.&lt;/p&gt;
+
+&lt;p&gt;Sistemi za kontrolu verzija funkcionišu tako što postoji jedan repozitorijum gde se nalazi kod i na njemu se obavljaju sve izmene. Repozitorijum je često direktorijum gde se nalazi kod sa fajlovima.&lt;/p&gt;
+
+&lt;p&gt;Po načinu funkcionisanja, sistemi za kontrolu verzija mogu biti centralizovani ili distribuirani. Centralizovani sistemi funkcionišu tako što imamo centralni repozitorijum gde svaki član tima dodaje svoje izmene i sve se dešava na tom centralnom repozitorijumu. Distribuirani sistemi funkcionišu tako što 
+svaki član tima ima svoj repozitorijum i tim funkcioniše tako što se repozitorijumi svakog člana tima
+sinhronizuju međusobno.&lt;/p&gt;
+
+&lt;p&gt;Centralizovani sistemi imaju taj problem što prilikom kvara na serveru gde se nalazi repozitorijum, člaovi tima ne mogu da rade na razvoju. Kod distribuiranih sistema se ovaj problem rešava upravo time što svako ima svoju lokalnu verziju repozitorijuma.&lt;/p&gt;
+
+&lt;h1 id=&quot;git&quot;&gt;Git&lt;/h1&gt;
+
+&lt;p&gt;Git je sistem za kontrolu verzija koji je slobodan i otvorenog koda (open source). Razvijen je za potrebe razvoja Linuxa i razvio ga je tvorac Linuxa Linus Torvalds. Git je distribuirani sistem što znači da poseduje sve prednosti takvih sistema koje su pomenute iznad. Git je sam po sebi konzolni alat ali 
+postoje softveri koji omogućavaju upotrebu Gita upotrebom grafičkih alata. Radi na Linuxu, Windowsu i OSX a čak postoje i verzije za Android.&lt;/p&gt;
+
+&lt;h1 id=&quot;inicijalizacija-repozitorijuma&quot;&gt;Inicijalizacija repozitorijuma&lt;/h1&gt;
+
+&lt;p&gt;Recimo da \elimo da napravimo naš repozitorijum lokalno, ovo radimo tako što prvo napravimo direktorijum gde ćemo držati naš kod a zatim inicijalizujemo git repozitorijum u njemu.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir repo 
+cd repo 
+git init
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Sada, za svaku promenu u kodu će git beležiti ko j je napravio. Zbog ovoga je važno da podesimo
+naše ime i adresu elektronske pošte koja će se pokazati u listi izmena.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git config --global user.name &quot;Pera Perić&quot;
+git config --global user.email nasemail@host.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;operacije-nad-repozitorijumom&quot;&gt;Operacije nad repozitorijumom&lt;/h1&gt;
+
+&lt;p&gt;Sada kada smo inicijalizovali naš repozitorijum i relki git-u ko smo i koji nam je mejl kako bi on znao da zabeleži ispravno ko je uradio određenu izmenu, sada možemo da krenemo sa razvojem softvera.&lt;/p&gt;
+
+&lt;h2 id=&quot;dodavanje-fajlova&quot;&gt;Dodavanje fajlova&lt;/h2&gt;
+
+&lt;p&gt;Za početak, treba naglasiti da ako napravimo fajl u našem direktorijumu gde nam je kod, to ne znači da je taj fajl dodat i u repozitorijum. Da dodamo fajl u repozitorijum, koristimo sledeću komandu:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git add imefajla
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Sada je fajl dodat u repozitorijum. Isto tako, svaki put kad izmenimo fajl, ako želimo da git prepozna izmene, moramo ga dodati na isti način. Za ovo postoji prečica koju ćemo pomenuti kasnije.&lt;/p&gt;
+
+&lt;h2 id=&quot;snimanje-izmena&quot;&gt;Snimanje izmena&lt;/h2&gt;
+
+&lt;p&gt;Kada uradimo izmene i kada ih dodamo na repozitorijum sa git add, potrebno je da ih snimimo (komitujemo). Prilikom snimanja izmena, treba da unesemo poruku koja opisuje datu izmenu, na primer ovako:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git commit -m &quot;Popravljen bug #67867&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ako smo dodali fajlove u repozitorijum, nema potrebe da izmene ponovo dodajemo sa git add već možemo da ih automatski dodamo prosleđivanjem opcije -a u commit komandu:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git commit -a -m &quot;Ispravljen bug #67776&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Isto tako, ako zaboravimo da izmenimo nešto a deo je nekog komita, možemo tu izmenu dodati na poslednji komit sa opcijom –amend&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git commit -a --amend
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;pregled-izmena-i-diff&quot;&gt;Pregled izmena i diff&lt;/h2&gt;
+
+&lt;p&gt;Sve izmene koje su se desile možemo pregledati sa git log&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git log 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;a ako želimo da vidimo šta je izmenjeno za dati komit, koristimo git diff&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git diff heš-komita 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ako želimo da obrišemo nekomitovane promene, koristimo:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git reset --hard 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Da obrišemo poslednji komit i vratimo se na prethodni:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git reset --hard HEAD~1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;grananje&quot;&gt;Grananje&lt;/h2&gt;
+
+&lt;p&gt;Grananje se upotrebljava kada je potrebno razvijati feature nezavisno od ostalih ili kada se razvijaju dva feature-a nezavisno. Može da posluži i ako želimo da dati problem rešimo na više načina pa da vidimo koji se metod pokazuje bolje. U tom slučaju jednu granu ostavljamo a drugu brišemo. Grananje funkcioniše tako šro razvoj razdvojimo na grane i svaka ima svoju istoriju izmena, posle granu spajamo u glavnu granu (master).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://redstack.files.wordpress.com/2013/05/version-control.png?w=640&amp;amp;h=238&quot; alt=&quot;Prikaz grananja&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Novu granu pravimo ovako:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout -b imenovegrane 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ovo će napraviti novu granu i prebaciti se na nju. Sada su sve buduće izmene snimaju na novu granu, da menjamo granu, koristimo git checkout&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout grana
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Glavna grana se zove master pa da se vratimo na nju, radimo:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout master 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Da sve izmene spojimo sa glavnom granom, moramo da uradimo git merge, prvo, pređemo na master granu (ili u neku drugu gde želimo da uradimo spajanje)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout master 
+git merge grana 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Da obrišemo granu:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git branch -d grana 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;dobre-prakse&quot;&gt;Dobre prakse&lt;/h1&gt;
+
+&lt;p&gt;Tokom vremena, nastao je dobar model kako organizovati grane i razvoj softvera. Ovo nije must-to-do 
+ali se pokazuje kao jako koristan metod.&lt;/p&gt;
+
+&lt;p&gt;Prvo, master grana služi za stabilnu verziju softvera. U njoj se uvek nalazi stabilna verzija softvera. Druga grana je dev u kojoj se nalazi trenutna razvojna verzija softvera. Za svaku novu stavku ili komponentu koju treba implementirati, potrebno je napraviti specijalnu granu za tu stavku. Na primer, ako želimo da implementiramo novu komponentu u GUI-u, recimo iscrtavanje statističkih podataka u nekom prozoru, napravimo granu graphing iz dev grane. Na tome radimo neko vreme i onda radimo merge u dev granu. Kada sve istestiramo i spremni smo da objavimo novu stabilnu verziju, radimo merge dev grane u master. U ovom trenutkune sme biti grana za dodatne stavke. Kada uradimo merge u master, obavezno kreiramo tag da obeležimo novu verziju:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout master 
+git merge dev 
+git tag 2.0 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;rad-sa-remote-serverom&quot;&gt;Rad sa remote serverom&lt;/h1&gt;
+
+&lt;p&gt;Iako je git distribuirani sistem, ;esto imamo potrebu da imamo i neki centralni repozitorijum gde je uvek sve up-to-date. Za ovo možemo koristiti git server i to:&lt;/p&gt;
+
+&lt;p&gt;da kloniramo repozitorijum sa remote servera, koristimo git clone&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone adresa-repozitorijuma 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;da uradimo update na lokalni repozitorijum koji je klon sa remote servera:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git pull 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;da odradimo update konkretne grane sa servera&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git pull grana 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;da pošaljemo sve izmene koje smo napravili na server:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git push 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;ovo će poslati izmene na master granu, ako želimo poslati izmene na neku drugu granu:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git push grana 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Postoje i servisi koji pružaju usluge git servera za free ili određenu svotu novca u zavisnosti od potreba, na primer GitHub, GitLab itd…&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 04 Jul 2017 14:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/git/2017/07/04/git.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/git/2017/07/04/git.html</guid>
+        
+        
+        <category>git</category>
+        
+      </item>
     
       <item>
         <title>Jedna greška koju pravimo pri donošenju odluka</title>
@@ -414,477 +971,6 @@ sa tim hešom i onda u toj maloj listi nađemo osobu koja nas interesuje.&lt;/p&
         <category>algorithms</category>
         
         <category>data-structures</category>
-        
-      </item>
-    
-      <item>
-        <title>SSH reversni tunel</title>
-        <description>&lt;p&gt;Ovaj članak objašnjava kako podesiti reversni SSh tunel i time omogućiti forvardovanje portova preko mreže. Ovo je 
-izuzetno korisno iz dva razloga:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Enkripcija neenkriptovanog protokola&lt;/li&gt;
-  &lt;li&gt;Zaobilaženje NAT-a&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Uzmimo za primer da želimo da pošaljemo poruku računaru A sa računara B. Računar A je iza NAT-a koji brani sve konekcije koje počinju sa porukom od B do A ali ne rani konekcije koje su inicijalizovane sa porukom od A do B.&lt;/p&gt;
-
-&lt;p&gt;Ovo se rešava tako što se računaru B od računara A pristupi preko SSH i uradi se mapiranje portova.&lt;/p&gt;
-
-&lt;p&gt;Primer ovoga je dat sledećom linijom:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh -fN -R 7000:localhost:50 username@B-ip
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Sada sve što se pošalje na port 7000 na računaru B, biće prosleđeno računaru A na port 50.&lt;/p&gt;
-
-&lt;p&gt;Na primer, da omogućimo SSh konekciju na računar A na port 22 sa porta 7000 možemo uraditi:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh -fN -R 7000:localhost:22 username@B-ip
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;I sada na računaru B treba izvršiti&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh -p 22 username@localhost
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Pored svega ovoga, treba obratiti pažnju da li je mapiranje portova preko SSH odobreno u sshd.conf.&lt;/p&gt;
-
-&lt;p&gt;Ovim putem zaobilazimo NAT + dobijamo enkriptovanu komunikaciju.&lt;/p&gt;
-</description>
-        <pubDate>Thu, 11 May 2017 00:15:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/ssh/networking/2017/05/10/ssh-tunnel.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/ssh/networking/2017/05/10/ssh-tunnel.html</guid>
-        
-        
-        <category>ssh</category>
-        
-        <category>networking</category>
-        
-      </item>
-    
-      <item>
-        <title>Neke strukture podataka - hip</title>
-        <description>&lt;p&gt;Hip je struktura podataka koja nam omogućava da brzo i lako dođemo do maksimalnog elementa. Često se predstavlja kao stablo 
-zbog lakšeg objašnjavanja ali se tokom implementacije koristi niz. Hip se predstavlja kao stablo na sledeći način: za svaki čvor, njegova deca su uvek manja od tog čvora. Ovakva reprezentacija podataka nam omogućava da nam na vrhu stabla (korenu stabla) uvek bude najveći element. Slično, možemo i obrnuti situaciju, da za svaki čvor su njegova deca manja od tog čvora. U ovom slučaju dobijamo strukturu
-gde nam je na vrhu uvek najmanji element. U implementaciji, za izvedbu hipa koristimo niz tako da nam element a(i) bude čvor a elementi 
-a(2i+1) i a(2i + 2) su njegova deca. Isto tako, ako imamo čvor a(i) onda njegovom roditelju pristupamo kao elementu a((i-1)/2).&lt;/p&gt;
-
-&lt;p&gt;Hip nam omogućava dodavanje elemenata u O(n log n) vremenu kao i brisanje u O(n log n) vremenu. Ipak, ako želimo najveći (najmanji) element onda to možemo dobiti u O(1) vremenu, mnogo brže nego u listi gde moramo proći kroz celu listu da bismo našli najveći element. 
-U hipu da bismo našli najveći element, dovoljno je da pristupimo njegovom čvoru, tačnije elementu a(0) jer znamo da su svi ostali sigurno manji od njega.&lt;/p&gt;
-
-&lt;p&gt;Kako koristimo niz da u njemu čuvamo naše podatke, ovo znači da od bilo kog niza možemo napraviti hip. Kako se ovo izvodi? Pretpostavimo da želimo da napravimo hip u nizu od indeksa i pa do kraja. Ovo radimo na sledeći način:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Vidimo koji je najveći element od elemenata a(i), a(2i) i a(2i+1), uzmemo njegov indeks i nazovemo ga j&lt;/li&gt;
-  &lt;li&gt;zamenimo elemente na indeksima i i j&lt;/li&gt;
-  &lt;li&gt;pozovemo funkciju za izradu hipa rekurzivno za dati niz sa početnim indeksom j&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Da od celog niza napravimo hip, potrebno je da krenemo od n/2-tog elementa i sve do početka niza pozivamo funkciju za izradu hipa.&lt;/p&gt;
-
-&lt;p&gt;U pseudokodu bi to izgledalo ovako:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func max_heapify(A, i):
-	l,r = 2*i, 2*i+1
-	m = max(A(i), A(l), A(r))
-	j = 0 
-	if A(i) = max: j = i
-	if A(l) = max: j = l
-	if A(r) = max: j = r
-	swap(A(i), A(j))
-	max_heapify(A, j)
-
-func build_heap(A):
-	n = A.size 
-	for i=n/2 downto 1:
-		max_heapify(A, i)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Funkcija za određivanje maksimalnog elementa bi onda u tom slučaju bila ovako:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func maximum(A):
-	return A(1)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Pored toga, imamo u funkciju za brisanje maksimalnog elementa:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func max_extract(A):
-	max = A(1)
-	n = A.size 
-	swap(A(1), A(n))
-	A.size = A.size - 1
-	max_heapify(A, 1)
-	return max
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;za ubacivanje elementa u hip:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func insert(A, x):
-	A.size = A.size + 1
-	A(A.size) = x
-	i = A.size
-	while i&amp;gt;1 and A(i/2) &amp;lt; A(i):
-		swap(A(i/2), A(i))
-		i = i/2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Dakle ova funkcija ubaci element na dno hipa i podiže ga gore sve dok mu je trenutni roditelj manji od datog elementa.&lt;/p&gt;
-
-&lt;p&gt;Sada e može lako implementirati i jedan algoritam za sortiranje koji je baziran na upotrebi hipa (heapsort). On se svodi na sledeće:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Želimo da sortiramo niz A&lt;/li&gt;
-  &lt;li&gt;Napravimo niz B koji će nam biti rezultat sortiranja&lt;/li&gt;
-  &lt;li&gt;Napravimo hip od niza A(1…n)&lt;/li&gt;
-  &lt;li&gt;radimo extract sve dok ne ispraznimo hip A, maksimalne elemente ubacujemo u niz B&lt;/li&gt;
-&lt;/ol&gt;
-
-</description>
-        <pubDate>Wed, 10 May 2017 23:00:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-heap.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-heap.html</guid>
-        
-        
-        <category>algorithms</category>
-        
-        <category>data-structures</category>
-        
-      </item>
-    
-      <item>
-        <title>Neke strukture podataka</title>
-        <description>&lt;p&gt;U ovom članku ću dati pregled nekih struktura podataka čije razumevanje je dosta važno za razumevanje algoritama i uopšteno za razumevanje dosta principa u računarstvu. Treba napomenuti da je dosta nabrojanih struktura opisano &lt;a href=&quot;https://github.com/fantastic001/alg-implementations&quot;&gt;ovde&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Za svaku strukturu je bitno znati koliko vremenski “koštaju” određene operacije. Ovo znači koliko vremenski traje određena implementacija da se izvrši. Naravno, vreme izvršavanja zavisi od mnogih faktora. Na primer, ako se pored naše aplikacije izvršava još neka aplikacija sasvim je jasno da CU neće operaciju izvršiti jednako brzo kao i kada bi se samo ta operacija izvršavala. Zbog ovoga, za opisivanje vremena se koristi &lt;a href=&quot;https://en.wikipedia.org/wiki/Big_O_notation&quot;&gt;O-notacija&lt;/a&gt;..&lt;/p&gt;
-
-&lt;p&gt;Pa da krenemo….&lt;/p&gt;
-
-&lt;h2 id=&quot;lista&quot;&gt;Lista&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://en.wikipedia.org/wiki/File:Doubly-linked-list.svg&quot; alt=&quot;Lista&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Lista se sadrži od struktura (čvorova) gde svaki čvor ima u sebi vrednost koju čuva i pokazivač na sledeći čvor u listi. Pored ovoga, čvor može imati i pokazivač na prethodni čvor u listi i tada je lista dvostruko povezana.&lt;/p&gt;
-
-&lt;p&gt;Implementacija čvora u programskom jeziku C bi izgledala ovako:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef int TYPE;
-typedef struct node_st 
-{
-	TYPE val; 
-	node_st *next;
-	node_st* prev; // za dvostruko povezanu listu 
-} node;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Ovde smo koristili celobrojni tip kao primer tipa koju vrednost čvora može da ima. U ovom primeru je lista zapravo lista celobrojnih elemenata.&lt;/p&gt;
-
-&lt;p&gt;Listta podržava dodavanje elementa na kraj u O(1) vremenu, iteraciju kroz celu strukturu i pristupanje određenom 
-elementu u O(n) vremenu. Brisanje elementa se radi u O(1) ako nam je dat pokazivač na element koji treba da obrišemo
-ili u slučaju jednostruko povezane liste, pokazivač na prethodnika elementa koji treba obrisati.&lt;/p&gt;
-
-&lt;h2 id=&quot;stek&quot;&gt;Stek&lt;/h2&gt;
-
-&lt;p&gt;Ova struktura ima u sebi pokazivač na gornji element i podržava samo tri operacije: push, pop i top.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;push: dodavanje elementa na stek;&lt;/li&gt;
-  &lt;li&gt;pop: brisanje elementa sa vrha steka i;&lt;/li&gt;
-  &lt;li&gt;top: pristupanje elementu sa vrha steka.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Sve nabrojane operacije je moguće realizovati u O(1) vremenu.&lt;/p&gt;
-
-&lt;h2 id=&quot;red&quot;&gt;Red&lt;/h2&gt;
-
-&lt;p&gt;Ova struktura podržava dodavanje elemenata na početak reda, uklanjanje elemenata sa kraja reda i pristup elementima na krajevima i sve ove operacije se realizuju u O(1) vremenu.&lt;/p&gt;
-
-&lt;p&gt;I stek i red se mogu implementirati preko lista.&lt;/p&gt;
-
-&lt;p&gt;Pored ovih struktura postoje i još neke dosta značajne koje su zauzele ceo jedan tekst a to su: binarno stablo pretrage, hip, heš tabela i graf.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 10 May 2017 19:15:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures.html</guid>
-        
-        
-        <category>algorithms</category>
-        
-        <category>data-structures</category>
-        
-      </item>
-    
-      <item>
-        <title>ScaPy - analiza protokola upotrebom Python-a</title>
-        <description>&lt;p&gt;ScaPy je biblioteka za Python koja pruža sastavljanje paketa od “parčića”. Na primer, možemo IP deo spojiti sa TCP delom i na kraju konkretan sadržaj paketa i to poslati serveru. Pored ovoga, ova biblioteka nam pruža i mogućnost “slušanja”
-dolazećih poruka i odgovaranje na njih.&lt;/p&gt;
-
-&lt;p&gt;U nastavku teksta je dato nekoliko primera upotrebe biblioteke.&lt;/p&gt;
-
-&lt;h2 id=&quot;uključivanje-paketa&quot;&gt;Uključivanje paketa&lt;/h2&gt;
-
-&lt;p&gt;pre svega mala napomena, da bismo koristili naredne funkcionalnosti, moramo imati administratorske privilegije. Možda ovo 
-može da se izbegne na neki način ali meni nije uspelo, ako neko uspe, napišite komentar. :)&lt;/p&gt;
-
-&lt;p&gt;Uključivanje biblioteke se radi na sledeći način:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from scapy.all import * 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;sastavljanje-paketa&quot;&gt;Sastavljanje paketa&lt;/h2&gt;
-
-&lt;p&gt;Ako želimo da sastavimo neki paket koji u svom IP delu sadrži adresu odredišta, u svom TCP delu sadrži odredišni port 
-sa sadržj datom kao string, to možemo učiniti na sledeći način:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pkt = IP(dst=&quot;192.168.4.5&quot;)/TCP(dport=55)/&quot;Poruka&quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Ovaj paket možemo poslati na sledeći način&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;send(pkt)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;a ako želimo da pošaljemo paket i da odmah dobijemo odgovor, to možemo ovako:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ans, unans = sr(pkt)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;promenljiva ans sadrži listu odgovora od servera.&lt;/p&gt;
-
-&lt;h2 id=&quot;nadzor-protoka&quot;&gt;Nadzor protoka&lt;/h2&gt;
-
-&lt;p&gt;Ako želimo da vršimo nadzor protoka, možemo koristiti funkciju sniff. Prvo implementiramo callback funkciju koja će se izvršiti svaki put kad željeni paket prođe filter odnosno kad stigne do nas.&lt;/p&gt;
-
-&lt;p&gt;Naredni primer ilustruje nadzor svih ARP paketa:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def arp_monitor_callback(pkt):
-    if ARP in pkt and pkt[ARP].op in (1,2): #who-has or is-at
-        op = &quot;&quot;
-        if pkt[ARP].op == 1: 
-            op = &quot;Who has &quot;
-        else:
-            op = &quot;Is at&quot;
-        return op + pkt.sprintf(&quot;%ARP.hwsrc% %ARP.psrc%&quot;)
-
-sniff(prn=arp_monitor_callback, filter=&quot;arp&quot;, store=0)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Drugi primer ilustruje nadzor svega na portu 80&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def tcp_func(pkt):
-    if TCP in pkt and pkt[TCP].dport == 80:
-        return str(pkt)
-
-sniff(prn=tcp_func, filter=&quot;tcp&quot;, store=0)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;za-više&quot;&gt;Za više&lt;/h2&gt;
-
-&lt;p&gt;ScaPy ima jako dobru dokumentaciju pa tako može se dosta primera videti. Ovde je obrađena najtrivijalnija upotreba. 
-Ipak, ovo je meni bilo dovoljno da radi ARP poisoning recimo. Happy coding.&lt;/p&gt;
-</description>
-        <pubDate>Mon, 08 May 2017 18:15:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/python/2017/05/08/scapy.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/python/2017/05/08/scapy.html</guid>
-        
-        
-        <category>python</category>
-        
-      </item>
-    
-      <item>
-        <title>Kako izgleda rad na projektu u IS Petnica na seminaru računarstva - smernice za nove polaznike</title>
-        <description>&lt;p&gt;&lt;img src=&quot;http://fantastic001.github.io/images/petnica.jpg&quot; alt=&quot;IS Petnica&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Za 4 godine koliko sam proveo u &lt;a href=&quot;http://www.petnica.rs&quot;&gt;Istraživačkoj Stanici “Petnica”&lt;/a&gt; kao polaznik seminara računarstva, imao sam 
-priliku da iskusim kako je to raditi na naučno-istraživačkom projektu. Ovo mi je mnogo značilo da naučim dosta važne stvari i o računarstvu ali i o tome kako da se organizujem, kako da planiram, kako da završim projekat do kraja, kako da obradim rezultate i na kraju kako da te iste rezultate predstavim drugima.&lt;/p&gt;
-
-&lt;p&gt;U Petnici se polaznici dele na mlađe i starije, ovi mlađi su polaznici koji su tek prvi put u Petnici a stariji su svi ostali (oni koji su već prisustvovali nekom letnjem seminaru u ISP). Mlađi polaznici na seminarima slušaju predavanja, rade u laboratorijama, rade konkretne male problemčiće iz oblasti kojom se bave dok stariji rade na konkretnim istraživačkim projektima. Od starijih polaznika se očekuje da osmisle svoj predlog projekta, organizuju rad na projektu tokom cele godine i da kasnije, ako je projekat završen, da svoje rezultate
-predstave široj publici na naučnoj konferenciji. Kao neko ko ima 2 objavljena rada u zbornicima radova ISP (treći je na putu), mislim
-da mogu i da kažem nešto o tome kako sam ja to sve radio i šta bih preporučio mlađima da se pridržavaju. Tekst je namenjen 
-polaznicima računarstva ali dosta delova može da posluži i ostalim polaznicima sa drugih seminara a i svima ostalima koji nameravaju
-da se bave naukom ili da se upuste u izradu nekog projekta van ISP, kod kuće,  na fakultetu ili negde drugde.&lt;/p&gt;
-
-&lt;p&gt;Kao stariji polaznik sam često dobijao pitanja od mlađih o tome kako se radi projekat, šta da predlože itd. Zbog svega ovoga sam odlučio da napišem ovo ovde pa ako nekome bar delić bude koristan, odlično! Treba naglasiti da je tekst u većem delu moje lično iskustvo i moji lični stavovi pa ako se neko ne slaže, neka napiše u komentar ili pošalje mejl, vredi naučiti i čuti nešto novo.&lt;/p&gt;
-
-&lt;h2 id=&quot;odabir-projekta&quot;&gt;Odabir projekta&lt;/h2&gt;
-
-&lt;p&gt;Odabir projekta je prva faza i ona se obavlja prilikom prijave na seminar. Predlog projekta se šalje u sklopu dokumentacije prilikom
-konkurisanja na seminar kao stariji polaznik. Ovde je bitno napomenuti da taj predlog projekta koji se šalje u prijavi za seminar ne mora biti konačan. Predlog se dodatno izrađuje tokom zimskog seminara uz konsultacije sa rukovodiocem i saradnicima na seminaru. 
-Ipak, važno je taj predlog tokom prijavljivanja na seminar napisati što bolje, kako bi se na zimskom moglo diskutovati o konkretnoj izradi projekta bez gubljenja vremena na traženje novog projekta.&lt;/p&gt;
-
-&lt;p&gt;Ovde je pre svega važno biti svestan koji je cilj projekta i čime se Petnica bavi. Zbog ovoga, treba prvo da razmotrimo kog karaktera bi trebalo da bude projekat koji ćete izrađivati tokom godine.&lt;/p&gt;
-
-&lt;h1 id=&quot;naučni-metod&quot;&gt;Naučni metod&lt;/h1&gt;
-
-&lt;p&gt;Dakle, kao što joj i samo ime kaže, Petnica je naučno-istraživačka stanica. Ovo znači da se bavi edukacijom polaznika tako što ih uči 
-da zaključke donose na osnovu naučno prihvatljivih činjenica i na osnovu logike. Zbog ovoga se posebna pažnja posvećuje obrazovanju
-polaznika kako da dolaze do rezultata i saznanja upotrebom naučne metodologije.&lt;/p&gt;
-
-&lt;p&gt;Naučni metod, u svojoj najbazičnijoj formi, se svodi na tri faze:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Postavljanje hipoteze&lt;/li&gt;
-  &lt;li&gt;Izrada i obavljanje eksperimenta i implementacije&lt;/li&gt;
-  &lt;li&gt;Merenja i prezentacija rezultata sa zaključcima.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Za svaku fazu je namenjen poseban seminar: zimski, letnji i jesenji.&lt;/p&gt;
-
-&lt;p&gt;Odabir projekta se zapravo svodi na prvu fazu - postavljanje hipoteze.&lt;/p&gt;
-
-&lt;h1 id=&quot;naučni-metod-u-računarstvu&quot;&gt;Naučni metod u računarstvu&lt;/h1&gt;
-
-&lt;p&gt;Ako ovo sve deluje previše opširno, evo malo konkretnih primera. Računarstvo je nauka, isto kao i astronomija, fizika, psihologija, istorija… Dakle, metode se primenjuje i na ovu oblast kao i na svaku drugu.&lt;/p&gt;
-
-&lt;p&gt;Hipoteza može biti da će određeni metod da pokaže očekivane rezultate koje mi sami postavljamo. Taj metod je obično neki algoritam 
-koji smo sami smislili ili smo ga negde našli pa želimo da ga primenimo na način na koji ga do sada niko nije primenio. Takođe, možemo
-i kombinovati nekoliko postojećih algoritama ili modifikovati neki algoritam i onda meriti njegovu uspešnost u rešavanju problema.&lt;/p&gt;
-
-&lt;p&gt;Na primer, u mašinskom učenju možemo da merimo preciznost nekog algoritma za prepoznavanje određenih obrazaca. Ako se bavimo
-operativnim sistemima, možemo posmatrati kako određeni algoritmi za rukovanje procesima funkcionišu ili recimo kako najbolje 
-da organizujemo sistem datoteka (eng. file system) tako da HDD najmanje ima upisa/čitanja. Ako se bavimo primenom računara za numeričku
-simulaciju fizičkih sistema, možemo meriti preciznost određenog algoritma za numeričku aproksimaciju za određeni fizički fenomen ili 
-možemo meriti stabilnost fizičkog sistema upotrebom datog numeričkog algoritma. Ako se bavimo izradom novog jezika, možemo posmatrati
-kako se uz pomoć tog novog jezika rešavaju određeni problemi pa ga porediti sa postojećim jezicima. Možemo i da izrađujemo neku 
-novu arhitekturu računara sa ciljem da je primenimo na specifičan problem.&lt;/p&gt;
-
-&lt;p&gt;Zaključak je da za svaku oblast računarstva, imamo dosta stvari koje možemo da postavimo kao hipotezu i da nam to bude polazna tačka.&lt;/p&gt;
-
-&lt;p&gt;Kao što se već moglo primetiti iz primera, za svaku hipotezu nam treba referentna vrednost. Ne možemo reći da je nešto bolje ili lošije
-ako nemamo referentnu vrednost. Dakle, da bismo mogli da pričamo o nekom merenju, MORAMO znati sa čim to poredimo. Ako radimo neki nov
-algoritam i za njega nešto merimo, moramo znati šta radi neko postojeće rešenje. Rad koji daje vrednost nekog merenja za neki novi 
-algoritam a ne poredi ga sa nečim što nam je poznato - ne znači ništa!&lt;/p&gt;
-
-&lt;p&gt;Ne možete reći da je nešto dobro ili loše ako nemate sa čim da uporedite. Ako se ispostavi da je vaš algoritam lošiji od postojećeg, to je isto validan rad. Bolje rad sa prikazom novog, lošijeg algoritma nego rad sa prikazom algoritma za koji ne znamo kakav je - ne znamo ni da je loš ni da je dobar.&lt;/p&gt;
-
-&lt;p&gt;Dake, moramo imati nešto sa čim poredimo i moramo imati način kako da izmerimo šta nas zanima.&lt;/p&gt;
-
-&lt;p&gt;Merenje može biti bilo šta, na primer, preciznost prepoznavanja obrazaca u mašinskom učenju, odstupanje od tačne vrednosti kod numeričkih simulacija, brzina algoritma, broj linija koda kod novog jezika itd…&lt;/p&gt;
-
-&lt;h1 id=&quot;ali-kako-do-ideje-za-kul-projekat&quot;&gt;Ali ….kako do ideje za kul projekat?&lt;/h1&gt;
-
-&lt;p&gt;OK, sad znamo šta nam treba sve da imamo dobar predlog projekta ali još uvek ne znamo kako da dođemo na ideju. Do dobre ideje se ne 
-dolazi preko noći, nikad niko nije došao na kul ideju preko noći. Ne postoji lampica u glavi niti jabuka koja je Njutnu pala na glavu. Ideje se dobijaju kada se nečim već bavite, kada čitate svašta, kada pričate sa kolegama, sa prijateljima. Kada naiđete na problem koji vas nervira i želite da ga rešite i spremni ste da posvetite svoje vreme tom problemu i znate kako biste mogli da ga rešite i želite da 
-to proverite - to je ideja koju tražite.&lt;/p&gt;
-
-&lt;p&gt;Zbog ovoga, nabavite svesku i beležite svoje ideje. Ideje vam nastaju kad se najmanje nadate pa bi trebalo da budete spremni da ih “uhvatite”. Ideja vam može nastati tokom priče sa nekim asistentom, prijateljem, dok čitate nešto na netu, dok programirate već nešto. Beležite svoje ideje, trebaće vam.&lt;/p&gt;
-
-&lt;h2 id=&quot;teorija-teorija-i-teorija-i-teorija-i-&quot;&gt;Teorija, teorija i teorija i teorija i ……&lt;/h2&gt;
-
-&lt;p&gt;Ako bih bio upitan da kažem neki svoj najveći propust u Petnici, onda bi to definitivno bilo neposvećivanje dovoljno pažnje teoriji. 
-Teorija je izuzetno važna da razumete oblast i problem kojim se bavite i da kasnije lakše možete da isplanirate implementaciju
-projekta. Na kraju, kada budete pisali rad, poznavanje teorije će vam pomoći da tokom revizije ne budete vraćeni jer ste pogrešno 
-upotrebili terminologiju. Jeste smor, zanimljivije je kucati kod ali je jako važno pre implementacije razumeti teorijsku podlogu svega.&lt;/p&gt;
-
-&lt;p&gt;Ovo pre svega znači da je potrebno upoznavanje sa svom matematikom koja stoji iza svega, od linearne algebre do analize, od grafova do
-teorije grupa, sve što je relevantno za vaš problem koji rešavate, treba se upoznati sa tim. Ako se bavite mašinskim učenjem onda 
-ćete se baviti statistikom, verovatnoćom, linearnog algebrom, linearnog regresijom, linearnom klasifikacijom, neuronskim mrežama, Markovljijevim modelima itd.&lt;/p&gt;
-
-&lt;p&gt;Ako se bavite ispitivanjem numeričkih metoda za simulaciju određenog fenomena, onda će vam trebati prvo poznavanje kako se brojevi 
-čuvaju u računaru, kako se aproksimiraju funkcije, Tejlorov red, kako se aproksimira izvod ali će vam trebati i poznavanje konkretnog
-fenomena kojim se bavite kao i jednačina koje opisuju dati fenomen.&lt;/p&gt;
-
-&lt;p&gt;Ako se bavite izradom sopstvenog jezika, treba da znate za leksičku analizu, za abstraktno sintaksno stablo, možda i za neke algoritme 
-optimizacije koda itd.&lt;/p&gt;
-
-&lt;p&gt;Treba da pronađete dobru literaturu koja objašnjava potrebne teorijske koncepte kako biste kasnije lakše mogli da razumete radove 
-koji se bave konkretnim problemom kojim se i vi bavite.&lt;/p&gt;
-
-&lt;p&gt;Kada ste završili sa upoznavanje sa osnovnom potrebnom teorijom, na red dolazi istraživanje o postojećim rešenjima za vaš problem. Velika je verovatnoća da niste jedini koji pokušava da reši dati problem pa tako verovatno postoje već gotova rešenja za dati problem. U ovom
-koraku ćete verovatno pronaći dobre referentne metode sa kojima možete da poredite vaš metod. Radovi se mogu naći na raznim mestima, za računarstvo se radovi uglavnom vrlo lako nalaze na Internetu a moja preporuka za pretraživač je Gugl ili, još preciznije, &lt;a href=&quot;https://scholar.google.com/&quot;&gt;Google Scholar&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;implementacija&quot;&gt;Implementacija&lt;/h2&gt;
-
-&lt;p&gt;Sada kada imamo ideju šta hoćemo, treba i da to napravimo. U ovom delu izrade projekta mnogi projekti propadaju jer se ispostavi
-da ili imaju loše poznavanje teorije ili loše poznavanje programiranja. Kako smo teoriju rešili (I hope so), ostalo je da rešimo
-i ove “inženjerske” stvari. Pa da krenemo…&lt;/p&gt;
-
-&lt;h1 id=&quot;odabir-alata&quot;&gt;Odabir alata&lt;/h1&gt;
-
-&lt;p&gt;Prvi korak je odabir alata, dakle jezik i frejmvork.&lt;/p&gt;
-
-&lt;p&gt;Ovde je najbolje da uzmete nešto gde se snalazite, rad na projektu nije prilika da naučite novi jezik. Uzmite ono što vam radi 
-posao. Isto važi i za frejmvork s tim da ovde može biti izuzetak ako rešavate problem kojim se nikada do sada niste bavili
-pa koristite nešto što do sada nikada niste koristili. U tom slučaju, dobro treba iščitati dokumentaciju a ne površno koristit
-frejmvork. Ovde je jako bitno i obratiti pažnju na konvencije i terminologiju koju koristi frejmvork jer se može desiti da se ne 
-poklapa sa onim na šta ste navikli pa ćete morati da se prilagodite, bar dok čitate dokumentaciju.&lt;/p&gt;
-
-&lt;p&gt;Takođe je bitno naglasiti da ne bi trebalo suviše preterivati sa upotrebom više različitih alata i frejmvorkova. Keep it simple. 
-Računajte i da frejmvork može imati bag, ne uzimajte ga zdravo za gotovo. Trudite se da koristite proverene alate sa velikom 
-zajednicom i bogatom dokumentacijom.&lt;/p&gt;
-
-&lt;p&gt;Pre nego što krenete sa konkretnom izradom projekta, treba se prvo upoznati sa alatima. Pokušajte da napravite nešto sitno kako 
-biste se upoznali sa alatima i kako bi vam oni ušli “pod prste”.&lt;/p&gt;
-
-&lt;h1 id=&quot;izdizajniraj-sve&quot;&gt;Izdizajniraj sve&lt;/h1&gt;
-
-&lt;p&gt;Sada treba isplanirati konkretnu implementaciju. Napravite mali skicu kako želite da organizujete projekat i kod. Podelite sve u manje
-module i trudite se da moduli što manje zavise jedni od drugih. Trudite se da ovde što bolje uradite planiranje jer dobro planirane 
-i dobro izdizajnirane stvari rade bolje i lakše se kasnije modifikuju i nadograđuju.&lt;/p&gt;
-
-&lt;p&gt;Posao implementacije izdelite na male zadatke od kojih svaki traje najviše 2 sata. Usitnite sve u sitna crevca. Ovim postižete pre
-svega psihološki efekat da stalno napredujete jer ćete stalno čekirati nešto kao “done” i to će držati vašu motivaciju. Ima mnogo 
-tekstova na ovu emu i kako se radi estimacija vremena tako da možete to detaljnije da pročitate.&lt;/p&gt;
-
-&lt;h1 id=&quot;unit-testovi&quot;&gt;Unit testovi&lt;/h1&gt;
-
-&lt;p&gt;Ovo je jako važan deo. Unit testovi su delovi koda koji automatski testiraju pojedinačne funkcionalnosti modula vašeg projekta. 
-Ovim postižete da stalno možete testirati vaš kod kad napravite izmenu i da se to sve radi automatski. Na Internetu ima mnogo objašnjenja i primera kako se koriste i prave unit testovi. Ako radite u Pajtonu, pogledajte &lt;a href=&quot;https://docs.python.org/3.6/library/unittest.html&quot;&gt;ovo&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&quot;git-i-cmake&quot;&gt;Git i CMake&lt;/h1&gt;
-
-&lt;p&gt;Jako je važno da imate prostor za eksperimentisanje i mogućnost da se vratite na prethodno stanje kada nešto pokvarite. Zbog ovoga 
-je jako korisno da koristite neki sistem za verzionisanje kao što je &lt;a href=&quot;https://git-scm.com/&quot;&gt;Git&lt;/a&gt; a projekat možete da imate i na 
-&lt;a href=&quot;https://github.com/&quot;&gt;GitHabu&lt;/a&gt; kako biste osigurali, ako izgubite kod na vašem računaru, isti imate i onlajn. Pored ovoga, ako objavite kod kao open source, možete tražiti pomoć od drugih kolega i lako im proslediti link do vašeg projekta. Githab nudi i istem za prijavljivanje bagova, upravljanje zadacima kao i mesto za pisanje dokumentacije tako da vam i to može koristiti.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://cmake.org/&quot;&gt;CMake&lt;/a&gt; je sistem za automatizaciju kompajliranja vašeg projekta. Ima dosta mogućnosti kao što su i pokretanje testova, traženje potrebnih biblioteka da se linkuju sa programom koji se kompajlira, izrada man stranica iz izvornih fajlova za dokumentaciju, instalacija projekta na sistem itd. Jako korisno pa pogledajte, značiće vam.&lt;/p&gt;
-
-&lt;h2 id=&quot;pisanje-rada&quot;&gt;Pisanje rada&lt;/h2&gt;
-
-&lt;p&gt;U ovoj fazi već možete da predahnete, težak deo je završen. Sada je potrebno da rezultate vašeg istraživanja predstavite kroz rad 
-koji bi trebalo da bude objavljen u zborniku radova ISP.&lt;/p&gt;
-
-&lt;p&gt;Prvo je važno napisati naslov. Iako zvuči jednostavno, pisanje naslova može biti dosta zamarajuće jer je to prvo što će vaši budući čitaoci da vide. Ako taj naslov ne opisuje šta ste radili, može zbuniti buduće čitaoce rada. Sa druge strane, naslov ne treba da bude ni previše dugačak ni opširan jer to smara.&lt;/p&gt;
-
-&lt;p&gt;Dobar metod koji su meni saradnici u Petnici pokazali za pisanje naslova jeste da razmislite o tome koje su ključne reči koje opisuju vaš rad. Šta je ono za šta mislite da treba da istaknete? Kada to odredite, povežite to u jednu celinu i to je prva verzija naslova. Sada vidite šta tu fali i šta je suvišno i sve tako dok ne budete zadovoljni. Pitajte i kolege da vam pomognu.&lt;/p&gt;
-
-&lt;p&gt;Ostatak rada prvo organizujte. Organizujte sadržaj samog rada. Uvod bi trebalo da sadrži opis problema kao i dosadašnja rešenja. Pored ovoga, u uvod možete i uvesti neke teorijske napomene i terminologiju.&lt;/p&gt;
-
-&lt;p&gt;Metod je onaj deo koji ste vi radli tokom leta. To je ono šta ste radili. Ovde opišite detaljan pristup i kako ste uradili svaku stvar. Naravno, nema potrebe da pišete stvari koje nisu vezane za konkretno rešavanje problema. Nemojte da pišete kako ste koristili Git, Cmake, u koliko ste sati jeli i da li ste uopšte jeli i spavali. Pišite samo ono što je vezano za izradu konkretnog metoda koji se bavi rešavanjem problema koji ste opisali u uvodu.&lt;/p&gt;
-
-&lt;p&gt;U rezultatima i diskusiji treba navesti … rezultate. Dakle, grafici, primeri generisanog koda itd. 
-Rezultate merenja obavezno čuvajte u nekom sirovom formatu kao npr CSV jer se može desiti da vaši grafici nisu prikladni za zbornik
-radova pa će biti potrebna ponovna izrada grafika pa vam ponovo mogu zatrebati podaci.&lt;/p&gt;
-
-&lt;h2 id=&quot;za-kraj&quot;&gt;Za kraj&lt;/h2&gt;
-
-&lt;p&gt;Ovo je samo ukratko objašnjeno šta i kako se radi. Ponovo moram da naglasim da je sve ovo prikupljeno iz nekog mog ličnog iskustva. 
-Treba naglasiti da je najvažnije na kraju koliko ste naučili i koliko ste napredovali. Nemojte da vam cilj bude konferencija, neka vam cilj bude napredak vas samih. Cilj je da naučite nešto novo, da nešto otkrijete, da se družite i da uživate u radu. Kada ovo postavite kao cilj, konferencija je samo alat i usputna stanica. Ona vam služi da se dodatno isprobate u prezentovanju rada ljudima koji nisu iz
-vaše oblasti, da naučite da napravite poster i prezentaciju.&lt;/p&gt;
-
-&lt;p&gt;Sve u svemu, nadam se da će ovaj tekst bar malo pomoći u tome da dostignete vaš cilj i da naučite nešto bolje i da Petnica za va bude isto ono što je i za mene - mesto gde volim da odem i gde se osećam sjajno.&lt;/p&gt;
-</description>
-        <pubDate>Sat, 11 Mar 2017 22:15:00 +0100</pubDate>
-        <link>http://fantastic001.github.io/petnica/2017/03/11/isp-projekat-howto.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/petnica/2017/03/11/isp-projekat-howto.html</guid>
-        
-        
-        <category>petnica</category>
         
       </item>
     
