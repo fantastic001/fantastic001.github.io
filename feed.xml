@@ -6,8 +6,8 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 18 Dec 2017 03:22:33 +0100</pubDate>
-    <lastBuildDate>Mon, 18 Dec 2017 03:22:33 +0100</lastBuildDate>
+    <pubDate>Mon, 25 Dec 2017 03:25:45 +0100</pubDate>
+    <lastBuildDate>Mon, 25 Dec 2017 03:25:45 +0100</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
     
       <item>
@@ -155,14 +155,15 @@ do not copy anything. We can do this trick because immutability guarantees that 
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List* tail(List* l)
 {
-        if (l-&amp;gt;head == NULL) return create_list(NULL);
-        else return create_list(l-&amp;gt;head-&amp;gt;next);
+        return create_list(l-&amp;gt;head-&amp;gt;next);
 }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Here you can see tat we are checking is list empty by checkig is head pointing to NULL. Tail of empty list is empty list. 
-If list is not empty, we simply create new list which has head of next elemen of head of our given list.&lt;/p&gt;
+&lt;p&gt;If list is not empty, we simply create new list which has head of next elemen of head of our given list. 
+If list is empty, behavior of tail is not defined so we will end up with segmentation fault (we will try dereferencing NULL pointer).&lt;/p&gt;
+
+&lt;p&gt;For debugging purposes we will make print function.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void print(List* l)
 {
@@ -403,14 +404,221 @@ bstsort l = tolist (fromlist l EmptyNode)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;h1 id=&quot;future-article&quot;&gt;Future article&lt;/h1&gt;
+&lt;h1 id=&quot;monads&quot;&gt;Monads&lt;/h1&gt;
 
-&lt;p&gt;In the following article, I will explain monads and how they can be applied to make Haskell more IO-oriented such that we 
-can make useful apps.&lt;/p&gt;
+&lt;p&gt;In pure functional programming languages, you cannot change state. This is core concept and very powerful one. 
+The problem is that our real world needs functionality to change state. Computer architecture is built on idea to change state. 
+Even basic operations such as printing to console output require to change state (state of console in this example).&lt;/p&gt;
+
+&lt;p&gt;The way to change state in functional languages is by using monads. Monads are actually mathematical objects which are applied 
+to computer science.&lt;/p&gt;
+
+&lt;p&gt;Basically, monad is data type which “surrounds” another type with additional functionality. For every monad, we have to define 
+two functions: return and bind.&lt;/p&gt;
+
+&lt;p&gt;Monad wraps another, say, primitive type and adds additional functionality.&lt;/p&gt;
+
+&lt;p&gt;To implement monad, we need to implement two functions: return and bind&lt;/p&gt;
+
+&lt;p&gt;Function return takes our pure type and return wrapped type. By using this function, we can convert pure types to our wrapped 
+types which hold state.&lt;/p&gt;
+
+&lt;p&gt;When we have functions that take one type and return another, it ecomes impossible to do composition in standard way. We can
+solve this by using bind. Bind function takes our wrapped type and function whic takes pure type and returns wrapped type. Bind returns
+wrapped type and does following: unwraps our first argument and passes it to function, then “merges” result of a function 
+with passed argument and returns it. This is best illustrated wit simple example. Let’s make type Debuggable which is basically 
+integer with list of strings which represents debug info. We first make type Debuggable and then implement bind and ret. Other 
+functions are implemented the same way as inc which increases number by one and stores message in a log.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data Debuggable = Debuggable (Int, [[Char]]) deriving (Show)
+
+
+ret :: Int -&amp;gt; Debuggable 
+ret x = Debuggable (x, [])
+
+bind :: Debuggable -&amp;gt; (Int -&amp;gt; Debuggable) -&amp;gt; Debuggable
+bind x f = Debuggable (y, z ++ b) where Debuggable (a,b) = x 
+                                        Debuggable (y,z) = f(a)
+
+inc :: Int -&amp;gt; Debuggable  
+inc x = Debuggable (x+1, [&quot;Number increased by one&quot;])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Note how we do unwrapping and wrapping in bind. There we return our result with concatenated list of debug info from a given parameter
+and additional info provided by calling function.&lt;/p&gt;
+
+&lt;p&gt;We arederiving Show here to make our type printable on console. Now we can do something like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;*Main&amp;gt; ret 5 
+Debuggable (5,[])
+*Main&amp;gt; inc 5 
+Debuggable (6,[&quot;Number increased by one&quot;])
+*Main&amp;gt; bind (ret 5) inc 
+Debuggable (6,[&quot;Number increased by one&quot;])
+*Main&amp;gt; bind (bind (ret 5) inc) inc
+Debuggable (7,[&quot;Number increased by one&quot;,&quot;Number increased by one&quot;])
+*Main&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Haskell has its own way of defining monads by implementing these operators such that Haskell understands them correctly as monads.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import Control.Applicative -- Otherwise you can't do the Applicative instance.
+import Control.Monad (liftM, ap)
+
+data Debuggable a = Debuggable (a, [[Char]]) deriving (Show)
+-- needed since newer versions of GHC
+instance Functor Debuggable where
+  fmap = liftM
+
+instance Applicative Debuggable where
+  pure  = return
+  (&amp;lt;*&amp;gt;) = ap
+------------------------
+
+instance Monad Debuggable where 
+  return x = Debuggable (x, [])
+  (&amp;gt;&amp;gt;=) (Debuggable (a,b)) f = Debuggable (y, z ++ b) where Debuggable (y,z) = f(a)
+
+inc :: Int -&amp;gt; Debuggable Int
+inc x = Debuggable (x+1, [&quot;Number increased by one&quot;])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now we can do something like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;*Main&amp;gt; (inc 5) &amp;gt;&amp;gt;= (\x -&amp;gt; (return x) &amp;gt;&amp;gt;= inc)
+Debuggable (7,[&quot;Number increased by one&quot;,&quot;Number increased by one&quot;])
+*Main&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can see how we use bind operator here. Haskell has syntatic sugar for this and it’s called do-notation&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;inc2 :: Int -&amp;gt; Debuggable Int 
+inc2 num = do 
+  x &amp;lt;- inc num
+  y &amp;lt;- inc x 
+  return y 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;unit-monad&quot;&gt;Unit Monad&lt;/h1&gt;
+
+&lt;p&gt;This is just unit wrapping around type, nothing special:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import Control.Applicative -- Otherwise you can't do the Applicative instance.
+import Control.Monad (liftM, ap)
+
+data Unit a = Unit a deriving (Show)
+
+instance Functor Unit where
+  fmap = liftM
+
+instance Applicative Unit where
+  pure  = return
+  (&amp;lt;*&amp;gt;) = ap
+
+instance Monad Unit where 
+  return x = Unit x
+  (&amp;gt;&amp;gt;=) (Unit x) f = f x
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;maybe-monad&quot;&gt;Maybe Monad&lt;/h1&gt;
+
+&lt;p&gt;Useful if you have something which can be “null” or undefined. Value of this type can be something useful or nothing.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import Control.Applicative -- Otherwise you can't do the Applicative instance.
+import Control.Monad (liftM, ap)
+
+data Maybe a = Just a | Nothing
+
+instance Functor Maybe where
+  fmap = liftM
+
+instance Applicative Maybe where
+  pure  = return
+  (&amp;lt;*&amp;gt;) = ap
+
+instance Monad Maybe where 
+  return x = Just x
+  (&amp;gt;&amp;gt;=) (Nothing) f = Nothing
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;io-monad&quot;&gt;IO Monad&lt;/h1&gt;
+
+&lt;p&gt;This monad can handle IO operations. In Haskell this monad is special because it changes state of world only with IO object 
+provided to main function. Main function is the first function which is run when you compile your program and run it as 
+executable without interactive mode. HAHAHAHA I know what you are thinking, we are there babies! We are going to make Hello World!&lt;/p&gt;
+
+&lt;p&gt;you can compile your program with:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ghc hello.hs -o hello -dynamic 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;and run it with:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./hello
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;and here it is:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;main :: IO ()
+main = putStrLn &quot;Hello world!&quot; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Let’s make small i/o program!&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;main :: IO ()
+main = do
+  putStrLn &quot;Enter your name&quot;
+  name &amp;lt;- getLine
+  putStrLn $ &quot;Your name is &quot; ++ name
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;appendix-1-data-types&quot;&gt;Appendix 1: data types&lt;/h1&gt;
+
+&lt;p&gt;you can create data types like so:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data Person = Person {
+	firstName :: String,
+	lastName :: String,
+	age :: Int
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;and then you can get data from Person value like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fullName p = (firstName p) ++ (lastName p)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;or create new value:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;john = Person {firstName = &quot;John&quot;, lastName = &quot;Johnson&quot;, age=55}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;appendix-2-interesting-links&quot;&gt;Appendix 2: Interesting links&lt;/h1&gt;
+
+&lt;p&gt;https://downloads.haskell.org/~ghc/latest/docs/html/libraries/&lt;/p&gt;
+
+&lt;p&gt;https://hackage.haskell.org/&lt;/p&gt;
+
+&lt;p&gt;https://robots.thoughtbot.com/a-rest-api-with-haskell-and-snap&lt;/p&gt;
+
 </description>
-        <pubDate>Sun, 17 Dec 2017 12:15:00 +0100</pubDate>
-        <link>http://fantastic001.github.io/functional-programming/software/2017/12/17/functional-programming.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/functional-programming/software/2017/12/17/functional-programming.html</guid>
+        <pubDate>Sun, 24 Dec 2017 12:15:00 +0100</pubDate>
+        <link>http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html</guid>
         
         
         <category>functional-programming</category>

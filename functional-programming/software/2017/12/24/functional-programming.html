@@ -22,7 +22,7 @@
   <meta name="description" content="Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little b...">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://fantastic001.github.io/functional-programming/software/2017/12/17/functional-programming.html">
+  <link rel="canonical" href="http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html">
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
@@ -32,13 +32,13 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarrifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventully be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straighforward and I will give explanation for things which may seem strange." />
 <meta property="og:description" content="Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarrifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventully be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straighforward and I will give explanation for things which may seem strange." />
-<link rel="canonical" href="http://fantastic001.github.io/functional-programming/software/2017/12/17/functional-programming.html" />
-<meta property="og:url" content="http://fantastic001.github.io/functional-programming/software/2017/12/17/functional-programming.html" />
+<link rel="canonical" href="http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html" />
+<meta property="og:url" content="http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html" />
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2017-12-17T12:15:00+01:00" />
+<meta property="article:published_time" content="2017-12-24T12:15:00+01:00" />
 <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"BlogPosting","headline":"A bit of functional programming by example in Haskell","datePublished":"2017-12-17T12:15:00+01:00","dateModified":"2017-12-17T12:15:00+01:00","description":"Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarrifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventully be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straighforward and I will give explanation for things which may seem strange.","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/functional-programming/software/2017/12/17/functional-programming.html"},"url":"http://fantastic001.github.io/functional-programming/software/2017/12/17/functional-programming.html"}</script>
+{"@context":"http://schema.org","@type":"BlogPosting","headline":"A bit of functional programming by example in Haskell","datePublished":"2017-12-24T12:15:00+01:00","dateModified":"2017-12-24T12:15:00+01:00","description":"Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarrifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventully be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straighforward and I will give explanation for things which may seem strange.","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html"},"url":"http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -90,7 +90,7 @@
 
   <header class="post-header">
     <h1 class="post-title" itemprop="name headline">A bit of functional programming by example in Haskell</h1>
-    <p class="post-meta"><time datetime="2017-12-17T12:15:00+01:00" itemprop="datePublished">Dec 17, 2017</time></p>
+    <p class="post-meta"><time datetime="2017-12-24T12:15:00+01:00" itemprop="datePublished">Dec 24, 2017</time></p>
   </header>
 
   <div class="post-content" itemprop="articleBody">
@@ -237,14 +237,15 @@ do not copy anything. We can do this trick because immutability guarantees that 
 
 <div class="highlighter-rouge"><pre class="highlight"><code>List* tail(List* l)
 {
-        if (l-&gt;head == NULL) return create_list(NULL);
-        else return create_list(l-&gt;head-&gt;next);
+        return create_list(l-&gt;head-&gt;next);
 }
 </code></pre>
 </div>
 
-<p>Here you can see tat we are checking is list empty by checkig is head pointing to NULL. Tail of empty list is empty list. 
-If list is not empty, we simply create new list which has head of next elemen of head of our given list.</p>
+<p>If list is not empty, we simply create new list which has head of next elemen of head of our given list. 
+If list is empty, behavior of tail is not defined so we will end up with segmentation fault (we will try dereferencing NULL pointer).</p>
+
+<p>For debugging purposes we will make print function.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>void print(List* l)
 {
@@ -485,10 +486,217 @@ bstsort l = tolist (fromlist l EmptyNode)
 </code></pre>
 </div>
 
-<h1 id="future-article">Future article</h1>
+<h1 id="monads">Monads</h1>
 
-<p>In the following article, I will explain monads and how they can be applied to make Haskell more IO-oriented such that we 
-can make useful apps.</p>
+<p>In pure functional programming languages, you cannot change state. This is core concept and very powerful one. 
+The problem is that our real world needs functionality to change state. Computer architecture is built on idea to change state. 
+Even basic operations such as printing to console output require to change state (state of console in this example).</p>
+
+<p>The way to change state in functional languages is by using monads. Monads are actually mathematical objects which are applied 
+to computer science.</p>
+
+<p>Basically, monad is data type which “surrounds” another type with additional functionality. For every monad, we have to define 
+two functions: return and bind.</p>
+
+<p>Monad wraps another, say, primitive type and adds additional functionality.</p>
+
+<p>To implement monad, we need to implement two functions: return and bind</p>
+
+<p>Function return takes our pure type and return wrapped type. By using this function, we can convert pure types to our wrapped 
+types which hold state.</p>
+
+<p>When we have functions that take one type and return another, it ecomes impossible to do composition in standard way. We can
+solve this by using bind. Bind function takes our wrapped type and function whic takes pure type and returns wrapped type. Bind returns
+wrapped type and does following: unwraps our first argument and passes it to function, then “merges” result of a function 
+with passed argument and returns it. This is best illustrated wit simple example. Let’s make type Debuggable which is basically 
+integer with list of strings which represents debug info. We first make type Debuggable and then implement bind and ret. Other 
+functions are implemented the same way as inc which increases number by one and stores message in a log.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>data Debuggable = Debuggable (Int, [[Char]]) deriving (Show)
+
+
+ret :: Int -&gt; Debuggable 
+ret x = Debuggable (x, [])
+
+bind :: Debuggable -&gt; (Int -&gt; Debuggable) -&gt; Debuggable
+bind x f = Debuggable (y, z ++ b) where Debuggable (a,b) = x 
+                                        Debuggable (y,z) = f(a)
+
+inc :: Int -&gt; Debuggable  
+inc x = Debuggable (x+1, ["Number increased by one"])
+</code></pre>
+</div>
+
+<p>Note how we do unwrapping and wrapping in bind. There we return our result with concatenated list of debug info from a given parameter
+and additional info provided by calling function.</p>
+
+<p>We arederiving Show here to make our type printable on console. Now we can do something like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>*Main&gt; ret 5 
+Debuggable (5,[])
+*Main&gt; inc 5 
+Debuggable (6,["Number increased by one"])
+*Main&gt; bind (ret 5) inc 
+Debuggable (6,["Number increased by one"])
+*Main&gt; bind (bind (ret 5) inc) inc
+Debuggable (7,["Number increased by one","Number increased by one"])
+*Main&gt; 
+</code></pre>
+</div>
+
+<p>Haskell has its own way of defining monads by implementing these operators such that Haskell understands them correctly as monads.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>import Control.Applicative -- Otherwise you can't do the Applicative instance.
+import Control.Monad (liftM, ap)
+
+data Debuggable a = Debuggable (a, [[Char]]) deriving (Show)
+-- needed since newer versions of GHC
+instance Functor Debuggable where
+  fmap = liftM
+
+instance Applicative Debuggable where
+  pure  = return
+  (&lt;*&gt;) = ap
+------------------------
+
+instance Monad Debuggable where 
+  return x = Debuggable (x, [])
+  (&gt;&gt;=) (Debuggable (a,b)) f = Debuggable (y, z ++ b) where Debuggable (y,z) = f(a)
+
+inc :: Int -&gt; Debuggable Int
+inc x = Debuggable (x+1, ["Number increased by one"])
+</code></pre>
+</div>
+
+<p>Now we can do something like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>*Main&gt; (inc 5) &gt;&gt;= (\x -&gt; (return x) &gt;&gt;= inc)
+Debuggable (7,["Number increased by one","Number increased by one"])
+*Main&gt;
+</code></pre>
+</div>
+
+<p>You can see how we use bind operator here. Haskell has syntatic sugar for this and it’s called do-notation</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>inc2 :: Int -&gt; Debuggable Int 
+inc2 num = do 
+  x &lt;- inc num
+  y &lt;- inc x 
+  return y 
+</code></pre>
+</div>
+
+<h1 id="unit-monad">Unit Monad</h1>
+
+<p>This is just unit wrapping around type, nothing special:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>import Control.Applicative -- Otherwise you can't do the Applicative instance.
+import Control.Monad (liftM, ap)
+
+data Unit a = Unit a deriving (Show)
+
+instance Functor Unit where
+  fmap = liftM
+
+instance Applicative Unit where
+  pure  = return
+  (&lt;*&gt;) = ap
+
+instance Monad Unit where 
+  return x = Unit x
+  (&gt;&gt;=) (Unit x) f = f x
+</code></pre>
+</div>
+
+<h1 id="maybe-monad">Maybe Monad</h1>
+
+<p>Useful if you have something which can be “null” or undefined. Value of this type can be something useful or nothing.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>import Control.Applicative -- Otherwise you can't do the Applicative instance.
+import Control.Monad (liftM, ap)
+
+data Maybe a = Just a | Nothing
+
+instance Functor Maybe where
+  fmap = liftM
+
+instance Applicative Maybe where
+  pure  = return
+  (&lt;*&gt;) = ap
+
+instance Monad Maybe where 
+  return x = Just x
+  (&gt;&gt;=) (Nothing) f = Nothing
+</code></pre>
+</div>
+
+<h1 id="io-monad">IO Monad</h1>
+
+<p>This monad can handle IO operations. In Haskell this monad is special because it changes state of world only with IO object 
+provided to main function. Main function is the first function which is run when you compile your program and run it as 
+executable without interactive mode. HAHAHAHA I know what you are thinking, we are there babies! We are going to make Hello World!</p>
+
+<p>you can compile your program with:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ghc hello.hs -o hello -dynamic 
+</code></pre>
+</div>
+
+<p>and run it with:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./hello
+</code></pre>
+</div>
+
+<p>and here it is:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>main :: IO ()
+main = putStrLn "Hello world!" 
+</code></pre>
+</div>
+
+<p>Let’s make small i/o program!</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>main :: IO ()
+main = do
+  putStrLn "Enter your name"
+  name &lt;- getLine
+  putStrLn $ "Your name is " ++ name
+</code></pre>
+</div>
+
+<h1 id="appendix-1-data-types">Appendix 1: data types</h1>
+
+<p>you can create data types like so:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>data Person = Person {
+	firstName :: String,
+	lastName :: String,
+	age :: Int
+}
+</code></pre>
+</div>
+
+<p>and then you can get data from Person value like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>fullName p = (firstName p) ++ (lastName p)
+</code></pre>
+</div>
+
+<p>or create new value:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>john = Person {firstName = "John", lastName = "Johnson", age=55}
+</code></pre>
+</div>
+
+<h1 id="appendix-2-interesting-links">Appendix 2: Interesting links</h1>
+
+<p>https://downloads.haskell.org/~ghc/latest/docs/html/libraries/</p>
+
+<p>https://hackage.haskell.org/</p>
+
+<p>https://robots.thoughtbot.com/a-rest-api-with-haskell-and-snap</p>
+
 
   </div>
 
@@ -503,8 +711,8 @@ can make useful apps.</p>
      */
     
     var disqus_config = function () {
-        this.page.url = "http://fantastic001.github.io/functional-programming/software/2017/12/17/functional-programming.html";  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = "/functional-programming/software/2017/12/17/functional-programming"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = "http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "/functional-programming/software/2017/12/24/functional-programming"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     (function() {  // DON'T EDIT BELOW THIS LINE
         var d = document, s = d.createElement('script');
