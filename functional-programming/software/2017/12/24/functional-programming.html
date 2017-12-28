@@ -104,14 +104,14 @@ of OOP first and then continue by explaining functional approach and how it solv
 but you don’t need to be familiar with Haskell to understand examples since they’re pretty straighforward and I will give explanation
 for things which may seem strange.</p>
 
-<h1 id="mutability-thread-safeness-history">Mutability, thread-safeness history</h1>
+<h1 id="mutability-thread-safeness-and-history">Mutability, thread-safeness and history</h1>
 
 <p>First of all, functional programming is type of declarative programming which means that we explain what is something instead 
 of giving instructions step by step which is seen in imperative programming. 
 For example, in functional programming we say “factorial of n is n times factorial of n-1 where factorial of 0 is 1”. In 
 imperative approach, we say how to compute factorial of n: “start with 1 and say resul is 1 then increment counter to n and multiply result by counter and save it into result”. Here you can see big difference in way of thinking. I personally think that declarative approach is much simpler.</p>
 
-<p>In above example you can see one important difference between these approaches. In declarative programming we define value only once. Translated in language you already know, think of this as using only constnt variables instead of common variables which can change state later. This is called immutability which means “when defined once, cannot be changed later”. Take a look at the following example of C code:</p>
+<p>In above example you can see one important difference between these approaches. In declarative programming we define value only once. Translated in language you already know, think of this as using only constant variables instead of common variables which can change state later. This is called immutability which means “when defined once, cannot be changed later”. Take a look at the following example of C code:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>#include &lt;stdio.h&gt;
 
@@ -333,28 +333,6 @@ which takes one integer and returns function which takes another integer which t
 
 <p>will return 6.</p>
 
-<h1 id="pattern-matching">Pattern matching</h1>
-
-<p>Something very useful in functional programming languages is pattern matching. Imagine you are trying to implement factorial. First you will check is parameter is zero. If it is, return 1, else return that number times factorial of number decreased by one. 
-In Haskell this checking can be easily written using pattern matching:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>fact :: Int -&gt; Int
-fact 0 = 1
-fact n = n * (fact (n-1))
-</code></pre>
-</div>
-
-<p>Pattern matching works in the following manner: it will check does arguments of function satisfy first condition, if yes, return given result, else go forward to next condition.</p>
-
-<p>For example the following function will return 1 if any of its two arguments is zero, 0 otherwise:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>anyzero :: Int -&gt; Int -&gt; Int
-anyzero 0 x = 1
-anyzero x 0 = 1
-anyzero x y = 0
-</code></pre>
-</div>
-
 <h1 id="lists">Lists</h1>
 
 <p>Lists in Haskell are implemented like we did above in C. They are simply single-linked lists.</p>
@@ -417,7 +395,73 @@ anyzero x y = 0
 
 <p>Note that I have specified step for our ranges for x and y as well.</p>
 
+<h1 id="pattern-matching">Pattern matching</h1>
+
+<p>Something very useful in functional programming languages is pattern matching. Imagine you are trying to implement factorial. First you will check is parameter is zero. If it is, return 1, else return that number times factorial of number decreased by one. 
+In Haskell this checking can be easily written using pattern matching:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>fact :: Int -&gt; Int
+fact 0 = 1
+fact n = n * (fact (n-1))
+</code></pre>
+</div>
+
+<p>Pattern matching works in the following manner: it will check does arguments of function satisfy first condition, if yes, return given result, else go forward to next condition.</p>
+
+<p>For example the following function will return 1 if any of its two arguments is zero, 0 otherwise:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>anyzero :: Int -&gt; Int -&gt; Int
+anyzero 0 x = 1
+anyzero x 0 = 1
+anyzero x y = 0
+</code></pre>
+</div>
+
+<p>Some list functions</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mymap :: (a -&gt; b) -&gt; [a] -&gt; [b]
+mymap _ [] = []
+mymap f (x:xs) = (f x) : (mymap f xs)
+
+
+reduce :: (b -&gt; a -&gt; b) -&gt; b -&gt; [a] -&gt; b 
+reduce _ z [] = z 
+reduce f z (x:xs) = reduce f (f z x) xs
+
+myfilter :: (a -&gt; Bool) -&gt; [a] -&gt; [a]
+myfilter _ [] = [] 
+myfilter f (x:xs) = if (f x) then x : (myfilter f xs) else myfilter f xs
+
+*Main&gt; mymap (+ 1) [1,2,3]
+[2,3,4]
+*Main&gt; filter (\x -&gt; x `mod` 2 == 0) [1,2,3,4,5,6]
+[2,4,6]
+*Main&gt; reduce (+) 0 [1,2,3,4,5]
+15
+*Main&gt; 
+</code></pre>
+</div>
+
 <h1 id="some-nice-examples">Some nice examples</h1>
+
+<p>Function which removes repeating elements</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>norepeat :: (Eq a) =&gt; [a] -&gt; [a]
+norepeat [] = [] 
+norepeat (x:[]) = [x]
+norepeat (x:y:xs) = if x == y then norepeat (x:xs) else x:(norepeat (y:xs))
+
+*Main&gt; norepeat [1,1,2,5,5,6]
+[1,2,5,6]
+*Main&gt; norepeat [1,1,2,5,5,6, 6]
+[1,2,5,6]
+*Main&gt; norepeat [1,2,5,5,6, 6]
+[1,2,5,6]
+*Main&gt; norepeat [1,2,5]
+[1,2,5]
+*Main&gt; 
+</code></pre>
+</div>
 
 <p>Quick sort</p>
 
@@ -453,22 +497,60 @@ strlen s
 </code></pre>
 </div>
 
-<p>Working with BSTs</p>
+<h1 id="data-types">Data types</h1>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>data Node = Node {
+<p>We can define data types by specifying type name and its constructors. Let’s take an example and make Zipper data type. This type
+is used mostly in editors. It is basically a list with focused element. You can go left or right and move focus around the list.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>data Zipper a = Zip [a] a [a] deriving (Show)
+
+right :: Zipper a -&gt; Zipper a
+right (Zip l focus []) = Zip l focus [] 
+right (Zip l focus r) = Zip (focus:l) (head r ) (tail r)
+
+
+left :: Zipper a -&gt; Zipper a
+left (Zip [] focus r) = Zip [] focus r
+left (Zip l focus r) = Zip (tail l) (head l) (focus:r)
+</code></pre>
+</div>
+
+<p>now we can do the following:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>*Main&gt; z = Zip [3, 2, 1] 4 [5, 6, 7]
+*Main&gt; right z 
+Zip [4,3,2,1] 5 [6,7]
+*Main&gt; left $ right z 
+Zip [3,2,1] 4 [5,6,7]
+*Main&gt; left $ left $ right z 
+Zip [2,1] 3 [4,5,6,7]
+*Main&gt; left $ left $ left $ right z 
+Zip [1] 2 [3,4,5,6,7]
+*Main&gt; left $ left $ left $ left $ right z 
+Zip [] 1 [2,3,4,5,6,7]
+*Main&gt; left $ left $ left $ left $ left $ right z 
+Zip [] 1 [2,3,4,5,6,7]
+*Main&gt; 
+</code></pre>
+</div>
+
+<p>Another example is binary tree node. Note that node can be empty (has no children and no value). Here we are using Haskell’s record
+syntax which gives us functions for extracting data. This is not usual way for implementing node in binary tree (we can go pretty well with usual data type definition as above) but we show this to demonstrate record syntax.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>data TreeNode = Node {
         left :: Node,
         right :: Node,
         value :: Int
     } | EmptyNode
 
-tolist :: Node -&gt; [Int]
+tolist :: TreeNode -&gt; [Int]
 tolist EmptyNode = []
 tolist n = let l = tolist $ left n
                r = tolist $ right n
                v = value n
            in l ++ [v] ++ r
 
-append :: Node -&gt; Int -&gt; Node
+append :: TreeNode -&gt; Int -&gt; Node
 append EmptyNode x = Node EmptyNode EmptyNode x
 append n x = let v = value n
                  r = right n
@@ -476,7 +558,7 @@ append n x = let v = value n
              in if x &lt; v then Node (append l x) r v else Node l (append r x) v
 
 
-fromlist :: [Int] -&gt; Node -&gt; Node
+fromlist :: [Int] -&gt; TreeNode -&gt; TreeNode
 fromlist [] n = n
 fromlist l n = let x = head l
                in fromlist (tail l) (append n x)
@@ -495,20 +577,16 @@ Even basic operations such as printing to console output require to change state
 <p>The way to change state in functional languages is by using monads. Monads are actually mathematical objects which are applied 
 to computer science.</p>
 
-<p>Basically, monad is data type which “surrounds” another type with additional functionality. For every monad, we have to define 
+<p>Basically, monad is data type which “surrounds” another type with additional information which is carried through computation. For every monad, we have to define 
 two functions: return and bind.</p>
 
-<p>Monad wraps another, say, primitive type and adds additional functionality.</p>
+<p>Function return takes our pure type and returns wrapped type. By using this function, we can convert pure types to our wrapped 
+types which hold state. In terms of computation, return does not influence computation.</p>
 
-<p>To implement monad, we need to implement two functions: return and bind</p>
-
-<p>Function return takes our pure type and return wrapped type. By using this function, we can convert pure types to our wrapped 
-types which hold state.</p>
-
-<p>When we have functions that take one type and return another, it ecomes impossible to do composition in standard way. We can
-solve this by using bind. Bind function takes our wrapped type and function whic takes pure type and returns wrapped type. Bind returns
+<p>When we have functions that take one type and return another, it becomes impossible to do composition in standard way. We can
+solve this by using bind. Bind function takes our wrapped type and function which takes pure type and returns wrapped type. Bind returns
 wrapped type and does following: unwraps our first argument and passes it to function, then “merges” result of a function 
-with passed argument and returns it. This is best illustrated wit simple example. Let’s make type Debuggable which is basically 
+with passed argument and returns it. This is best illustrated with simple example. Let’s make type Debuggable which is basically 
 integer with list of strings which represents debug info. We first make type Debuggable and then implement bind and ret. Other 
 functions are implemented the same way as inc which increases number by one and stores message in a log.</p>
 
@@ -519,8 +597,7 @@ ret :: Int -&gt; Debuggable
 ret x = Debuggable (x, [])
 
 bind :: Debuggable -&gt; (Int -&gt; Debuggable) -&gt; Debuggable
-bind x f = Debuggable (y, z ++ b) where Debuggable (a,b) = x 
-                                        Debuggable (y,z) = f(a)
+bind (Debuggable a b) f = Debuggable (y, z ++ b) where Debuggable (y,z) = f(a)
 
 inc :: Int -&gt; Debuggable  
 inc x = Debuggable (x+1, ["Number increased by one"])
@@ -530,7 +607,7 @@ inc x = Debuggable (x+1, ["Number increased by one"])
 <p>Note how we do unwrapping and wrapping in bind. There we return our result with concatenated list of debug info from a given parameter
 and additional info provided by calling function.</p>
 
-<p>We arederiving Show here to make our type printable on console. Now we can do something like this:</p>
+<p>We are deriving Show here to make our type printable on console. Now we can do something like this:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>*Main&gt; ret 5 
 Debuggable (5,[])
