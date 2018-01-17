@@ -26,8 +26,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.2.3 -->
+  <!-- Begin Jekyll SEO tag v2.4.0 -->
 <title>Emacs org-mode | Stefan Nožinić</title>
+<meta name="generator" content="Jekyll v3.7.0" />
 <meta property="og:title" content="Emacs org-mode" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Već nekoliko godina koristim Emacs. Eto priznao sam. :D Ja sam Vim korisnik koji koristi Emacs. Emacs koristim samo u svrhu za koju ne koristim Vim a to je za sve ostalo što nije pisanje koda. Toliko ga koristim da sam napravio i Python biblioteku za parsiranje Emacs org dokumenata. Dakle, Emacs koristim prvenstveno za organizaciju i pisanje dokumenata. U tome mi pomaže Emacs org-mode. Ovaj dodatak za Emacs je postao must-have na mom računaru. Bez ovoga ne idem nigde. Toliko je važno da hoću da sve što imam ima integraciju sa ovim. Plan mi je da i ovaj blog krenem da pišem u njemu." />
@@ -38,7 +39,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-11-01T21:15:00+01:00" />
 <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"BlogPosting","headline":"Emacs org-mode","datePublished":"2017-11-01T21:15:00+01:00","dateModified":"2017-11-01T21:15:00+01:00","description":"Već nekoliko godina koristim Emacs. Eto priznao sam. :D Ja sam Vim korisnik koji koristi Emacs. Emacs koristim samo u svrhu za koju ne koristim Vim a to je za sve ostalo što nije pisanje koda. Toliko ga koristim da sam napravio i Python biblioteku za parsiranje Emacs org dokumenata. Dakle, Emacs koristim prvenstveno za organizaciju i pisanje dokumenata. U tome mi pomaže Emacs org-mode. Ovaj dodatak za Emacs je postao must-have na mom računaru. Bez ovoga ne idem nigde. Toliko je važno da hoću da sve što imam ima integraciju sa ovim. Plan mi je da i ovaj blog krenem da pišem u njemu.","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/emacs/organization/utilities/2017/11/01/org-mode.html"},"url":"http://fantastic001.github.io/emacs/organization/utilities/2017/11/01/org-mode.html"}</script>
+{"datePublished":"2017-11-01T21:15:00+01:00","@type":"BlogPosting","dateModified":"2017-11-01T21:15:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/emacs/organization/utilities/2017/11/01/org-mode.html"},"url":"http://fantastic001.github.io/emacs/organization/utilities/2017/11/01/org-mode.html","description":"Već nekoliko godina koristim Emacs. Eto priznao sam. :D Ja sam Vim korisnik koji koristi Emacs. Emacs koristim samo u svrhu za koju ne koristim Vim a to je za sve ostalo što nije pisanje koda. Toliko ga koristim da sam napravio i Python biblioteku za parsiranje Emacs org dokumenata. Dakle, Emacs koristim prvenstveno za organizaciju i pisanje dokumenata. U tome mi pomaže Emacs org-mode. Ovaj dodatak za Emacs je postao must-have na mom računaru. Bez ovoga ne idem nigde. Toliko je važno da hoću da sve što imam ima integraciju sa ovim. Plan mi je da i ovaj blog krenem da pišem u njemu.","headline":"Emacs org-mode","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -103,9 +104,8 @@ ne koristim Vim a to je za sve ostalo što nije pisanje koda. Toliko ga koristim
 
 <p>Prva stvar koju možete videti kad ga uključite (napravite i otvorite .org fajl) je mogućnost da pravite lako TODO liste. Sintaksa je slefeća:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>* TODO nešto 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* TODO nešto 
+</code></pre></div></div>
 
 <p>Ako pritisnete kombinaciju ‘Control+t’ stavka se markira kao DONE. Ako ponovo pritisnete datu kombinaciju stavka se briše pa ako opet pritisnete dobijate opet marker “TODO”. Ako lupite alt+enter, dobijate novu stavku. Ove stavke su zapravo sekcije, ispod njih kada pišete vi 
 zapravo pišete sadržaj sekcije. Sekciju možete “sakriti” tako što se kursorom namestite na naslov sekcije (to sa zvezdicom) i kliknete <TAB>.</TAB></p>
@@ -114,19 +114,17 @@ zapravo pišete sadržaj sekcije. Sekciju možete “sakriti” tako što se kur
 
 <p>Liste se prave sa znakom “+”:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>+ item 1 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+ item 1 
 + item 2
 ....
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>lupite alt+enter i dobijate novu stavku liste.</p>
 
 <p>U dokumentima možete pisati i matematičke formule uz pomoć LaTeX-a. Njih ogradite sa “$$”, npr:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$$ a^2 = \int f(x)dx $$ 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$$ a^2 = \int f(x)dx $$ 
+</code></pre></div></div>
 
 <p>renderovanje formula se vrši sa Control+c pa onda Control+x pa pritisnete “l”.</p>
 
@@ -135,21 +133,18 @@ Izlazi vam prozor gde su vam dati tasteri koje treba pritisnuti za eksport u odr
 
 <p>Možete uključiti (navezati, “inkludovati”) druga org-mode dokumenta pa će u eksportovanom delu biti eksportovano sve. Zbogdno ako pišete veći dokument ili možda čak i knjigu. :)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#+INCLUDE: "putanja/do/fajla.org"
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#+INCLUDE: "putanja/do/fajla.org"
+</code></pre></div></div>
 
 <p>A da isključite sadržaj u eksportovanom dokumentu:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#+OPTIONS: toc:nil
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#+OPTIONS: toc:nil
+</code></pre></div></div>
 
 <p>Da u eksportovanom dokumentu matematičke formule snimite kao slike (zgodno za pretraživače koji imaju problema sa matematičkim formulama ili recimo za Kindl):</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#+OPTIONS: tex:dvipng
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#+OPTIONS: tex:dvipng
+</code></pre></div></div>
 
 <p>Da otvorite blok za izvorni kod upišete “&lt;s” pa lupite TAB i onda samo u nastavku upišete jezik koji hoćete, i bloku kad pozicionirate kursor i pritisnete Control+c pa onda ‘ (jednostruki navodnik), otvara  se prozor za pisanje koda, sa sve obojenom sintaksom datog jezika. :D Da zatvorite prozor i sačuvate kod, upotrebite istu kombinaciju tastera.</p>
 

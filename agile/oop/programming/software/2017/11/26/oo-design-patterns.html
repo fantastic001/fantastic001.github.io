@@ -26,8 +26,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.2.3 -->
+  <!-- Begin Jekyll SEO tag v2.4.0 -->
 <title>Object-oriented design patterns | Stefan Nožinić</title>
+<meta name="generator" content="Jekyll v3.7.0" />
 <meta property="og:title" content="Object-oriented design patterns" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="In software engineering you often need to make some design decisions such that your software is extenable and easily maintainable. After some time of software development, industry has come up with repeating patterns of design that makes sense for some application. Still, you need to choose particular design pattern but overall task is much simplified because you are deciding on finite number of patterns with small modifications if needed. I doubt you are trying to solve problem which is not solvable with these patterns described below. At least, in one part of your software you can use some of these patterns. The purpose if this aarticle is to present some design patterns with explanation and examples where they are helpful. In this process, you also have to follow SOLID principles." />
@@ -38,7 +39,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-11-26T18:15:00+01:00" />
 <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"BlogPosting","headline":"Object-oriented design patterns","datePublished":"2017-11-26T18:15:00+01:00","dateModified":"2017-11-26T18:15:00+01:00","description":"In software engineering you often need to make some design decisions such that your software is extenable and easily maintainable. After some time of software development, industry has come up with repeating patterns of design that makes sense for some application. Still, you need to choose particular design pattern but overall task is much simplified because you are deciding on finite number of patterns with small modifications if needed. I doubt you are trying to solve problem which is not solvable with these patterns described below. At least, in one part of your software you can use some of these patterns. The purpose if this aarticle is to present some design patterns with explanation and examples where they are helpful. In this process, you also have to follow SOLID principles.","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/agile/oop/programming/software/2017/11/26/oo-design-patterns.html"},"url":"http://fantastic001.github.io/agile/oop/programming/software/2017/11/26/oo-design-patterns.html"}</script>
+{"datePublished":"2017-11-26T18:15:00+01:00","@type":"BlogPosting","dateModified":"2017-11-26T18:15:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/agile/oop/programming/software/2017/11/26/oo-design-patterns.html"},"url":"http://fantastic001.github.io/agile/oop/programming/software/2017/11/26/oo-design-patterns.html","description":"In software engineering you often need to make some design decisions such that your software is extenable and easily maintainable. After some time of software development, industry has come up with repeating patterns of design that makes sense for some application. Still, you need to choose particular design pattern but overall task is much simplified because you are deciding on finite number of patterns with small modifications if needed. I doubt you are trying to solve problem which is not solvable with these patterns described below. At least, in one part of your software you can use some of these patterns. The purpose if this aarticle is to present some design patterns with explanation and examples where they are helpful. In this process, you also have to follow SOLID principles.","headline":"Object-oriented design patterns","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -117,9 +118,8 @@ can be implemented with builder design pattern. Building SQL query is another ex
 
 <p>Another case is when you want to have default parameters and vary them if needed. Take for example this piece of code:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>MyClass(int a, int b, int c=5, intd=4) ...
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MyClass(int a, int b, int c=5, intd=4) ...
+</code></pre></div></div>
 
 <p>What if we want to set values for a,b and d but take c as default. In C++, we need to set value of c such that we are able to set value
 of d.</p>
@@ -127,24 +127,22 @@ of d.</p>
 <p>Builder is implemented as follows: Implement Builder class which in constructor can recieve all its parameters and also has empty constructor which sets up default parameters. For every parameter, implement “setX” method which returns new instance of Builder with changed
 specified parameter. Also, you will have to implement build() function which returns concrete object. This class can be used like this:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>MyClass my_object = MyClassBuilder()
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MyClass my_object = MyClassBuilder()
 	.setA(2)
 	.setB(3)
 	.setD(4)
 	.build();
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>so every call to set method will return new instance of builder and last call will build concrete object from lastly created builder instance which has all parameters. The real magic comes when you want to make some default values and then create objects with one parameter changed:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>MyClassBuilder builder = MyClassBuilder()
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MyClassBuilder builder = MyClassBuilder()
 	.setA(2)
 	.setB(3);
 
 MyClass myobj1 = builder.setD(7).build();
 MyClass myobj2 = builder.setD(10).build();
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h1 id="abstract-factory">Abstract factory</h1>
 
@@ -162,13 +160,12 @@ the following abstract classes: AbstractWindow, AbstractButton, AbstractText.</p
 <p>so then you can subcass this class and makeDarkFactory and LightFactory, every in its implementation returns needed class instances for
 button, window and text. Now you can use it like this:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>AbstractFactory theme = DarkFactory()
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AbstractFactory theme = DarkFactory()
 AbstractButton btn = theme.getButton(); 
 AbstractWindow win = theme.getWindow();
 
 ...
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>when structuring all this in directories, pay attention to put concrete factory and objects which are created by that factory at the same place if possible</p>
 
@@ -202,10 +199,9 @@ can pass inner objects using constructor, using Builder, abstract factory or by 
 implement later some kind of logging. We can make decorator class which, before calls its child’s method, write log in a file
 or to the standard output. The we just need to decorate our existing simulator object:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Simulator* simulator = new Simulator(); // logging turned off 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Simulator* simulator = new Simulator(); // logging turned off 
 simulator = new DebugDecorator(simulator); // we turn on logging
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h1 id="hain-of-responsibility">hain of responsibility</h1>
 

@@ -26,8 +26,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.2.3 -->
+  <!-- Begin Jekyll SEO tag v2.4.0 -->
 <title>Neke strukture podataka - hip | Stefan Nožinić</title>
+<meta name="generator" content="Jekyll v3.7.0" />
 <meta property="og:title" content="Neke strukture podataka - hip" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Hip je struktura podataka koja nam omogućava da brzo i lako dođemo do maksimalnog elementa. Često se predstavlja kao stablo zbog lakšeg objašnjavanja ali se tokom implementacije koristi niz. Hip se predstavlja kao stablo na sledeći način: za svaki čvor, njegova deca su uvek manja od tog čvora. Ovakva reprezentacija podataka nam omogućava da nam na vrhu stabla (korenu stabla) uvek bude najveći element. Slično, možemo i obrnuti situaciju, da za svaki čvor su njegova deca manja od tog čvora. U ovom slučaju dobijamo strukturu gde nam je na vrhu uvek najmanji element. U implementaciji, za izvedbu hipa koristimo niz tako da nam element a(i) bude čvor a elementi a(2i+1) i a(2i + 2) su njegova deca. Isto tako, ako imamo čvor a(i) onda njegovom roditelju pristupamo kao elementu a((i-1)/2)." />
@@ -38,7 +39,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-05-10T23:00:00+02:00" />
 <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"BlogPosting","headline":"Neke strukture podataka - hip","datePublished":"2017-05-10T23:00:00+02:00","dateModified":"2017-05-10T23:00:00+02:00","description":"Hip je struktura podataka koja nam omogućava da brzo i lako dođemo do maksimalnog elementa. Često se predstavlja kao stablo zbog lakšeg objašnjavanja ali se tokom implementacije koristi niz. Hip se predstavlja kao stablo na sledeći način: za svaki čvor, njegova deca su uvek manja od tog čvora. Ovakva reprezentacija podataka nam omogućava da nam na vrhu stabla (korenu stabla) uvek bude najveći element. Slično, možemo i obrnuti situaciju, da za svaki čvor su njegova deca manja od tog čvora. U ovom slučaju dobijamo strukturu gde nam je na vrhu uvek najmanji element. U implementaciji, za izvedbu hipa koristimo niz tako da nam element a(i) bude čvor a elementi a(2i+1) i a(2i + 2) su njegova deca. Isto tako, ako imamo čvor a(i) onda njegovom roditelju pristupamo kao elementu a((i-1)/2).","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-heap.html"},"url":"http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-heap.html"}</script>
+{"datePublished":"2017-05-10T23:00:00+02:00","@type":"BlogPosting","dateModified":"2017-05-10T23:00:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-heap.html"},"url":"http://fantastic001.github.io/algorithms/data-structures/2017/05/10/data-structures-heap.html","description":"Hip je struktura podataka koja nam omogućava da brzo i lako dođemo do maksimalnog elementa. Često se predstavlja kao stablo zbog lakšeg objašnjavanja ali se tokom implementacije koristi niz. Hip se predstavlja kao stablo na sledeći način: za svaki čvor, njegova deca su uvek manja od tog čvora. Ovakva reprezentacija podataka nam omogućava da nam na vrhu stabla (korenu stabla) uvek bude najveći element. Slično, možemo i obrnuti situaciju, da za svaki čvor su njegova deca manja od tog čvora. U ovom slučaju dobijamo strukturu gde nam je na vrhu uvek najmanji element. U implementaciji, za izvedbu hipa koristimo niz tako da nam element a(i) bude čvor a elementi a(2i+1) i a(2i + 2) su njegova deca. Isto tako, ako imamo čvor a(i) onda njegovom roditelju pristupamo kao elementu a((i-1)/2).","headline":"Neke strukture podataka - hip","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -114,7 +115,7 @@ U hipu da bismo našli najveći element, dovoljno je da pristupimo njegovom čvo
 
 <p>U pseudokodu bi to izgledalo ovako:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>func max_heapify(A, i):
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func max_heapify(A, i):
 	l,r = 2*i, 2*i+1
 	m = max(A(i), A(l), A(r))
 	j = 0 
@@ -128,39 +129,35 @@ func build_heap(A):
 	n = A.size 
 	for i=n/2 downto 1:
 		max_heapify(A, i)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Funkcija za određivanje maksimalnog elementa bi onda u tom slučaju bila ovako:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>func maximum(A):
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func maximum(A):
 	return A(1)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Pored toga, imamo u funkciju za brisanje maksimalnog elementa:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>func max_extract(A):
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func max_extract(A):
 	max = A(1)
 	n = A.size 
 	swap(A(1), A(n))
 	A.size = A.size - 1
 	max_heapify(A, 1)
 	return max
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>za ubacivanje elementa u hip:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>func insert(A, x):
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func insert(A, x):
 	A.size = A.size + 1
 	A(A.size) = x
 	i = A.size
 	while i&gt;1 and A(i/2) &lt; A(i):
 		swap(A(i/2), A(i))
 		i = i/2
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Dakle ova funkcija ubaci element na dno hipa i podiže ga gore sve dok mu je trenutni roditelj manji od datog elementa.</p>
 

@@ -26,8 +26,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.2.3 -->
+  <!-- Begin Jekyll SEO tag v2.4.0 -->
 <title>Implementing file system with FUSE | Stefan Nožinić</title>
+<meta name="generator" content="Jekyll v3.7.0" />
 <meta property="og:title" content="Implementing file system with FUSE" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="During summer camp at Petnica Science Center you can get a chance to build something and work on your own research project. On computer science course, we usually do, well, computer science (sometimes it is multidisciplinary) so my friend decided to work on building her own file system. This is open source project and can be found here on GitHub. This is proof of concept of how file system work and it is built as stand-alone command-line application which has its own shell and uses RAM as its storage for data. Structure and organization of data is specific to project but it looks pretty much as first implementations of file systems." />
@@ -38,7 +39,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2016-12-22T22:00:00+01:00" />
 <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"BlogPosting","headline":"Implementing file system with FUSE","datePublished":"2016-12-22T22:00:00+01:00","dateModified":"2016-12-22T22:00:00+01:00","description":"During summer camp at Petnica Science Center you can get a chance to build something and work on your own research project. On computer science course, we usually do, well, computer science (sometimes it is multidisciplinary) so my friend decided to work on building her own file system. This is open source project and can be found here on GitHub. This is proof of concept of how file system work and it is built as stand-alone command-line application which has its own shell and uses RAM as its storage for data. Structure and organization of data is specific to project but it looks pretty much as first implementations of file systems.","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/osdev/2016/12/22/fuse.html"},"url":"http://fantastic001.github.io/osdev/2016/12/22/fuse.html"}</script>
+{"datePublished":"2016-12-22T22:00:00+01:00","@type":"BlogPosting","dateModified":"2016-12-22T22:00:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/osdev/2016/12/22/fuse.html"},"url":"http://fantastic001.github.io/osdev/2016/12/22/fuse.html","description":"During summer camp at Petnica Science Center you can get a chance to build something and work on your own research project. On computer science course, we usually do, well, computer science (sometimes it is multidisciplinary) so my friend decided to work on building her own file system. This is open source project and can be found here on GitHub. This is proof of concept of how file system work and it is built as stand-alone command-line application which has its own shell and uses RAM as its storage for data. Structure and organization of data is specific to project but it looks pretty much as first implementations of file systems.","headline":"Implementing file system with FUSE","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -103,7 +104,7 @@ to work on building her own file system. This is open source project and can be 
 
 <p>This is an example of our main function:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#define FUSE_USE_VERSION 30
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#define FUSE_USE_VERSION 30
 
 #include "interface.h" 
 
@@ -126,14 +127,13 @@ int main(int argc, char* argv[])
         mi_ops.unlink = mi_unlink;
 	return fuse_main(argc, argv, &amp;mi_ops, NULL);
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>As you can see, we create structure and then we have to assign needed pointers to our functions. Functions are declared in interface.h so we can use them here. I will not explain how to implement every function alone and I will exaplin that in some other blogpost aimed for that. I will just leave one example of implementation of function getattr as well as implementation of functions used in this implementation:</p>
 
 <p>getattr.cpp:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#include "interface.h"
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "interface.h"
 #include "context.h"
 #include &lt;sys/stat.h&gt;
 
@@ -149,12 +149,11 @@ int mi_getattr(const char *path, struct stat * fstat)
 
 	return 0;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>context.cpp:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>...
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
 node* mi_get_destination(const char* path) 
 {
 	if (strlen(path) == 1) return mi_get_context()-&gt;root;
@@ -228,8 +227,7 @@ void mi_get_stat(node* n, struct stat* fstat)
 	fstat-&gt;st_blksize = 4096;
 	fstat-&gt;st_blocks = 1;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>I have ommited some debugging code to make it more readable.</p>
 

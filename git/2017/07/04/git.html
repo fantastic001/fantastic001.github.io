@@ -26,8 +26,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.2.3 -->
+  <!-- Begin Jekyll SEO tag v2.4.0 -->
 <title>Git - kako se koristi? | Stefan Nožinić</title>
+<meta name="generator" content="Jekyll v3.7.0" />
 <meta property="og:title" content="Git - kako se koristi?" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Uvod" />
@@ -38,7 +39,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-07-04T14:15:00+02:00" />
 <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"BlogPosting","headline":"Git - kako se koristi?","datePublished":"2017-07-04T14:15:00+02:00","dateModified":"2017-07-04T14:15:00+02:00","description":"Uvod","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/git/2017/07/04/git.html"},"url":"http://fantastic001.github.io/git/2017/07/04/git.html"}</script>
+{"datePublished":"2017-07-04T14:15:00+02:00","@type":"BlogPosting","dateModified":"2017-07-04T14:15:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/git/2017/07/04/git.html"},"url":"http://fantastic001.github.io/git/2017/07/04/git.html","description":"Uvod","headline":"Git - kako se koristi?","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -117,19 +118,17 @@ postoje softveri koji omogućavaju upotrebu Gita upotrebom grafičkih alata. Rad
 
 <p>Recimo da \elimo da napravimo naš repozitorijum lokalno, ovo radimo tako što prvo napravimo direktorijum gde ćemo držati naš kod a zatim inicijalizujemo git repozitorijum u njemu.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>mkdir repo 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir repo 
 cd repo 
 git init
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Sada, za svaku promenu u kodu će git beležiti ko j je napravio. Zbog ovoga je važno da podesimo
 naše ime i adresu elektronske pošte koja će se pokazati u listi izmena.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git config --global user.name "Pera Perić"
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global user.name "Pera Perić"
 git config --global user.email nasemail@host.com
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h1 id="operacije-nad-repozitorijumom">Operacije nad repozitorijumom</h1>
 
@@ -139,9 +138,8 @@ git config --global user.email nasemail@host.com
 
 <p>Za početak, treba naglasiti da ako napravimo fajl u našem direktorijumu gde nam je kod, to ne znači da je taj fajl dodat i u repozitorijum. Da dodamo fajl u repozitorijum, koristimo sledeću komandu:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git add imefajla
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add imefajla
+</code></pre></div></div>
 
 <p>Sada je fajl dodat u repozitorijum. Isto tako, svaki put kad izmenimo fajl, ako želimo da git prepozna izmene, moramo ga dodati na isti način. Za ovo postoji prečica koju ćemo pomenuti kasnije.</p>
 
@@ -149,47 +147,40 @@ git config --global user.email nasemail@host.com
 
 <p>Kada uradimo izmene i kada ih dodamo na repozitorijum sa git add, potrebno je da ih snimimo (komitujemo). Prilikom snimanja izmena, treba da unesemo poruku koja opisuje datu izmenu, na primer ovako:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git commit -m "Popravljen bug #67867"
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit -m "Popravljen bug #67867"
+</code></pre></div></div>
 
 <p>Ako smo dodali fajlove u repozitorijum, nema potrebe da izmene ponovo dodajemo sa git add već možemo da ih automatski dodamo prosleđivanjem opcije -a u commit komandu:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git commit -a -m "Ispravljen bug #67776"
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit -a -m "Ispravljen bug #67776"
+</code></pre></div></div>
 
 <p>Isto tako, ako zaboravimo da izmenimo nešto a deo je nekog komita, možemo tu izmenu dodati na poslednji komit sa opcijom –amend</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git commit -a --amend
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit -a --amend
+</code></pre></div></div>
 
 <h2 id="pregled-izmena-i-diff">Pregled izmena i diff</h2>
 
 <p>Sve izmene koje su se desile možemo pregledati sa git log</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git log 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git log 
+</code></pre></div></div>
 
 <p>a ako želimo da vidimo šta je izmenjeno za dati komit, koristimo git diff</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git diff heš-komita 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff heš-komita 
+</code></pre></div></div>
 
 <p>Ako želimo da obrišemo nekomitovane promene, koristimo:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git reset --hard 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git reset --hard 
+</code></pre></div></div>
 
 <p>Da obrišemo poslednji komit i vratimo se na prethodni:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git reset --hard HEAD~1
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git reset --hard HEAD~1
+</code></pre></div></div>
 
 <h2 id="grananje">Grananje</h2>
 
@@ -199,34 +190,29 @@ git config --global user.email nasemail@host.com
 
 <p>Novu granu pravimo ovako:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git checkout -b imenovegrane 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout -b imenovegrane 
+</code></pre></div></div>
 
 <p>Ovo će napraviti novu granu i prebaciti se na nju. Sada su sve buduće izmene snimaju na novu granu, da menjamo granu, koristimo git checkout</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git checkout grana
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout grana
+</code></pre></div></div>
 
 <p>Glavna grana se zove master pa da se vratimo na nju, radimo:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git checkout master 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout master 
+</code></pre></div></div>
 
 <p>Da sve izmene spojimo sa glavnom granom, moramo da uradimo git merge, prvo, pređemo na master granu (ili u neku drugu gde želimo da uradimo spajanje)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git checkout master 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout master 
 git merge grana 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Da obrišemo granu:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git branch -d grana 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git branch -d grana 
+</code></pre></div></div>
 
 <h1 id="dobre-prakse">Dobre prakse</h1>
 
@@ -235,11 +221,10 @@ ali se pokazuje kao jako koristan metod.</p>
 
 <p>Prvo, master grana služi za stabilnu verziju softvera. U njoj se uvek nalazi stabilna verzija softvera. Druga grana je dev u kojoj se nalazi trenutna razvojna verzija softvera. Za svaku novu stavku ili komponentu koju treba implementirati, potrebno je napraviti specijalnu granu za tu stavku. Na primer, ako želimo da implementiramo novu komponentu u GUI-u, recimo iscrtavanje statističkih podataka u nekom prozoru, napravimo granu graphing iz dev grane. Na tome radimo neko vreme i onda radimo merge u dev granu. Kada sve istestiramo i spremni smo da objavimo novu stabilnu verziju, radimo merge dev grane u master. U ovom trenutkune sme biti grana za dodatne stavke. Kada uradimo merge u master, obavezno kreiramo tag da obeležimo novu verziju:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git checkout master 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout master 
 git merge dev 
 git tag 2.0 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h1 id="rad-sa-remote-serverom">Rad sa remote serverom</h1>
 
@@ -247,33 +232,28 @@ git tag 2.0
 
 <p>da kloniramo repozitorijum sa remote servera, koristimo git clone</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git clone adresa-repozitorijuma 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone adresa-repozitorijuma 
+</code></pre></div></div>
 
 <p>da uradimo update na lokalni repozitorijum koji je klon sa remote servera:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git pull 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git pull 
+</code></pre></div></div>
 
 <p>da odradimo update konkretne grane sa servera</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git pull grana 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git pull grana 
+</code></pre></div></div>
 
 <p>da pošaljemo sve izmene koje smo napravili na server:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git push 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push 
+</code></pre></div></div>
 
 <p>ovo će poslati izmene na master granu, ako želimo poslati izmene na neku drugu granu:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git push grana 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push grana 
+</code></pre></div></div>
 
 <p>Postoje i servisi koji pružaju usluge git servera za free ili određenu svotu novca u zavisnosti od potreba, na primer GitHub, GitLab itd…</p>
 

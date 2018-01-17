@@ -6,9 +6,102 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 29 Dec 2017 00:03:41 +0100</pubDate>
-    <lastBuildDate>Fri, 29 Dec 2017 00:03:41 +0100</lastBuildDate>
-    <generator>Jekyll v3.4.3</generator>
+    <pubDate>Wed, 17 Jan 2018 03:14:11 +0100</pubDate>
+    <lastBuildDate>Wed, 17 Jan 2018 03:14:11 +0100</lastBuildDate>
+    <generator>Jekyll v3.7.0</generator>
+    
+      <item>
+        <title>Algorithm analysis in functional programming</title>
+        <description>&lt;p&gt;This article has purpose to demonstrate the way of reasoning when algoritmh analysis comes for programs written in 
+functional programming paradigm. I will give some examples in Haskell to demostrate methodology and also explain some
+core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic manner which is when 
+we take limit where size of input goes to infinity.&lt;/p&gt;
+
+&lt;h1 id=&quot;list-comprehension&quot;&gt;List comprehension&lt;/h1&gt;
+
+&lt;p&gt;Firt let’s start by simple things. List comprehension is a way to define new list in terms of existing one. It is similar to what 
+you can see in math. For example the following list:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l = [x^2 | x &amp;lt;- [1..10]]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;is a list of squares from 1 to 10 (it is list [1,4,9, …, 100])&lt;/p&gt;
+
+&lt;p&gt;List comprehension is done in O(n) time. Another example is finding prime numbers:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;primes = [x | x &amp;lt;- [1..100], [y | y &amp;lt;- [2..x-1], x `mod` y == 0] == []]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This is list of primes from 1 to 100. Let’s determine what time does it take to find prime numbers from 1 to n using this method. First 
+we need to generate list of n numbers and for each to check is list [y|y&amp;lt;-[2..x-1], x &lt;code class=&quot;highlighter-rouge&quot;&gt;mod&lt;/code&gt; y == 0] empty. To generate this second
+list we need to check x elements. This yields formula: 1 + 2 + … + n which is asymptotically equal to O(n^2).&lt;/p&gt;
+
+&lt;p&gt;Here you can see that filtering does not lower number of operations since we have to perform them anyway.&lt;/p&gt;
+
+&lt;h1 id=&quot;recursion&quot;&gt;Recursion&lt;/h1&gt;
+
+&lt;p&gt;Analysis of recursive functions is not the same as in imperative programming. In imperative programming every call to 
+function is executed while in functional programming, call to function with specific parameters is executed only once!&lt;/p&gt;
+
+&lt;p&gt;We can check that in the following example:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fact :: Int -&amp;gt; Int 
+fact 1 = 1
+fact n = n * fact (n-1)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;so if we calculate fact 100 and call it again, or call fact 99 we will get result immediately. Tihs is because in functional 
+programming, function always returns the same result when called with the same parameters so this can be cached. This 
+is good for us when worrying about time but may be bad if we worry about space. This complicates our time analysis 
+For example, consider Fibonacci number generator:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fib = 0 = 1
+fib 1 = 1 
+fib n = fib (n-1) + fib (n-2) 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;if we apply our analysis and know that results are cached, we get total execution time of O(n) since values won’t be computed twice.&lt;/p&gt;
+
+&lt;h1 id=&quot;operations-on-lists&quot;&gt;Operations on lists&lt;/h1&gt;
+
+&lt;p&gt;We will have to consider some operations for list and to be aware of their time performance. The most used 
+operation is adding to the head of list: x:xs is a new list with its head x and tail xs. This operation 
+takes constant time since Haskell implements lists as single-linked and saves pointer only to the head of list. 
+We are not copying whole list, we are just returning new head of a list.&lt;/p&gt;
+
+&lt;p&gt;We using concatenation with ++, then we have O(n) complexity and explanation is that lists are single-linked and we have
+to traverse list and make copy of elements to be able to create concatenated version.&lt;/p&gt;
+
+&lt;p&gt;Operator !! which will give n-th element in a list takes also O(n) time since it is property of a list.&lt;/p&gt;
+
+&lt;h1 id=&quot;quick-sort-example&quot;&gt;Quick sort example&lt;/h1&gt;
+
+&lt;p&gt;Let’s do the analysis for our quick sort example:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;qsort :: [Int] -&amp;gt; [Int]
+qsort [] = []
+qsort l = (qsort [x | x&amp;lt;-l, x &amp;lt; y]) ++ [y] ++ (qsort [x | x&amp;lt;-l, x&amp;gt;y]) where y = (head l)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;first we will do list comprehension for left and right part and it takes O(n) time and then we will merge results of sorting individual parts which also takes O(n) time. For sorting both sides we need 2T(n/2) time if we assume that left and right sides are approximately equal. Now we have formula:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;T(n) = 2T(n/2) + O(n)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;so by Akra-Bazzi theorem we conclude that T(n) = O(nlog(n)).&lt;/p&gt;
+</description>
+        <pubDate>Tue, 16 Jan 2018 23:15:00 +0100</pubDate>
+        <link>http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html</guid>
+        
+        
+        <category>functional-programming</category>
+        
+        <category>software</category>
+        
+        <category>algorithms</category>
+        
+      </item>
     
       <item>
         <title>A bit of functional programming by example in Haskell</title>
@@ -31,7 +124,7 @@ imperative approach, we say how to compute factorial of n: “start with 1 and s
 
 &lt;p&gt;In above example you can see one important difference between these approaches. In declarative programming we define value only once. Translated in language you already know, think of this as using only constant variables instead of common variables which can change state later. This is called immutability which means “when defined once, cannot be changed later”. Take a look at the following example of C code:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
 
 int f( int* x ) 
 {
@@ -46,8 +139,7 @@ int main() {
 	printf(&quot;%d\n&quot;, f(&amp;amp;x));
 	return 0;
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Our function f changes state of x by increasing it by one and returns previous state increased by one. For a moment let’s 
 orget about this function definitiion and imagine we only see main function. What would you guess out of it? It seems logical 
@@ -89,51 +181,47 @@ use:&lt;/p&gt;
 
 &lt;p&gt;Firt we will define our list element structure:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef struct ListElem_t
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef struct ListElem_t
 {
         int value;
         struct ListElem_t* next;
 } ListElem;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;You can see that element hold its value and pointer to next element in a list. This pointer can be NULL which means there’s 
 nothing after this element.&lt;/p&gt;
 
 &lt;p&gt;Now let’s create method that will reserve memory for our element and return instance of this element:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ListElem* create_element(int value, ListElem* next)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ListElem* create_element(int value, ListElem* next)
 {
         ListElem* elem = (ListElem*) malloc(sizeof(ListElem));
         elem-&amp;gt;value = value;
         elem-&amp;gt;next = next;
         return elem;
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;What does this method do is basically reserving memory for our element structure, assigning value to the new element 
 from parameters and assigns next element to the element given as argument. At the end, it returns new instance of this element.&lt;/p&gt;
 
 &lt;p&gt;Now we can create our List structure which basically has only pointer to the head of list:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef struct
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef struct
 {
         ListElem* head;
 } List;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now we will create function that, for a given list element, creates list with head assigned to the given list element:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List* create_list(ListElem* head)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List* create_list(ListElem* head)
 {
         List* l = (List*) malloc(sizeof(List));
         l-&amp;gt;head = head;
         return l;
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Nothing special so far, right?&lt;/p&gt;
 
@@ -144,28 +232,26 @@ approach is inefficient. The good news are that we do not have to do that. We wi
 whic has head pointing to the new element. Next pointer of new element will be just head of our list in arguments so we basically 
 do not copy anything. We can do this trick because immutability guarantees that elements of the list won’t be changed in any time.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List* push(List* l, int value)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List* push(List* l, int value)
 {
         return create_list(create_element(value, l-&amp;gt;head));
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now let’s make function that will return new list but without head of a given list (i.e. tail of list):&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List* tail(List* l)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List* tail(List* l)
 {
         return create_list(l-&amp;gt;head-&amp;gt;next);
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;If list is not empty, we simply create new list which has head of next elemen of head of our given list. 
 If list is empty, behavior of tail is not defined so we will end up with segmentation fault (we will try dereferencing NULL pointer).&lt;/p&gt;
 
 &lt;p&gt;For debugging purposes we will make print function.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void print(List* l)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void print(List* l)
 {
         if (l-&amp;gt;head == NULL) printf(&quot;\n&quot;);
         else
@@ -174,12 +260,11 @@ If list is empty, behavior of tail is not defined so we will end up with segment
                 print(tail(l));
         }
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;So now we can test our list in main:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int main() {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int main() {
         List *l = create_list(NULL);
         push(l, 5);
         print(l);
@@ -190,8 +275,7 @@ If list is empty, behavior of tail is not defined so we will end up with segment
         print(push(l2, 10));
         return 0;
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;So you can see that when we add element in front of list, we assign this result to the new list since push returns new instance of 
 list where it has one additional element.&lt;/p&gt;
@@ -210,28 +294,25 @@ Types in Haskell must begin with upper case letter. To test examples, you can ru
 
 &lt;p&gt;Let’s make our first function which takes a number and return square of that number.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sq :: Int -&amp;gt; Int
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sq :: Int -&amp;gt; Int
 sq x = x*x
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;So we can run this in ghci like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ghci example.hs 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ghci example.hs 
 &amp;gt;&amp;gt;&amp;gt; sq 5 
 25
 &amp;gt;&amp;gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;so you can see that we can call function and easily get result. We first declare function by specifying  what types of argument it recieves and what type it returns. After that, we can define our function.&lt;/p&gt;
 
 &lt;p&gt;Now let’s define function that computes sum of two itegers:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add :: Int -&amp;gt; Int -&amp;gt; Int 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add :: Int -&amp;gt; Int -&amp;gt; Int 
 add a b = a+b
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Here we have two parameters and result. The reson we declared function like above is that this declration is actully not a function 
 with two parameters. In Haskell, functions can recieve only one parameter and return only one result. Here we have function 
@@ -239,15 +320,13 @@ which takes one integer and returns function which takes another integer which t
 
 &lt;p&gt;This can be easily proven by passing only one parameter to the function:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;inc = add 1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;inc = add 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now inc is function which takes one parameter and returns that parameter increased by one. For instance&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;inc 5 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;inc 5 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;will return 6.&lt;/p&gt;
 
@@ -257,59 +336,50 @@ which takes one integer and returns function which takes another integer which t
 
 &lt;p&gt;To define list:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l = [1,2,3]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l = [1,2,3]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;to get head of the list you can simply do:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head l 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head l 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;to get tail of list:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tail l
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tail l
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;you can do list concaenation which will merge two lists in a new list:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l = l1 ++ l2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l = l1 ++ l2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;to get list with new element added to the head (our push function):&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l2 = 5 : l
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l2 = 5 : l
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;To get list as range of numbers:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;range = [1..10] 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;range = [1..10] 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now we get to interesting stuff: list comprehension!&lt;/p&gt;
 
 &lt;p&gt;This is something you have already seen in math: you can define list by specifying its general element. For instance:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;squares = [x*x | x &amp;lt;- [1..10]]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;squares = [x*x | x &amp;lt;- [1..10]]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;or you can add additionall condition, for instance squares divisible by 3:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;squares = [x*x | x &amp;lt;- [1..10], x*x `mod` 3 == 0]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;squares = [x*x | x &amp;lt;- [1..10], x*x `mod` 3 == 0]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;or to define list of tuples which have property that their distance from (0,0) is less than 1:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;unitcircle = [(x,y) | x &amp;lt;- [0, 0.01..10], y &amp;lt;- [0,0.01..10], x*x + y*y &amp;lt; 1]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;unitcircle = [(x,y) | x &amp;lt;- [0, 0.01..10], y &amp;lt;- [0,0.01..10], x*x + y*y &amp;lt; 1]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Note that I have specified step for our ranges for x and y as well.&lt;/p&gt;
 
@@ -318,26 +388,24 @@ which takes one integer and returns function which takes another integer which t
 &lt;p&gt;Something very useful in functional programming languages is pattern matching. Imagine you are trying to implement factorial. First you will check is parameter is zero. If it is, return 1, else return that number times factorial of number decreased by one. 
 In Haskell this checking can be easily written using pattern matching:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fact :: Int -&amp;gt; Int
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fact :: Int -&amp;gt; Int
 fact 0 = 1
 fact n = n * (fact (n-1))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Pattern matching works in the following manner: it will check does arguments of function satisfy first condition, if yes, return given result, else go forward to next condition.&lt;/p&gt;
 
 &lt;p&gt;For example the following function will return 1 if any of its two arguments is zero, 0 otherwise:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;anyzero :: Int -&amp;gt; Int -&amp;gt; Int
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;anyzero :: Int -&amp;gt; Int -&amp;gt; Int
 anyzero 0 x = 1
 anyzero x 0 = 1
 anyzero x y = 0
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Some list functions&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mymap :: (a -&amp;gt; b) -&amp;gt; [a] -&amp;gt; [b]
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mymap :: (a -&amp;gt; b) -&amp;gt; [a] -&amp;gt; [b]
 mymap _ [] = []
 mymap f (x:xs) = (f x) : (mymap f xs)
 
@@ -357,14 +425,13 @@ myfilter f (x:xs) = if (f x) then x : (myfilter f xs) else myfilter f xs
 *Main&amp;gt; reduce (+) 0 [1,2,3,4,5]
 15
 *Main&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;some-nice-examples&quot;&gt;Some nice examples&lt;/h1&gt;
 
 &lt;p&gt;Function which removes repeating elements&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;norepeat :: (Eq a) =&amp;gt; [a] -&amp;gt; [a]
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;norepeat :: (Eq a) =&amp;gt; [a] -&amp;gt; [a]
 norepeat [] = [] 
 norepeat (x:[]) = [x]
 norepeat (x:y:xs) = if x == y then norepeat (x:xs) else x:(norepeat (y:xs))
@@ -378,20 +445,18 @@ norepeat (x:y:xs) = if x == y then norepeat (x:xs) else x:(norepeat (y:xs))
 *Main&amp;gt; norepeat [1,2,5]
 [1,2,5]
 *Main&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Quick sort&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;qsort :: [Int] -&amp;gt; [Int]
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;qsort :: [Int] -&amp;gt; [Int]
 qsort [] = []
 qsort l = (qsort [x | x&amp;lt;-l, x &amp;lt; y]) ++ [y] ++ (qsort [x | x&amp;lt;-l, x&amp;gt;y]) where y = (head l)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Splitting string into words&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;findFirstWord :: [Char] -&amp;gt; ([Char], [Char])
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;findFirstWord :: [Char] -&amp;gt; ([Char], [Char])
 findFirstWord &quot;&quot; = (&quot;&quot;, &quot;&quot;)
 findFirstWord &quot; &quot; = (&quot;&quot;, &quot;&quot;)
 findFirstWord s =
@@ -403,24 +468,22 @@ split :: [Char] -&amp;gt; [[Char]]
 split &quot;&quot; = []
 split s = let (x, y) = findFirstWord s
           in [x] ++ (split y)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;String length&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;strlen :: String -&amp;gt; Int
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;strlen :: String -&amp;gt; Int
 strlen s
     | s == &quot;&quot; = 0
     | otherwise = 1 + (strlen $ tail s)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;data-types&quot;&gt;Data types&lt;/h1&gt;
 
 &lt;p&gt;We can define data types by specifying type name and its constructors. Let’s take an example and make Zipper data type. This type
 is used mostly in editors. It is basically a list with focused element. You can go left or right and move focus around the list.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data Zipper a = Zip [a] a [a] deriving (Show)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data Zipper a = Zip [a] a [a] deriving (Show)
 
 right :: Zipper a -&amp;gt; Zipper a
 right (Zip l focus []) = Zip l focus [] 
@@ -430,12 +493,11 @@ right (Zip l focus r) = Zip (focus:l) (head r ) (tail r)
 left :: Zipper a -&amp;gt; Zipper a
 left (Zip [] focus r) = Zip [] focus r
 left (Zip l focus r) = Zip (tail l) (head l) (focus:r)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;now we can do the following:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;*Main&amp;gt; z = Zip [3, 2, 1] 4 [5, 6, 7]
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;*Main&amp;gt; z = Zip [3, 2, 1] 4 [5, 6, 7]
 *Main&amp;gt; right z 
 Zip [4,3,2,1] 5 [6,7]
 *Main&amp;gt; left $ right z 
@@ -449,13 +511,12 @@ Zip [] 1 [2,3,4,5,6,7]
 *Main&amp;gt; left $ left $ left $ left $ left $ right z 
 Zip [] 1 [2,3,4,5,6,7]
 *Main&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Another example is binary tree node. Note that node can be empty (has no children and no value). Here we are using Haskell’s record
 syntax which gives us functions for extracting data. This is not usual way for implementing node in binary tree (we can go pretty well with usual data type definition as above) but we show this to demonstrate record syntax.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data TreeNode = Node {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data TreeNode = Node {
         left :: Node,
         right :: Node,
         value :: Int
@@ -483,8 +544,7 @@ fromlist l n = let x = head l
 
 bstsort :: [Int] -&amp;gt; [Int]
 bstsort l = tolist (fromlist l EmptyNode)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;monads&quot;&gt;Monads&lt;/h1&gt;
 
@@ -508,7 +568,7 @@ with passed argument and returns it. This is best illustrated with simple exampl
 integer with list of strings which represents debug info. We first make type Debuggable and then implement bind and ret. Other 
 functions are implemented the same way as inc which increases number by one and stores message in a log.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data Debuggable = Debuggable (Int, [[Char]]) deriving (Show)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data Debuggable = Debuggable (Int, [[Char]]) deriving (Show)
 
 
 ret :: Int -&amp;gt; Debuggable 
@@ -519,15 +579,14 @@ bind (Debuggable a b) f = Debuggable (y, z ++ b) where Debuggable (y,z) = f(a)
 
 inc :: Int -&amp;gt; Debuggable  
 inc x = Debuggable (x+1, [&quot;Number increased by one&quot;])
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Note how we do unwrapping and wrapping in bind. There we return our result with concatenated list of debug info from a given parameter
 and additional info provided by calling function.&lt;/p&gt;
 
 &lt;p&gt;We are deriving Show here to make our type printable on console. Now we can do something like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;*Main&amp;gt; ret 5 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;*Main&amp;gt; ret 5 
 Debuggable (5,[])
 *Main&amp;gt; inc 5 
 Debuggable (6,[&quot;Number increased by one&quot;])
@@ -536,12 +595,11 @@ Debuggable (6,[&quot;Number increased by one&quot;])
 *Main&amp;gt; bind (bind (ret 5) inc) inc
 Debuggable (7,[&quot;Number increased by one&quot;,&quot;Number increased by one&quot;])
 *Main&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Haskell has its own way of defining monads by implementing these operators such that Haskell understands them correctly as monads.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import Control.Applicative -- Otherwise you can't do the Applicative instance.
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import Control.Applicative -- Otherwise you can't do the Applicative instance.
 import Control.Monad (liftM, ap)
 
 data Debuggable a = Debuggable (a, [[Char]]) deriving (Show)
@@ -560,32 +618,29 @@ instance Monad Debuggable where
 
 inc :: Int -&amp;gt; Debuggable Int
 inc x = Debuggable (x+1, [&quot;Number increased by one&quot;])
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now we can do something like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;*Main&amp;gt; (inc 5) &amp;gt;&amp;gt;= (\x -&amp;gt; (return x) &amp;gt;&amp;gt;= inc)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;*Main&amp;gt; (inc 5) &amp;gt;&amp;gt;= (\x -&amp;gt; (return x) &amp;gt;&amp;gt;= inc)
 Debuggable (7,[&quot;Number increased by one&quot;,&quot;Number increased by one&quot;])
 *Main&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;You can see how we use bind operator here. Haskell has syntatic sugar for this and it’s called do-notation&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;inc2 :: Int -&amp;gt; Debuggable Int 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;inc2 :: Int -&amp;gt; Debuggable Int 
 inc2 num = do 
   x &amp;lt;- inc num
   y &amp;lt;- inc x 
   return y 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;unit-monad&quot;&gt;Unit Monad&lt;/h1&gt;
 
 &lt;p&gt;This is just unit wrapping around type, nothing special:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import Control.Applicative -- Otherwise you can't do the Applicative instance.
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import Control.Applicative -- Otherwise you can't do the Applicative instance.
 import Control.Monad (liftM, ap)
 
 data Unit a = Unit a deriving (Show)
@@ -600,14 +655,13 @@ instance Applicative Unit where
 instance Monad Unit where 
   return x = Unit x
   (&amp;gt;&amp;gt;=) (Unit x) f = f x
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;maybe-monad&quot;&gt;Maybe Monad&lt;/h1&gt;
 
 &lt;p&gt;Useful if you have something which can be “null” or undefined. Value of this type can be something useful or nothing.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import Control.Applicative -- Otherwise you can't do the Applicative instance.
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import Control.Applicative -- Otherwise you can't do the Applicative instance.
 import Control.Monad (liftM, ap)
 
 data Maybe a = Just a | Nothing
@@ -622,8 +676,7 @@ instance Applicative Maybe where
 instance Monad Maybe where 
   return x = Just x
   (&amp;gt;&amp;gt;=) (Nothing) f = Nothing
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;io-monad&quot;&gt;IO Monad&lt;/h1&gt;
 
@@ -633,56 +686,49 @@ executable without interactive mode. HAHAHAHA I know what you are thinking, we a
 
 &lt;p&gt;you can compile your program with:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ghc hello.hs -o hello -dynamic 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ghc hello.hs -o hello -dynamic 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;and run it with:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./hello
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./hello
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;and here it is:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;main :: IO ()
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;main :: IO ()
 main = putStrLn &quot;Hello world!&quot; 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Let’s make small i/o program!&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;main :: IO ()
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;main :: IO ()
 main = do
   putStrLn &quot;Enter your name&quot;
   name &amp;lt;- getLine
   putStrLn $ &quot;Your name is &quot; ++ name
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;appendix-1-data-types&quot;&gt;Appendix 1: data types&lt;/h1&gt;
 
 &lt;p&gt;you can create data types like so:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data Person = Person {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data Person = Person {
 	firstName :: String,
 	lastName :: String,
 	age :: Int
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;and then you can get data from Person value like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fullName p = (firstName p) ++ (lastName p)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fullName p = (firstName p) ++ (lastName p)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;or create new value:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;john = Person {firstName = &quot;John&quot;, lastName = &quot;Johnson&quot;, age=55}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;john = Person {firstName = &quot;John&quot;, lastName = &quot;Johnson&quot;, age=55}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;appendix-2-interesting-links&quot;&gt;Appendix 2: Interesting links&lt;/h1&gt;
 
@@ -729,9 +775,8 @@ can be implemented with builder design pattern. Building SQL query is another ex
 
 &lt;p&gt;Another case is when you want to have default parameters and vary them if needed. Take for example this piece of code:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClass(int a, int b, int c=5, intd=4) ...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClass(int a, int b, int c=5, intd=4) ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;What if we want to set values for a,b and d but take c as default. In C++, we need to set value of c such that we are able to set value
 of d.&lt;/p&gt;
@@ -739,24 +784,22 @@ of d.&lt;/p&gt;
 &lt;p&gt;Builder is implemented as follows: Implement Builder class which in constructor can recieve all its parameters and also has empty constructor which sets up default parameters. For every parameter, implement “setX” method which returns new instance of Builder with changed
 specified parameter. Also, you will have to implement build() function which returns concrete object. This class can be used like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClass my_object = MyClassBuilder()
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClass my_object = MyClassBuilder()
 	.setA(2)
 	.setB(3)
 	.setD(4)
 	.build();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;so every call to set method will return new instance of builder and last call will build concrete object from lastly created builder instance which has all parameters. The real magic comes when you want to make some default values and then create objects with one parameter changed:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClassBuilder builder = MyClassBuilder()
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClassBuilder builder = MyClassBuilder()
 	.setA(2)
 	.setB(3);
 
 MyClass myobj1 = builder.setD(7).build();
 MyClass myobj2 = builder.setD(10).build();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;abstract-factory&quot;&gt;Abstract factory&lt;/h1&gt;
 
@@ -774,13 +817,12 @@ the following abstract classes: AbstractWindow, AbstractButton, AbstractText.&lt
 &lt;p&gt;so then you can subcass this class and makeDarkFactory and LightFactory, every in its implementation returns needed class instances for
 button, window and text. Now you can use it like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;AbstractFactory theme = DarkFactory()
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;AbstractFactory theme = DarkFactory()
 AbstractButton btn = theme.getButton(); 
 AbstractWindow win = theme.getWindow();
 
 ...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;when structuring all this in directories, pay attention to put concrete factory and objects which are created by that factory at the same place if possible&lt;/p&gt;
 
@@ -814,10 +856,9 @@ can pass inner objects using constructor, using Builder, abstract factory or by 
 implement later some kind of logging. We can make decorator class which, before calls its child’s method, write log in a file
 or to the standard output. The we just need to decorate our existing simulator object:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Simulator* simulator = new Simulator(); // logging turned off 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Simulator* simulator = new Simulator(); // logging turned off 
 simulator = new DebugDecorator(simulator); // we turn on logging
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;hain-of-responsibility&quot;&gt;hain of responsibility&lt;/h1&gt;
 
@@ -1030,9 +1071,8 @@ ne koristim Vim a to je za sve ostalo što nije pisanje koda. Toliko ga koristim
 
 &lt;p&gt;Prva stvar koju možete videti kad ga uključite (napravite i otvorite .org fajl) je mogućnost da pravite lako TODO liste. Sintaksa je slefeća:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* TODO nešto 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* TODO nešto 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Ako pritisnete kombinaciju ‘Control+t’ stavka se markira kao DONE. Ako ponovo pritisnete datu kombinaciju stavka se briše pa ako opet pritisnete dobijate opet marker “TODO”. Ako lupite alt+enter, dobijate novu stavku. Ove stavke su zapravo sekcije, ispod njih kada pišete vi 
 zapravo pišete sadržaj sekcije. Sekciju možete “sakriti” tako što se kursorom namestite na naslov sekcije (to sa zvezdicom) i kliknete &lt;TAB&gt;.&lt;/TAB&gt;&lt;/p&gt;
@@ -1041,19 +1081,17 @@ zapravo pišete sadržaj sekcije. Sekciju možete “sakriti” tako što se kur
 
 &lt;p&gt;Liste se prave sa znakom “+”:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ item 1 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ item 1 
 + item 2
 ....
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;lupite alt+enter i dobijate novu stavku liste.&lt;/p&gt;
 
 &lt;p&gt;U dokumentima možete pisati i matematičke formule uz pomoć LaTeX-a. Njih ogradite sa “$$”, npr:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$$ a^2 = \int f(x)dx $$ 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$$ a^2 = \int f(x)dx $$ 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;renderovanje formula se vrši sa Control+c pa onda Control+x pa pritisnete “l”.&lt;/p&gt;
 
@@ -1062,21 +1100,18 @@ Izlazi vam prozor gde su vam dati tasteri koje treba pritisnuti za eksport u odr
 
 &lt;p&gt;Možete uključiti (navezati, “inkludovati”) druga org-mode dokumenta pa će u eksportovanom delu biti eksportovano sve. Zbogdno ako pišete veći dokument ili možda čak i knjigu. :)&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+INCLUDE: &quot;putanja/do/fajla.org&quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+INCLUDE: &quot;putanja/do/fajla.org&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;A da isključite sadržaj u eksportovanom dokumentu:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+OPTIONS: toc:nil
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+OPTIONS: toc:nil
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Da u eksportovanom dokumentu matematičke formule snimite kao slike (zgodno za pretraživače koji imaju problema sa matematičkim formulama ili recimo za Kindl):&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+OPTIONS: tex:dvipng
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+OPTIONS: tex:dvipng
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Da otvorite blok za izvorni kod upišete “&amp;lt;s” pa lupite TAB i onda samo u nastavku upišete jezik koji hoćete, i bloku kad pozicionirate kursor i pritisnete Control+c pa onda ‘ (jednostruki navodnik), otvara  se prozor za pisanje koda, sa sve obojenom sintaksom datog jezika. :D Da zatvorite prozor i sačuvate kod, upotrebite istu kombinaciju tastera.&lt;/p&gt;
 
@@ -1167,59 +1202,51 @@ infrastructure how database is organized.&lt;/p&gt;
 then subproject for every course you are attending on the university. So, in university project, you can have algebra subproject 
 and every task related to algebra on the university can be placed here. So let’s create our first project:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako projects add university
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako projects add university
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;so now when you list your projects, it will show that you have one project:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ mako projects 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ mako projects 
 Projects:
 _________________
 university
 ~ 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now it’s time to add some subprojects to our university project:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subprojects add algebra
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subprojects add algebra
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;now we can list subprojects of university project:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subprojects 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subprojects 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;When we have project and its subprojects we can add individual tasks to them:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra tasks add &quot;Read chapter 1&quot; 2017-08-21 2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra tasks add &quot;Read chapter 1&quot; 2017-08-21 2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;First argument to task add option is desciption of the task, second is due date and third is estimated time to complete given task. This is important since Mako will calculate how much time you are spending on tasks and hoow this time relates to your expectations.&lt;/p&gt;
 
 &lt;p&gt;Now we cna list tasks:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra tasks
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra tasks
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;to increase spent time on a task, do the following:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra task 1 do 2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra task 1 do 2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;first you specify task index given by task list and after “do” you specify how much time did you spend doing particular task, this will increase spent time on a task every time you run “do” command.&lt;/p&gt;
 
 &lt;p&gt;To mark task as done:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra task 1 done 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project university subproject algebra task 1 done 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now, when you list tasks, you will see that our task is green instead of red which means it is marked as done.&lt;/p&gt;
 
@@ -1227,9 +1254,8 @@ university
 
 &lt;p&gt;Since one blogpost is not enough to explain whole functionality and since I explained just a little bit of this tool, I suggest to run:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako help
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako help
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;to see what you can use.&lt;/p&gt;
 
@@ -1280,19 +1306,17 @@ postoje softveri koji omogućavaju upotrebu Gita upotrebom grafičkih alata. Rad
 
 &lt;p&gt;Recimo da \elimo da napravimo naš repozitorijum lokalno, ovo radimo tako što prvo napravimo direktorijum gde ćemo držati naš kod a zatim inicijalizujemo git repozitorijum u njemu.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir repo 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir repo 
 cd repo 
 git init
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Sada, za svaku promenu u kodu će git beležiti ko j je napravio. Zbog ovoga je važno da podesimo
 naše ime i adresu elektronske pošte koja će se pokazati u listi izmena.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git config --global user.name &quot;Pera Perić&quot;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git config --global user.name &quot;Pera Perić&quot;
 git config --global user.email nasemail@host.com
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;operacije-nad-repozitorijumom&quot;&gt;Operacije nad repozitorijumom&lt;/h1&gt;
 
@@ -1302,9 +1326,8 @@ git config --global user.email nasemail@host.com
 
 &lt;p&gt;Za početak, treba naglasiti da ako napravimo fajl u našem direktorijumu gde nam je kod, to ne znači da je taj fajl dodat i u repozitorijum. Da dodamo fajl u repozitorijum, koristimo sledeću komandu:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git add imefajla
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git add imefajla
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Sada je fajl dodat u repozitorijum. Isto tako, svaki put kad izmenimo fajl, ako želimo da git prepozna izmene, moramo ga dodati na isti način. Za ovo postoji prečica koju ćemo pomenuti kasnije.&lt;/p&gt;
 
@@ -1312,47 +1335,40 @@ git config --global user.email nasemail@host.com
 
 &lt;p&gt;Kada uradimo izmene i kada ih dodamo na repozitorijum sa git add, potrebno je da ih snimimo (komitujemo). Prilikom snimanja izmena, treba da unesemo poruku koja opisuje datu izmenu, na primer ovako:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git commit -m &quot;Popravljen bug #67867&quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git commit -m &quot;Popravljen bug #67867&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Ako smo dodali fajlove u repozitorijum, nema potrebe da izmene ponovo dodajemo sa git add već možemo da ih automatski dodamo prosleđivanjem opcije -a u commit komandu:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git commit -a -m &quot;Ispravljen bug #67776&quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git commit -a -m &quot;Ispravljen bug #67776&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Isto tako, ako zaboravimo da izmenimo nešto a deo je nekog komita, možemo tu izmenu dodati na poslednji komit sa opcijom –amend&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git commit -a --amend
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git commit -a --amend
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;pregled-izmena-i-diff&quot;&gt;Pregled izmena i diff&lt;/h2&gt;
 
 &lt;p&gt;Sve izmene koje su se desile možemo pregledati sa git log&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git log 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git log 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;a ako želimo da vidimo šta je izmenjeno za dati komit, koristimo git diff&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git diff heš-komita 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git diff heš-komita 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Ako želimo da obrišemo nekomitovane promene, koristimo:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git reset --hard 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git reset --hard 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Da obrišemo poslednji komit i vratimo se na prethodni:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git reset --hard HEAD~1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git reset --hard HEAD~1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;grananje&quot;&gt;Grananje&lt;/h2&gt;
 
@@ -1362,34 +1378,29 @@ git config --global user.email nasemail@host.com
 
 &lt;p&gt;Novu granu pravimo ovako:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout -b imenovegrane 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout -b imenovegrane 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Ovo će napraviti novu granu i prebaciti se na nju. Sada su sve buduće izmene snimaju na novu granu, da menjamo granu, koristimo git checkout&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout grana
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout grana
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Glavna grana se zove master pa da se vratimo na nju, radimo:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout master 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout master 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Da sve izmene spojimo sa glavnom granom, moramo da uradimo git merge, prvo, pređemo na master granu (ili u neku drugu gde želimo da uradimo spajanje)&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout master 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout master 
 git merge grana 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Da obrišemo granu:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git branch -d grana 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git branch -d grana 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;dobre-prakse&quot;&gt;Dobre prakse&lt;/h1&gt;
 
@@ -1398,11 +1409,10 @@ ali se pokazuje kao jako koristan metod.&lt;/p&gt;
 
 &lt;p&gt;Prvo, master grana služi za stabilnu verziju softvera. U njoj se uvek nalazi stabilna verzija softvera. Druga grana je dev u kojoj se nalazi trenutna razvojna verzija softvera. Za svaku novu stavku ili komponentu koju treba implementirati, potrebno je napraviti specijalnu granu za tu stavku. Na primer, ako želimo da implementiramo novu komponentu u GUI-u, recimo iscrtavanje statističkih podataka u nekom prozoru, napravimo granu graphing iz dev grane. Na tome radimo neko vreme i onda radimo merge u dev granu. Kada sve istestiramo i spremni smo da objavimo novu stabilnu verziju, radimo merge dev grane u master. U ovom trenutkune sme biti grana za dodatne stavke. Kada uradimo merge u master, obavezno kreiramo tag da obeležimo novu verziju:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout master 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout master 
 git merge dev 
 git tag 2.0 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;rad-sa-remote-serverom&quot;&gt;Rad sa remote serverom&lt;/h1&gt;
 
@@ -1410,33 +1420,28 @@ git tag 2.0
 
 &lt;p&gt;da kloniramo repozitorijum sa remote servera, koristimo git clone&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone adresa-repozitorijuma 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone adresa-repozitorijuma 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;da uradimo update na lokalni repozitorijum koji je klon sa remote servera:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git pull 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git pull 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;da odradimo update konkretne grane sa servera&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git pull grana 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git pull grana 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;da pošaljemo sve izmene koje smo napravili na server:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git push 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git push 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;ovo će poslati izmene na master granu, ako želimo poslati izmene na neku drugu granu:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git push grana 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git push grana 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Postoje i servisi koji pružaju usluge git servera za free ili određenu svotu novca u zavisnosti od potreba, na primer GitHub, GitLab itd…&lt;/p&gt;
 
@@ -1517,61 +1522,6 @@ U gradivo treba da uđe svaka teorija, da se izučava način razmišljanja, nau�
         <category>education</category>
         
         <category>science</category>
-        
-      </item>
-    
-      <item>
-        <title>Git + CMake + unit testovi = kako se softver pravilno razvija</title>
-        <description>&lt;p&gt;Dosta godina se bavim programiranjem i mogu reći da sam video zaista dosta primera o tome kako se razvija softver. Dosta faktora
-utiče na razvoj softvera, pre svega utiču resursi poput finansija, ljudi, vremena i samog okruženja i konteksta. Pored ovih, postoje 
-i tehnički razlozi zašto neki softver ugleda svetlost dana a zašto neki ne. Pored svih ovih resursa, tehnički resursi 
-značajno mogu da umanje i troškove i vreme potrebno za razvoj i broj ljudi koji je potreban da razvija softver. Naravno, nekada
-dodatni slojevi u razvoju mogu i uvećati sve ove stavke ali to se uglavnom dešava zbog nesposobnosti da se dati tehnički alati 
-koriste pravilno ili zato što ti alati ne zadovoljavaju potrebe onog ko razvija softver. Ova druga mogućnost je manje verovatna 
-i ona se obično dešava u velikim kompanijama poput Gugla, Fejsbuka i sl.&lt;/p&gt;
-
-&lt;p&gt;U ovom članku ću pokazati kakvi su sve tipovi alata potrebni za kvalitetan razvoj softvera i dati neke primere istih.&lt;/p&gt;
-
-&lt;p&gt;Prilikom razvoja softvera važe neke činjenice kao na primer da je često potrebno uraditi neku inovaciju. Da bismo došli do toga, 
-stalno moramo da pravimo eksperimente. Da bismo tako nešto uspeli, potrebno nam je okruženje koje nam omogućava da eventualne 
-greške i pogrešne odluke eliminišemo vraćanjem na stariju verziju softvera. U ovome nam pomaže sistem za kontrolu verzija a jedan 
-primer takvog alata je Git o kom će biti više reči kasnije.&lt;/p&gt;
-
-&lt;p&gt;Tokom razvoja, treba znati kada je određeni posao završen. Pre svega, čitav razvoj je potrebno podeliti u manje delove 
-kako bismo mogli da radimo delić po delić. Ovo je značajno i iz tehničke i iz pihološke strane. Prvo, psihološki, čoveku je lakše
-da održ motivaciju kada radi deo po deo i kada vidi napredak u tom radu. Sa tehničke strane, rad deo po deo nam omogućava 
-da svaki delić izolujemo i zasebno testiramo. U ovome nam pomažu unit testovi koji upravo tome služe. Napišemo testove 
-za modul koji razvijamo i razvijamo ga sve dok taj modul ne prođe sve napisane testove. Ovako znamo i kada je posao završen - onog trenutka kada modul prolazi sve unit testove. Ovim e eliminiše i još jedna, danas loša, osobina - perfekcionizam. Danas, kada je važno biti
-brz i brzo menjati stvari u malim iteracijama perfekcionizmu nema mesta i posao je završen onog trenutka kada je modul dovoljno dobar.&lt;/p&gt;
-
-&lt;p&gt;I treći alat je alat za distribuiranje i izgradnju softvera. Ovaj alat treba da se postara da se svi vaši fajlovi 
-uredno kompajliraju, da se dokumentacija spakuje i da se to sve može instalirati na sistem korisnika. Primer ovakvog alata je 
-svakako CMake ali ovde ne mogu da kažem da samo njega koristim. Sve zavisi u kom jeziku radite. Ako koristite C++, CMake je 
-svakako way-to-go ali nije ako koristite Python jer on ima svoj sistem.&lt;/p&gt;
-
-&lt;h2 id=&quot;git&quot;&gt;Git&lt;/h2&gt;
-
-&lt;p&gt;Kao što je već napomenuto, Git je sistem za kontrolu verzija. Omogućava nam da zabeležimo svaku promenu i da se u svakom trenutku možemo vratiti na bilo koju verziju od ranije. Ima dosta opcija, može se raditi i grananje. Grananje je metod da u jednom trenutku krenete da razvijate softver u dva pravca. Na primer, niste sigurni koji algoritam će rešiti konkretan problem bolje. Razvoj možete razdvojiti u dva pravca (branch-a) i razvijati svaki posebno. Kasnije kada znate koji je algoritam bolji, ovaj drugi možete samo izbrisati i nastaviti razvoj normalno. Nema copy-paste koda pa da testirate neke izmene. Sve možete u postojećem kodu. Pored ovoga, Git je distribuirani sistem što nam omogućava da softver razvijamo na više računara i da ne brinemo kako ćemo raditi sync svega toga. Postoje i onlajn servisi gde možete čuvati kod poput GitHaba koji je ada postao kao jedna društvena mreža sa bogatom bazom softvera. 
-Git omogućava lagan rad u timovima, rade svi zajedno ali svako svoj posao. Sve se radi na istom projektu.&lt;/p&gt;
-
-&lt;h2 id=&quot;cmake&quot;&gt;CMake&lt;/h2&gt;
-
-&lt;p&gt;Kao što sam gore naveo, ne mogu baš da kažem da je CMake jedini alat za ovu svrhu koji koristim ali je definitivno vredan da 
-se izdvoji kao lider. Možete napisati kako se vaš softver kompajlira, koji fajlovi se instaliraju i gde u sistemu. CMake radi na više različitih platformi a koristi ga dosta veliki broj softvera. Jako se lako uči i koristi a dokumentacije ima dosta. Olakšaćete život distributerima i korisnicima ali i sebi ako planirate da pravite instalacije za različite platforme.&lt;/p&gt;
-
-&lt;h2 id=&quot;unit-testovi&quot;&gt;Unit testovi&lt;/h2&gt;
-
-&lt;p&gt;Već sam dosta pisao o ovome iznad. Ovaj metod omogućava da radite modul po modul. Da svaki modul testirate i tako da znate kada ste završili. Postoje i razne metrike kao što je pokrivenost koda testovima i sl. Pored ovoga, svaki put kada uvidite bag ili vam ga neko prijavi, prvo napišite test koji otkriva taj bag a onda krenite da ga ispravljate. Nemojte da budete lenji, nekoliko linija više će vam spasiti vreme. Na ovaj način nećete stalno ponavljati iste greške i tako težite ka tome da vam softver sve manje bude bagovit.&lt;/p&gt;
-
-</description>
-        <pubDate>Sat, 13 May 2017 14:15:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/software/development/2017/05/13/vcs-bs-unit.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/software/development/2017/05/13/vcs-bs-unit.html</guid>
-        
-        
-        <category>software</category>
-        
-        <category>development</category>
         
       </item>
     

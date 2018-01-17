@@ -26,8 +26,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.2.3 -->
+  <!-- Begin Jekyll SEO tag v2.4.0 -->
 <title>SSH reversni tunel | Stefan Nožinić</title>
+<meta name="generator" content="Jekyll v3.7.0" />
 <meta property="og:title" content="SSH reversni tunel" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Ovaj članak objašnjava kako podesiti reversni SSh tunel i time omogućiti forvardovanje portova preko mreže. Ovo je izuzetno korisno iz dva razloga:" />
@@ -38,7 +39,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-05-11T00:15:00+02:00" />
 <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"BlogPosting","headline":"SSH reversni tunel","datePublished":"2017-05-11T00:15:00+02:00","dateModified":"2017-05-11T00:15:00+02:00","description":"Ovaj članak objašnjava kako podesiti reversni SSh tunel i time omogućiti forvardovanje portova preko mreže. Ovo je izuzetno korisno iz dva razloga:","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/ssh/networking/2017/05/10/ssh-tunnel.html"},"url":"http://fantastic001.github.io/ssh/networking/2017/05/10/ssh-tunnel.html"}</script>
+{"datePublished":"2017-05-11T00:15:00+02:00","@type":"BlogPosting","dateModified":"2017-05-11T00:15:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/ssh/networking/2017/05/10/ssh-tunnel.html"},"url":"http://fantastic001.github.io/ssh/networking/2017/05/10/ssh-tunnel.html","description":"Ovaj članak objašnjava kako podesiti reversni SSh tunel i time omogućiti forvardovanje portova preko mreže. Ovo je izuzetno korisno iz dva razloga:","headline":"SSH reversni tunel","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -108,23 +109,20 @@ izuzetno korisno iz dva razloga:</p>
 
 <p>Primer ovoga je dat sledećom linijom:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ssh -fN -R 7000:localhost:50 username@B-ip
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -fN -R 7000:localhost:50 username@B-ip
+</code></pre></div></div>
 
 <p>Sada sve što se pošalje na port 7000 na računaru B, biće prosleđeno računaru A na port 50.</p>
 
 <p>Na primer, da omogućimo SSh konekciju na računar A na port 22 sa porta 7000 možemo uraditi:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ssh -fN -R 7000:localhost:22 username@B-ip
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -fN -R 7000:localhost:22 username@B-ip
+</code></pre></div></div>
 
 <p>I sada na računaru B treba izvršiti</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ssh -p 22 username@localhost
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -p 22 username@localhost
+</code></pre></div></div>
 
 <p>Pored svega ovoga, treba obratiti pažnju da li je mapiranje portova preko SSH odobreno u sshd.conf.</p>
 
