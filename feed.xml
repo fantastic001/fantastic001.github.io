@@ -6,8 +6,8 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 23 Jan 2018 17:56:54 +0100</pubDate>
-    <lastBuildDate>Tue, 23 Jan 2018 17:56:54 +0100</lastBuildDate>
+    <pubDate>Tue, 23 Jan 2018 18:09:37 +0100</pubDate>
+    <lastBuildDate>Tue, 23 Jan 2018 18:09:37 +0100</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
     
       <item>
@@ -136,8 +136,10 @@ data from array as normal, comma-separated, values.&lt;/p&gt;
 [ 2, 3 ]
 &amp;gt; head
 1
-&amp;gt;  Pattern matching  ==================
+&amp;gt; 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;pattern-matching&quot;&gt;Pattern matching&lt;/h1&gt;
 
 &lt;p&gt;Pattern matching is not standardized yet but there’s proposal here: https://github.com/tc39/proposal-pattern-matching&lt;/p&gt;
 </description>
