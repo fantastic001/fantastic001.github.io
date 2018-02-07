@@ -6,15 +6,13 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 07 Feb 2018 16:16:41 +0100</pubDate>
-    <lastBuildDate>Wed, 07 Feb 2018 16:16:41 +0100</lastBuildDate>
+    <pubDate>Wed, 07 Feb 2018 16:23:43 +0100</pubDate>
+    <lastBuildDate>Wed, 07 Feb 2018 16:23:43 +0100</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
     
       <item>
         <title>ArgumentStack</title>
-        <description>&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
-
-&lt;p&gt;ArgumentStack is a small python library which helps you to make argument parsing easy. It is based on nice argument 
+        <description>&lt;p&gt;ArgumentStack is a small python library which helps you to make argument parsing easy. It is based on nice argument 
 structure where your arguments are structured like a tree. Nice example of this is nmcli command for network manager, for instance you can do:&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nmcli dev 
