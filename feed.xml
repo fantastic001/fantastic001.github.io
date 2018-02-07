@@ -6,9 +6,120 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 23 Jan 2018 18:09:37 +0100</pubDate>
-    <lastBuildDate>Tue, 23 Jan 2018 18:09:37 +0100</lastBuildDate>
+    <pubDate>Wed, 07 Feb 2018 16:16:41 +0100</pubDate>
+    <lastBuildDate>Wed, 07 Feb 2018 16:16:41 +0100</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
+    
+      <item>
+        <title>ArgumentStack</title>
+        <description>&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;ArgumentStack is a small python library which helps you to make argument parsing easy. It is based on nice argument 
+structure where your arguments are structured like a tree. Nice example of this is nmcli command for network manager, for instance you can do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nmcli dev 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and it will list all devices, but if you do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nmcli dev wifi 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;it will list only wifi devices which are scanned. However if you do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nmcli general 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;it will show general status info. Similar example is Mako, if you do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako projects 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;it will show list of projects currently in database, but if you do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project X subprojects
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;it will show X’s subprojects. ArgumentStack functionality is based on adding arguments to stack and then assigning action for 
+current stack state. It supports push and pop functions for stack. For example, in nmcli part we would implement above functionality 
+like:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from ArgumentStack import * 
+import sys 
+
+# define needed functions as actions 
+
+stack = ArgumentStack(&quot;Wrong command&quot;) # to constructor it is passed error message for non-existing commands
+
+stack.pushCommand(&quot;dev&quot;)
+stack.assignAction(dev_status, &quot;device status&quot;) # nmcli dev
+
+stack.pushCommand(&quot;wifi&quot;)
+stack.assignAction(wifi_scanned, &quot;WIFI device list&quot;) # nmcli dev wifi 
+stack.pop() # now state is: nmcli dev 
+
+stack.pushCommand(&quot;ethernet&quot;) # nmcli dev ethernet
+stack.assignAction(ethernet_status, &quot;Ethernet status&quot;)
+stack.popAll() # now state is: nmcli
+
+stack.pushCommand(&quot;general&quot;)
+stack.assignAction(general_info, &quot;General status info&quot;) # nmcli general 
+
+stack.pushVariable(&quot;interface&quot;)
+stack.assignAction(info_for_interface, &quot;info for interface&quot;) # nmcli general &amp;lt;interface&amp;gt;
+# interface is passed as keyword argument to function info_for_interface
+
+sys.execute(sys.argv) # argument parsing and calling apropirate functions
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Important note here is that our functions have to take keyword arguments such that variables can be passed (as our interface variable for general action, last state).&lt;/p&gt;
+
+&lt;p&gt;You can make action for getting help, for instance, above stack.execute(…) call just add:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;stack.popAll()
+stack.pushCommand(&quot;help&quot;)
+stack.assignAction(lambda: print(stack.getHelp()), &quot;Get help&quot;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;example-using-lambda-expressions&quot;&gt;Example using lambda expressions&lt;/h1&gt;
+
+&lt;p&gt;You can use lambda expressions if your functions are one line of code:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/python &lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;src&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; 
+
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sys&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ArgumentStack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wrong command&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pushCommand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hello&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pushCommand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;world&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;assignAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hello world!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;say hello to world&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pushCommand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;to&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pushVariable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;assignAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;s&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;say hello to somebody&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;popAll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pushCommand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;help&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;assignAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getHelp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Get help&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;installation&quot;&gt;Installation&lt;/h1&gt;
+
+&lt;p&gt;ArgumentStack can be easily installed via pip:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install ArgumentStack 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Wed, 07 Feb 2018 15:15:00 +0100</pubDate>
+        <link>http://fantastic001.github.io/python/2018/02/07/argumentstack.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/python/2018/02/07/argumentstack.html</guid>
+        
+        
+        <category>python</category>
+        
+      </item>
     
       <item>
         <title>Functional JavaScript</title>
@@ -1598,33 +1709,6 @@ git tag 2.0
         
         
         <category>git</category>
-        
-      </item>
-    
-      <item>
-        <title>Jedna greška koju pravimo pri donošenju odluka</title>
-        <description>&lt;p&gt;Tokom svog života, veliki deo vremena provedemo u odlučivanju. To nas prati od samog početka života. Još kao mali donosimo 
-odluke koju igračku želimo da dobijemo, sa kim želimo da se igramo. Kada malo porastemo, kada krenemo u školu, tu dolazimo do odluka koju ćemo školu da upišemo. Posle fakulteta ili srednje škole, donosimo odluke čime želimo da se bavimo dalje. Tokom obavljanja posla, gde god radili, donosimo odluke o tome kako želimo da radimo i na čemu. Kada dobijemo decu, kada imamo porodicu, donoimo odluke od kojih zavii i budućnost te dece. Posle e to prenosi i na naše unuke kad ostarimo. Zbog svega ovoga, pravilno donošenje odluka je 
-jako važno. Ipak u školi nam nikad ne kažu jednu jako važnu lekciju a to je kako da odluke donosimo kako treba. To se indirektno provuče kroz život nekako mislimo da nam je to urođeno. Problem je što nije.&lt;/p&gt;
-
-&lt;p&gt;Društveni pritisci i pritisci okruženja nas često teraju da donosimo odluke. Svi žele da znaju naše mišljenje, naše stavove 
-i naše planove. Zbog ovoga smo postali mašine za odgovaranje samo sa dva odgovora: “da” ili “ne”.&lt;/p&gt;
-
-&lt;p&gt;U svoj toj trci da damo odgovor gde su nam ponuđena samo dva moguća odgovora, često zaboravimo da postoji i treći odgovor: “ne znam”.&lt;/p&gt;
-
-&lt;p&gt;Ljudi često zaborave i da odlučivanje mogu i da odlože dok nemaju dovoljan broj informacija. Umesto da slušamo intuiciju i da 
-suvo sledimo neke vodiče, treba više da govorimo “ne znam”, odložimo odlučivanje, dobijemo potrebne informacije i tek na osnovu 
-njih damo zaključke. Na taj način ćemo smanjiti broj pogrešnih odluka. Strpljenje je važno a na to smo zaboravili. Živimo u brzom svetu
-i povodom toga ne možemo ništa da uradimo ali isto tako živimo u svetu informacija pa treba iskoristiti tu činjenicu kako da donesemo
-ispravnije odluke, bazirane na podacima a ne na verovanju i ubeđenjima.&lt;/p&gt;
-
-</description>
-        <pubDate>Tue, 16 May 2017 14:15:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/life/2017/05/16/decisions.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/life/2017/05/16/decisions.html</guid>
-        
-        
-        <category>life</category>
         
       </item>
     
