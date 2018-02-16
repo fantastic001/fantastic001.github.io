@@ -6,8 +6,8 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 16 Feb 2018 16:55:21 +0100</pubDate>
-    <lastBuildDate>Fri, 16 Feb 2018 16:55:21 +0100</lastBuildDate>
+    <pubDate>Fri, 16 Feb 2018 16:59:31 +0100</pubDate>
+    <lastBuildDate>Fri, 16 Feb 2018 16:59:31 +0100</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
     
       <item>
@@ -710,9 +710,9 @@ h-&amp;gt;assign([=] (int level, float x, float z) -&amp;gt; pair&amp;lt;float, 
 code needed to implement some stuff. I will post about that when I make changes. You can see more examples on repository under 
 &lt;code class=&quot;highlighter-rouge&quot;&gt;functional&lt;/code&gt; directory, here are some photos what can be done (from examples in repository):&lt;/p&gt;
 
-&lt;p&gt;~&lt;a href=&quot;/images/height3d/3.png&quot;&gt;Example 1&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/height3d/3.png&quot; alt=&quot;Example 1&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;~&lt;a href=&quot;/images/height3d/4.png&quot;&gt;Example 1&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/height3d/4.png&quot; alt=&quot;Example 1&quot; /&gt;&lt;/p&gt;
 </description>
         <pubDate>Fri, 16 Feb 2018 15:15:00 +0100</pubDate>
         <link>http://fantastic001.github.io/height3d/c++/2018/02/16/height3d.html</link>
