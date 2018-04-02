@@ -6,9 +6,79 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 08 Mar 2018 18:49:02 +0100</pubDate>
-    <lastBuildDate>Thu, 08 Mar 2018 18:49:02 +0100</lastBuildDate>
+    <pubDate>Tue, 03 Apr 2018 01:55:50 +0200</pubDate>
+    <lastBuildDate>Tue, 03 Apr 2018 01:55:50 +0200</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
+    
+      <item>
+        <title>Purescript - a nice path to web</title>
+        <description>&lt;p&gt;Recently I have been playing with Haskell and functional programming. I’ve found a nice Haskell-like language which compiles to Javascript which means 
+it is very suitable for web. It is PureScript and you can easily set up project with pulp and run it. It can be used to develop backend part or frontend part.&lt;/p&gt;
+
+&lt;h1 id=&quot;installation-of-tools&quot;&gt;Installation of tools&lt;/h1&gt;
+
+&lt;p&gt;Tools needed for purescript project can be installed via npm:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm install pulp purescript bower
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Most of purescript packages can be installed with bower, for example AFF library:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bower install purescript-aff 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;pulp is PureScript’s equivalent of gulp and it is used to run, build and initialize project. It can be also used to generate javascript code which can be 
+linked to HTML.&lt;/p&gt;
+
+&lt;p&gt;After installation, you should add pulp to path:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export PATH=&quot;$PATH:node_modules/.bin/&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now you can initialize project:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pulp init 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To generate JS file:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pulp browserify -t script.js 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To build project and run:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pulp run
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To launch REPL with project’s environment:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pulp repl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;===Learning PureScript===&lt;/p&gt;
+
+&lt;p&gt;If you know Haskell you will easily understand PS, just see &lt;a href=&quot;https://github.com/purescript/documentation/blob/master/language/Differences-from-Haskell.md&quot;&gt;what is different&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;===Building UI with PS===&lt;/p&gt;
+
+&lt;p&gt;There’s nice module for PureScript where you can easily build reactive UIs. It is called Halogen and &lt;a href=&quot;https://github.com/slamdata/purescript-halogen/tree/master/docs&quot;&gt;here&lt;/a&gt; you can reead guide to it.&lt;/p&gt;
+
+&lt;p&gt;===Building backend===&lt;/p&gt;
+
+&lt;p&gt;There is wrapper around node-express for purescript and &lt;a href=&quot;https://abhinavsarkar.net/posts/ps-simple-rest-service/&quot;&gt;here&lt;/a&gt; is simple guide to it.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 03 Apr 2018 00:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/haskell/purescript/web/2018/04/02/purescript.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/haskell/purescript/web/2018/04/02/purescript.html</guid>
+        
+        
+        <category>haskell</category>
+        
+        <category>purescript</category>
+        
+        <category>web</category>
+        
+      </item>
     
       <item>
         <title>Easy widgets library for Python based on URWID</title>
@@ -2413,80 +2483,6 @@ so much.&lt;/p&gt;
         <category>programming</category>
         
         <category>software</category>
-        
-      </item>
-    
-      <item>
-        <title>Emacs org-mode</title>
-        <description>&lt;p&gt;Već nekoliko godina koristim Emacs. Eto priznao sam. :D Ja sam Vim korisnik koji koristi Emacs. Emacs koristim samo u svrhu za koju
-ne koristim Vim a to je za sve ostalo što nije pisanje koda. Toliko ga koristim da sam napravio i &lt;a href=&quot;https://github.com/fantastic001/YAPyOrg&quot;&gt;Python biblioteku&lt;/a&gt; za parsiranje Emacs org dokumenata. Dakle, Emacs koristim prvenstveno za organizaciju i pisanje dokumenata. U tome mi pomaže &lt;a href=&quot;http://orgmode.org/&quot;&gt;Emacs org-mode&lt;/a&gt;. Ovaj dodatak za Emacs je postao must-have na mom računaru. Bez ovoga ne idem nigde. Toliko je važno da hoću da sve što imam ima integraciju sa ovim. Plan mi je da i ovaj blog krenem da pišem u njemu.&lt;/p&gt;
-
-&lt;p&gt;Dakle, šta je tu zanimljivo? Pa da krenemo…&lt;/p&gt;
-
-&lt;h2 id=&quot;todo-liste&quot;&gt;TODO liste&lt;/h2&gt;
-
-&lt;p&gt;Prva stvar koju možete videti kad ga uključite (napravite i otvorite .org fajl) je mogućnost da pravite lako TODO liste. Sintaksa je slefeća:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* TODO nešto 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Ako pritisnete kombinaciju ‘Control+t’ stavka se markira kao DONE. Ako ponovo pritisnete datu kombinaciju stavka se briše pa ako opet pritisnete dobijate opet marker “TODO”. Ako lupite alt+enter, dobijate novu stavku. Ove stavke su zapravo sekcije, ispod njih kada pišete vi 
-zapravo pišete sadržaj sekcije. Sekciju možete “sakriti” tako što se kursorom namestite na naslov sekcije (to sa zvezdicom) i kliknete &lt;TAB&gt;.&lt;/TAB&gt;&lt;/p&gt;
-
-&lt;p&gt;Ako držite Alt i kliknete strelicu na desno, sekcija postaje podsekcija a na levo dižete nivo sekcije.&lt;/p&gt;
-
-&lt;p&gt;Liste se prave sa znakom “+”:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ item 1 
-+ item 2
-....
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;lupite alt+enter i dobijate novu stavku liste.&lt;/p&gt;
-
-&lt;p&gt;U dokumentima možete pisati i matematičke formule uz pomoć LaTeX-a. Njih ogradite sa “$$”, npr:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$$ a^2 = \int f(x)dx $$ 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;renderovanje formula se vrši sa Control+c pa onda Control+x pa pritisnete “l”.&lt;/p&gt;
-
-&lt;p&gt;Org-mode takođe podržava i export u različite formate, na primer u HTML. To možete uraditi tako što pritisnete Control+c Control+e.
-Izlazi vam prozor gde su vam dati tasteri koje treba pritisnuti za eksport u određeni format.&lt;/p&gt;
-
-&lt;p&gt;Možete uključiti (navezati, “inkludovati”) druga org-mode dokumenta pa će u eksportovanom delu biti eksportovano sve. Zbogdno ako pišete veći dokument ili možda čak i knjigu. :)&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+INCLUDE: &quot;putanja/do/fajla.org&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;A da isključite sadržaj u eksportovanom dokumentu:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+OPTIONS: toc:nil
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Da u eksportovanom dokumentu matematičke formule snimite kao slike (zgodno za pretraživače koji imaju problema sa matematičkim formulama ili recimo za Kindl):&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#+OPTIONS: tex:dvipng
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Da otvorite blok za izvorni kod upišete “&amp;lt;s” pa lupite TAB i onda samo u nastavku upišete jezik koji hoćete, i bloku kad pozicionirate kursor i pritisnete Control+c pa onda ‘ (jednostruki navodnik), otvara  se prozor za pisanje koda, sa sve obojenom sintaksom datog jezika. :D Da zatvorite prozor i sačuvate kod, upotrebite istu kombinaciju tastera.&lt;/p&gt;
-
-&lt;p&gt;Org-mode podržava i tabele sa sve mogućnošću pisanja formula i automatskog izračunavanja.&lt;/p&gt;
-
-&lt;p&gt;Ovo su samo neki tips and tricks, za više info valja posetiti stranicu i zvaničnu dokumentaciju alata.&lt;/p&gt;
-
-&lt;p&gt;Eto, napisao na brzinu tekstić, nahvalih ga lepo, sad je red da sami istražujete. Probajte i zavolećete ga.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 01 Nov 2017 21:15:00 +0100</pubDate>
-        <link>http://fantastic001.github.io/emacs/organization/utilities/2017/11/01/org-mode.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/emacs/organization/utilities/2017/11/01/org-mode.html</guid>
-        
-        
-        <category>emacs</category>
-        
-        <category>organization</category>
-        
-        <category>utilities</category>
         
       </item>
     
