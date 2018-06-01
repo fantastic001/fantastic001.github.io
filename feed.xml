@@ -6,9 +6,209 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 17 Apr 2018 22:31:47 +0200</pubDate>
-    <lastBuildDate>Tue, 17 Apr 2018 22:31:47 +0200</lastBuildDate>
+    <pubDate>Fri, 01 Jun 2018 08:57:25 +0200</pubDate>
+    <lastBuildDate>Fri, 01 Jun 2018 08:57:25 +0200</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
+    
+      <item>
+        <title>Parsing in Haskell</title>
+        <description>&lt;p&gt;This article is going to explain some basic concepts in compiler design and to give practical implementation 
+of lexical analysis and parsing in Haskell.&lt;/p&gt;
+
+&lt;h1 id=&quot;compiler-design&quot;&gt;Compiler design&lt;/h1&gt;
+
+&lt;p&gt;Every compiler consists of three main parts:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;lexical analysis&lt;/li&gt;
+  &lt;li&gt;parsing&lt;/li&gt;
+  &lt;li&gt;semantic analysis&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Lexical analysis is responsible for transforming string to list of tokens. Tokens are meaningful objects such as numbers, string constants, identifiers, separators, operators etc.&lt;/p&gt;
+
+&lt;p&gt;Parsing is responsible to take list of tokens and transform it to abstract syntax tree. This tree consists some form of meaning as its node and parameters as children. For example, root node is program node while its children are statement nodes. Every statement node contains children which meaning depends of type of statement. Let’s say we have assignment statement, in its children we have one node for identifier and one node for expression. Expression node can be represented by its operator as parent and operands as children etc…&lt;/p&gt;
+
+&lt;p&gt;Semantic analysis takes AST and understands meaning to make executable code. Semantic analysis will notify you that you cannot sum string and number. It also does type checking and various things. Semantic analysis is also responsible for keeping track of variables, global, local scopes etc…&lt;/p&gt;
+
+&lt;p&gt;In this article, it will be explained how parsing is done in Haskell using monads. We will assume that we can generate list of tokens from lexical analysis. This will be our input to parser. This list is list of Token type defined like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data Token = Identifier String | KeyWord String | Number Int | StringConstant String | 
+    	PlusOperator | MinusOperator | DivisionOperator | MultiplicationOperator | OpenP | 
+     	ClosedP | Comma | Space | AssignmentOperator |
+     	OpenScope | ClosedScope | ListBegin | ListEnd deriving (Show, Eq)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;then we need to make parser which will transform list of these tokens into abstract syntax tree.&lt;/p&gt;
+
+&lt;h1 id=&quot;tree-description&quot;&gt;Tree description&lt;/h1&gt;
+
+&lt;p&gt;Tree is represented by its nodes which represent operation and operands as its children. For example if we have expression a + b&lt;em&gt;c it will be tree with node “+”, left child will be identifier “a” and right child will be subtree “&lt;/em&gt;” with left child identifier “b” and right child identifier “c”. Another example is a+b+c, where we have “+” as root and identifier “a” as left child and another “+” subtree as right child.&lt;/p&gt;
+
+&lt;p&gt;Let’s take a look into simple definition of tree nodes for “+”, “*”, “-“ and “/” operations. First of all, let’s define them. We know that multiplication and division has priority over addition and subtraction. This means that multiplication and division is always subtree of addition and subtraction. Also, we know that brackets have priority over multiplication and division, so brackets (and expression in them) is always subtree of multiplication and division. For this reason, we will have three types of nodes because we have three levels of priority.&lt;/p&gt;
+
+&lt;p&gt;When we are talking about addition and subtraction, we are talking about expression which has operantor (+ or -) and two operands. One of them is multiplication and another is expression (because we want to have a+b+c). But what if we have only a*b? Then we need to enable that expression can be just one tiny multiplication.
+We also have to enable something like “-a” so we will have special kind of negative expression.&lt;/p&gt;
+
+&lt;p&gt;Similar thing for term, term is either multiplication, divisio or just factor.&lt;/p&gt;
+
+&lt;p&gt;Factor is just identifier, just number or expression inside brackets.&lt;/p&gt;
+
+&lt;p&gt;To summmarize, our definitions look liker this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;expression = term &quot;+&quot; expression | term &quot;-&quot; expression | term | &quot;-&quot; term
+term = factor &quot;*&quot; term | factor &quot;/&quot; term | factor 
+factor = identifier | number | &quot;(&quot; expression &quot;)&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Let’s translate this into Haskell code:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data Factor = JustNumber Int | JustIdentifier String | FactorExpression Expression deriving (Show)
+data Term = MultiplicationTerm Factor Term | DivisionTerm Factor Term | JustFactor Factor deriving (Show)
+data Expression = SumExpression Term Expression | DifferenceExpression Term Expression | JustTerm Term | NegativeTerm Term  |
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;monadic-parsing&quot;&gt;Monadic parsing&lt;/h1&gt;
+
+&lt;p&gt;Let’s assume that we need to parse somehow given list of tokens. What should that operation return? It should return given tree node and the rest of tokens which are not parser. We can model this as state monad where state is list of tokens and output is resulting tree node or something else which we will discuss soon.&lt;/p&gt;
+
+&lt;p&gt;Let’s define result of parsing as something that returns result and list of remaining tokens to be parsed or some kind of error:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type LineNumber = Int 
+data ParseResult a = ParseResult [Token] a | ParseError LineNumber String deriving (Show)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we can make Parse monad which will represent computation of parsing:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data Parse a = Parse ([Token] -&amp;gt; ParseResult a)
+
+instance Functor Parse where 
+	fmap f action = do 
+		x &amp;lt;- action 
+		return $ f x 
+
+instance Applicative Parse where 
+	(&amp;lt;*&amp;gt;) af action = do 
+		f &amp;lt;- af 
+		x &amp;lt;- action 
+		return $ f x 
+	pure = return 
+
+instance Monad Parse where 
+	return x = Parse $ \tokens -&amp;gt; ParseResult tokens x
+	(Parse run) &amp;gt;&amp;gt;= f = Parse $ \tokens -&amp;gt; case run tokens of 
+		(ParseResult tokens' x) -&amp;gt; let (Parse run') = f x in case run' tokens' of 
+			(ParseError l m) -&amp;gt; ParseError l m 
+			res -&amp;gt; res 
+		(ParseError l m) -&amp;gt; ParseError l m 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This is a little modified state monad which handles errors inside its run method.&lt;/p&gt;
+
+&lt;h1 id=&quot;parsing&quot;&gt;Parsing&lt;/h1&gt;
+
+&lt;p&gt;Now, how parsing is done? Well, when you see definitions of nodes above, we can use them to easily implement parsing. For now, let’s define two functions:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;getToken :: Parse Token 
+getToken = Parse $ \tokens -&amp;gt; case tokens of 
+	[] -&amp;gt; ParseError 0 &quot;Cannot take token&quot;
+	t:ts -&amp;gt; ParseResult (t:ts) t 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This function represents computation which returns current tooken as result and does not change state of tokens (this token remains in list of tokens).&lt;/p&gt;
+
+&lt;p&gt;Another function is expect which will return parsing error if given token does not exist in list. If it exists, it will remove that token from list of tokens. You can see this function by other names in other articles or literature, for example they call it “eat” somewhere because it “eats” token if it exists.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;expect :: Token -&amp;gt; Parse Token
+expect token = Parse $ \tokens -&amp;gt; case tokens of 
+	[] -&amp;gt; ParseError 0 &quot;Expected token but no such token found&quot;
+	t:ts -&amp;gt; if t == token then ParseResult ts t else ParseError 0 $ &quot;Expected token &quot; ++ (show token) ++ &quot; but &quot; ++ (show t) ++ &quot;found&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Alsoo, for outputing errors during parsing, we will have some simple function which always returns error with given message:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cerror :: String -&amp;gt; Parse a
+cerror msg = Parse $ \token -&amp;gt; ParseError 0 msg
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, parsing can be done easily from definitions of tree nodes. For example, let’s start with factor parsing:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;factor :: Parse Factor 
+factor = do 
+	t &amp;lt;- getToken 
+	case getToken of 
+		(OpenP) -&amp;gt; do 
+			expect OpenP
+			expr &amp;lt;- expression 
+			expect ClosedP
+			return $ FactorExpression expr
+		(Identifier name) -&amp;gt; do 
+			expect (Identifier name)
+			return $ JustIdentifier name 
+		(Number num) -&amp;gt; do 
+			expect (Number num)
+			return $ JustNumber num
+		_ -&amp;gt; cerror &quot;Cannot parse factor&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;What did we do? Well, we got current token and checked for various possibilities and then handled these possibilities. If nothing is satisfied, we output error. 
+You can see how we use expression method (which we will implement later) to easily parse expression inside brackets. We just need to follow our definitions above.&lt;/p&gt;
+
+&lt;p&gt;Let’s implement term parsing:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;term = do 
+	f &amp;lt;- factor
+	t &amp;lt;- getToken
+	case t of 
+		(MultiplicationOperator) -&amp;gt; do 
+			expect MultiplicationOperator 
+			tt &amp;lt;- term 
+			return $ MultiplicationTerm f tt
+		(DivisionOperator) -&amp;gt; do 
+			expect DivisionOperator 
+			tt &amp;lt;- term 
+			return $ DivisionTerm f tt
+		_ -&amp;gt; return $ JustFactor f
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and for expression:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;expression = do 
+	t &amp;lt;- getToken 
+	case t of 
+		MinusOperator -&amp;gt; do 
+			expect MinusOperator 
+			expr &amp;lt;- expression 
+			return $ NegativeExpression expr
+		_ -&amp;gt; do 
+			t1 &amp;lt;- term 
+			operator &amp;lt;- getToken 
+			case operator of 
+				PlusOperator -&amp;gt; do 
+					expect PlusOperator 
+					expr &amp;lt;- expression 
+					return $ SumExpression t1 expr
+				MinusOperator -&amp;gt; do 
+					expect MinusOperator 
+					expr &amp;lt;- expression 
+					return $ DifferenceExpression t1 expr
+				_ -&amp;gt; return $ JustTerm t1 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;So, as you can see, parsing can be very easily implemented in Haskell Extensions to additional syntax and grammmar can be easily done through adding more methods and tree nodes.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 07 May 2018 23:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html</guid>
+        
+        
+        <category>haskell</category>
+        
+        <category>compilers</category>
+        
+      </item>
     
       <item>
         <title>ETF vs FTN vs MATF vs PMF vs RAF vs ... vs studije u Njemačku</title>
@@ -2240,190 +2440,6 @@ main = do
         
         
         <category>functional-programming</category>
-        
-        <category>software</category>
-        
-      </item>
-    
-      <item>
-        <title>Object-oriented design patterns</title>
-        <description>&lt;p&gt;In software engineering you often need to make some design decisions such that your software is extenable and easily maintainable. 
-After some time of software development, industry has come up with repeating patterns of design that makes sense for some application. 
-Still, you need to choose particular design pattern but overall task is much simplified because you are deciding on finite number
-of patterns with small modifications if needed. I doubt you are trying to solve problem which is not solvable with these patterns
-described below. At least, in one part of your software you can use some of these patterns. The purpose if this aarticle is to 
-present some design patterns with explanation and examples where they are helpful. In this process, you also have to follow 
-&lt;a href=&quot;/agile/oop/programming/software/2017/11/20/SOLID-principles.html&quot;&gt;SOLID principles&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Here they are:&lt;/p&gt;
-
-&lt;h1 id=&quot;builder&quot;&gt;Builder&lt;/h1&gt;
-
-&lt;p&gt;This pattern is used when you have to construct object and that object recieves many parameters. It is nice thing to have builder
-class that is responsible for object creation. For example, let’s say you have some class in which constructor it recieves many parameters. You want to have default values for some parameters. In most programming languages you can define default value for parameter. 
-The problem arises if you want to have different default value for parameter A based on passed value for parameter B. Another
-case is when you want to have multiple ways of constructing some object and you see you are aving many constructors which basically 
-do the same thing in general with little modifications.&lt;/p&gt;
-
-&lt;p&gt;Another use case for builder if you want to build complex data structures or documents. For example, building of XML 
-can be implemented with builder design pattern. Building SQL query is another example.&lt;/p&gt;
-
-&lt;p&gt;Another case is when you want to have default parameters and vary them if needed. Take for example this piece of code:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClass(int a, int b, int c=5, intd=4) ...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;What if we want to set values for a,b and d but take c as default. In C++, we need to set value of c such that we are able to set value
-of d.&lt;/p&gt;
-
-&lt;p&gt;Builder is implemented as follows: Implement Builder class which in constructor can recieve all its parameters and also has empty constructor which sets up default parameters. For every parameter, implement “setX” method which returns new instance of Builder with changed
-specified parameter. Also, you will have to implement build() function which returns concrete object. This class can be used like this:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClass my_object = MyClassBuilder()
-	.setA(2)
-	.setB(3)
-	.setD(4)
-	.build();
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;so every call to set method will return new instance of builder and last call will build concrete object from lastly created builder instance which has all parameters. The real magic comes when you want to make some default values and then create objects with one parameter changed:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClassBuilder builder = MyClassBuilder()
-	.setA(2)
-	.setB(3);
-
-MyClass myobj1 = builder.setD(7).build();
-MyClass myobj2 = builder.setD(10).build();
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;abstract-factory&quot;&gt;Abstract factory&lt;/h1&gt;
-
-&lt;p&gt;This kind of pattern is used when you want to separate class and its construction. The difference between abstract factory and 
-builder is that abstract factory is sublcassed and every subclass implement construction different subclasses of some set of 
-abstract classes. For example, you want to have support for multiple coloring systems in your software. You can implement
-the following abstract classes: AbstractWindow, AbstractButton, AbstractText.&lt;/p&gt;
-
-&lt;p&gt;For every color you want to have, you subclass and implement these classes. So you will have something like: DarkWindow, DarkButton, DarkText, LightWindow, LightButton and LightText.&lt;/p&gt;
-
-&lt;p&gt;So now you want to use dark buttons only with dark windows. These classes share the same interface but construction is different.&lt;/p&gt;
-
-&lt;p&gt;This can be easily solved using abstract factory and then having in its interface the following mmethods: getutton(), getWindow() and getText().&lt;/p&gt;
-
-&lt;p&gt;so then you can subcass this class and makeDarkFactory and LightFactory, every in its implementation returns needed class instances for
-button, window and text. Now you can use it like this:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;AbstractFactory theme = DarkFactory()
-AbstractButton btn = theme.getButton(); 
-AbstractWindow win = theme.getWindow();
-
-...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;when structuring all this in directories, pay attention to put concrete factory and objects which are created by that factory at the same place if possible&lt;/p&gt;
-
-&lt;p&gt;this is best done when we use only one instance of factory in system, factory can be provided from singleton or something like that.&lt;/p&gt;
-
-&lt;h1 id=&quot;adapter&quot;&gt;Adapter&lt;/h1&gt;
-
-&lt;p&gt;Class which recieves one object in its constructor and converts it to other objects by its methods&lt;/p&gt;
-
-&lt;p&gt;This pattern can be used to:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;convert one object to another&lt;/li&gt;
-  &lt;li&gt;to make glue between different, non-compatible parts of software&lt;/li&gt;
-  &lt;li&gt;wrap existing class with a new interface: recieves object in constructor and exposes new interface&lt;/li&gt;
-  &lt;li&gt;match legacy component to a new system&lt;/li&gt;
-  &lt;li&gt;match new component to a old system&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h1 id=&quot;composite&quot;&gt;Composite&lt;/h1&gt;
-
-&lt;p&gt;Tihs pattern is used when we want to compose some objects in a group. For example, in graphical user interface, Window object 
-is of composite type. When we move window on screen, all widgets on that window are also moved. It is implemented very easily. You 
-can pass inner objects using constructor, using Builder, abstract factory or by invoking some kind of add(CompositeChild) method.&lt;/p&gt;
-
-&lt;h1 id=&quot;decorator&quot;&gt;Decorator&lt;/h1&gt;
-
-&lt;p&gt;Used to add functionality to individual objects and when needed features grow exponentialy as number of small features grows.&lt;/p&gt;
-
-&lt;p&gt;Basically, it has same interface as class it is decorating and in every method, method of decorated object is called with additional actions above and below calling this method of concrete object(). For example we want to make some kind of simulator. We want to 
-implement later some kind of logging. We can make decorator class which, before calls its child’s method, write log in a file
-or to the standard output. The we just need to decorate our existing simulator object:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Simulator* simulator = new Simulator(); // logging turned off 
-simulator = new DebugDecorator(simulator); // we turn on logging
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;hain-of-responsibility&quot;&gt;hain of responsibility&lt;/h1&gt;
-
-&lt;p&gt;This kind of pattern is used when we want to implement some kind of checking or multi layer processing.&lt;/p&gt;
-
-&lt;p&gt;How does it work? Define abstract Process and implement individual processes. Implement method process() or check() and implement method getNext().&lt;/p&gt;
-
-&lt;p&gt;Now we have to implement our class which is chain of responsibility. It gets specific request (object to handle, object to check etc…)
-and it passes this request to processes. It first starts at root process and then calls getNext() method of root process and then passes request to next process and so on until it gets to the end of chain.&lt;/p&gt;
-
-&lt;p&gt;This concept can be handy in parsing and creating trees or lists.&lt;/p&gt;
-
-&lt;p&gt;use cases:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;middleware classes that control security&lt;/li&gt;
-  &lt;li&gt;pattern recognition - recognize pattern in data and return aproprirate object to handle it (or proper Factory)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h1 id=&quot;command&quot;&gt;Command&lt;/h1&gt;
-
-&lt;p&gt;Tihs is used hand-by-hand with previous pattern. Tihs command is basically process. You have to make one abstract interface 
-for command and then implement individual commands. These individual commmands can recieve additional parameters in its constructors
-or can be gained from some factory.&lt;/p&gt;
-
-&lt;p&gt;Also, this pattern is useful if you want to make “undo” operation. Every command instance changes state and every 
-class implementing Command interface has to implement undo() method. After that, you just have to save history of commands 
-(which is basically list of Command instances) and when you want to invoke undo functionality, just call undo() method of lastly
-executed command and remove it from list.&lt;/p&gt;
-
-&lt;h1 id=&quot;observer&quot;&gt;Observer&lt;/h1&gt;
-
-&lt;p&gt;In this pattern, there is two types of classes: observers and subjects. Subject observes state (which is usually its own state)
-and notifies observer when state is changed.&lt;/p&gt;
-
-&lt;p&gt;One common example is Subject which keeps data model, Observers (views) register to that subject and watch for changes. This is 
-often used in MVC (Model-View-Controller) architecture which is often used in GUI applications and web frontends.&lt;/p&gt;
-
-&lt;h1 id=&quot;strategy&quot;&gt;Strategy&lt;/h1&gt;
-
-&lt;p&gt;Here we have one abstract class and other classes inherit it.
-Abstract class defines interface and each class implements it.&lt;/p&gt;
-
-&lt;p&gt;For example, different algorithms which solve the same problem.&lt;/p&gt;
-
-&lt;h1 id=&quot;template-method&quot;&gt;Template method&lt;/h1&gt;
-
-&lt;p&gt;This is often used when we have some kind of algoritmh with multiple steps and every step can be implemented differently. 
-In this case, we can make class which recieves different Strategy instances for different steps. For example, in speech recognition
-we can have feature extraction and model fitting. We can make FeatureExtractionStrategy and implement concrete strategies for 
-feature extraction and then we can also make ModelFittingStrategy and implement concrete model fitting algorithms such as 
-neural networks, HMM etc…&lt;/p&gt;
-
-&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
-
-&lt;p&gt;This is very limmited set of design patterns, you can find a lot of examples and descriptions online. I do not recommend reading
-books about this topic because this stuff is best grased by practice and real world examples and real world projects. You can 
-look at open source software and see how others do things and get some idea of how you could start your design process.&lt;/p&gt;
-
-</description>
-        <pubDate>Sun, 26 Nov 2017 18:15:00 +0100</pubDate>
-        <link>http://fantastic001.github.io/agile/oop/programming/software/2017/11/26/oo-design-patterns.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/agile/oop/programming/software/2017/11/26/oo-design-patterns.html</guid>
-        
-        
-        <category>agile</category>
-        
-        <category>oop</category>
-        
-        <category>programming</category>
         
         <category>software</category>
         

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-109687688-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-109687688-1');
+</script>
+
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Parsing in Haskell</title>
+  <meta name="description" content="This article is going to explain some basic concepts in compiler design and to give practical implementation of lexical analysis and parsing in Haskell.">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html">
+  <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
+</head>
+
+  <!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Parsing in Haskell | Stefan Nožinić</title>
+<meta name="generator" content="Jekyll v3.7.0" />
+<meta property="og:title" content="Parsing in Haskell" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="This article is going to explain some basic concepts in compiler design and to give practical implementation of lexical analysis and parsing in Haskell." />
+<meta property="og:description" content="This article is going to explain some basic concepts in compiler design and to give practical implementation of lexical analysis and parsing in Haskell." />
+<link rel="canonical" href="http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html" />
+<meta property="og:url" content="http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html" />
+<meta property="og:site_name" content="Stefan Nožinić" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-05-07T23:15:00+02:00" />
+<script type="application/ld+json">
+{"datePublished":"2018-05-07T23:15:00+02:00","@type":"BlogPosting","dateModified":"2018-05-07T23:15:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html"},"url":"http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html","description":"This article is going to explain some basic concepts in compiler design and to give practical implementation of lexical analysis and parsing in Haskell.","headline":"Parsing in Haskell","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Stefan Nožinić</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+<!--
+    <div class="site-description">
+      <p>This is my blog where I will express my thoughts about everything which I'm interested in.
+</p>
+    </div>
+-->
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Parsing in Haskell</h1>
+    <p class="post-meta"><time datetime="2018-05-07T23:15:00+02:00" itemprop="datePublished">May 7, 2018</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>This article is going to explain some basic concepts in compiler design and to give practical implementation 
+of lexical analysis and parsing in Haskell.</p>
+
+<h1 id="compiler-design">Compiler design</h1>
+
+<p>Every compiler consists of three main parts:</p>
+
+<ol>
+  <li>lexical analysis</li>
+  <li>parsing</li>
+  <li>semantic analysis</li>
+</ol>
+
+<p>Lexical analysis is responsible for transforming string to list of tokens. Tokens are meaningful objects such as numbers, string constants, identifiers, separators, operators etc.</p>
+
+<p>Parsing is responsible to take list of tokens and transform it to abstract syntax tree. This tree consists some form of meaning as its node and parameters as children. For example, root node is program node while its children are statement nodes. Every statement node contains children which meaning depends of type of statement. Let’s say we have assignment statement, in its children we have one node for identifier and one node for expression. Expression node can be represented by its operator as parent and operands as children etc…</p>
+
+<p>Semantic analysis takes AST and understands meaning to make executable code. Semantic analysis will notify you that you cannot sum string and number. It also does type checking and various things. Semantic analysis is also responsible for keeping track of variables, global, local scopes etc…</p>
+
+<p>In this article, it will be explained how parsing is done in Haskell using monads. We will assume that we can generate list of tokens from lexical analysis. This will be our input to parser. This list is list of Token type defined like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Token = Identifier String | KeyWord String | Number Int | StringConstant String | 
+    	PlusOperator | MinusOperator | DivisionOperator | MultiplicationOperator | OpenP | 
+     	ClosedP | Comma | Space | AssignmentOperator |
+     	OpenScope | ClosedScope | ListBegin | ListEnd deriving (Show, Eq)
+</code></pre></div></div>
+
+<p>then we need to make parser which will transform list of these tokens into abstract syntax tree.</p>
+
+<h1 id="tree-description">Tree description</h1>
+
+<p>Tree is represented by its nodes which represent operation and operands as its children. For example if we have expression a + b<em>c it will be tree with node “+”, left child will be identifier “a” and right child will be subtree “</em>” with left child identifier “b” and right child identifier “c”. Another example is a+b+c, where we have “+” as root and identifier “a” as left child and another “+” subtree as right child.</p>
+
+<p>Let’s take a look into simple definition of tree nodes for “+”, “*”, “-“ and “/” operations. First of all, let’s define them. We know that multiplication and division has priority over addition and subtraction. This means that multiplication and division is always subtree of addition and subtraction. Also, we know that brackets have priority over multiplication and division, so brackets (and expression in them) is always subtree of multiplication and division. For this reason, we will have three types of nodes because we have three levels of priority.</p>
+
+<p>When we are talking about addition and subtraction, we are talking about expression which has operantor (+ or -) and two operands. One of them is multiplication and another is expression (because we want to have a+b+c). But what if we have only a*b? Then we need to enable that expression can be just one tiny multiplication.
+We also have to enable something like “-a” so we will have special kind of negative expression.</p>
+
+<p>Similar thing for term, term is either multiplication, divisio or just factor.</p>
+
+<p>Factor is just identifier, just number or expression inside brackets.</p>
+
+<p>To summmarize, our definitions look liker this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expression = term "+" expression | term "-" expression | term | "-" term
+term = factor "*" term | factor "/" term | factor 
+factor = identifier | number | "(" expression ")"
+</code></pre></div></div>
+
+<p>Let’s translate this into Haskell code:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Factor = JustNumber Int | JustIdentifier String | FactorExpression Expression deriving (Show)
+data Term = MultiplicationTerm Factor Term | DivisionTerm Factor Term | JustFactor Factor deriving (Show)
+data Expression = SumExpression Term Expression | DifferenceExpression Term Expression | JustTerm Term | NegativeTerm Term  |
+</code></pre></div></div>
+
+<h1 id="monadic-parsing">Monadic parsing</h1>
+
+<p>Let’s assume that we need to parse somehow given list of tokens. What should that operation return? It should return given tree node and the rest of tokens which are not parser. We can model this as state monad where state is list of tokens and output is resulting tree node or something else which we will discuss soon.</p>
+
+<p>Let’s define result of parsing as something that returns result and list of remaining tokens to be parsed or some kind of error:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type LineNumber = Int 
+data ParseResult a = ParseResult [Token] a | ParseError LineNumber String deriving (Show)
+</code></pre></div></div>
+
+<p>Now we can make Parse monad which will represent computation of parsing:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Parse a = Parse ([Token] -&gt; ParseResult a)
+
+instance Functor Parse where 
+	fmap f action = do 
+		x &lt;- action 
+		return $ f x 
+
+instance Applicative Parse where 
+	(&lt;*&gt;) af action = do 
+		f &lt;- af 
+		x &lt;- action 
+		return $ f x 
+	pure = return 
+
+instance Monad Parse where 
+	return x = Parse $ \tokens -&gt; ParseResult tokens x
+	(Parse run) &gt;&gt;= f = Parse $ \tokens -&gt; case run tokens of 
+		(ParseResult tokens' x) -&gt; let (Parse run') = f x in case run' tokens' of 
+			(ParseError l m) -&gt; ParseError l m 
+			res -&gt; res 
+		(ParseError l m) -&gt; ParseError l m 
+</code></pre></div></div>
+
+<p>This is a little modified state monad which handles errors inside its run method.</p>
+
+<h1 id="parsing">Parsing</h1>
+
+<p>Now, how parsing is done? Well, when you see definitions of nodes above, we can use them to easily implement parsing. For now, let’s define two functions:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>getToken :: Parse Token 
+getToken = Parse $ \tokens -&gt; case tokens of 
+	[] -&gt; ParseError 0 "Cannot take token"
+	t:ts -&gt; ParseResult (t:ts) t 
+</code></pre></div></div>
+
+<p>This function represents computation which returns current tooken as result and does not change state of tokens (this token remains in list of tokens).</p>
+
+<p>Another function is expect which will return parsing error if given token does not exist in list. If it exists, it will remove that token from list of tokens. You can see this function by other names in other articles or literature, for example they call it “eat” somewhere because it “eats” token if it exists.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expect :: Token -&gt; Parse Token
+expect token = Parse $ \tokens -&gt; case tokens of 
+	[] -&gt; ParseError 0 "Expected token but no such token found"
+	t:ts -&gt; if t == token then ParseResult ts t else ParseError 0 $ "Expected token " ++ (show token) ++ " but " ++ (show t) ++ "found"
+</code></pre></div></div>
+
+<p>Alsoo, for outputing errors during parsing, we will have some simple function which always returns error with given message:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cerror :: String -&gt; Parse a
+cerror msg = Parse $ \token -&gt; ParseError 0 msg
+</code></pre></div></div>
+
+<p>Now, parsing can be done easily from definitions of tree nodes. For example, let’s start with factor parsing:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>factor :: Parse Factor 
+factor = do 
+	t &lt;- getToken 
+	case getToken of 
+		(OpenP) -&gt; do 
+			expect OpenP
+			expr &lt;- expression 
+			expect ClosedP
+			return $ FactorExpression expr
+		(Identifier name) -&gt; do 
+			expect (Identifier name)
+			return $ JustIdentifier name 
+		(Number num) -&gt; do 
+			expect (Number num)
+			return $ JustNumber num
+		_ -&gt; cerror "Cannot parse factor"
+</code></pre></div></div>
+
+<p>What did we do? Well, we got current token and checked for various possibilities and then handled these possibilities. If nothing is satisfied, we output error. 
+You can see how we use expression method (which we will implement later) to easily parse expression inside brackets. We just need to follow our definitions above.</p>
+
+<p>Let’s implement term parsing:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>term = do 
+	f &lt;- factor
+	t &lt;- getToken
+	case t of 
+		(MultiplicationOperator) -&gt; do 
+			expect MultiplicationOperator 
+			tt &lt;- term 
+			return $ MultiplicationTerm f tt
+		(DivisionOperator) -&gt; do 
+			expect DivisionOperator 
+			tt &lt;- term 
+			return $ DivisionTerm f tt
+		_ -&gt; return $ JustFactor f
+</code></pre></div></div>
+
+<p>and for expression:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expression = do 
+	t &lt;- getToken 
+	case t of 
+		MinusOperator -&gt; do 
+			expect MinusOperator 
+			expr &lt;- expression 
+			return $ NegativeExpression expr
+		_ -&gt; do 
+			t1 &lt;- term 
+			operator &lt;- getToken 
+			case operator of 
+				PlusOperator -&gt; do 
+					expect PlusOperator 
+					expr &lt;- expression 
+					return $ SumExpression t1 expr
+				MinusOperator -&gt; do 
+					expect MinusOperator 
+					expr &lt;- expression 
+					return $ DifferenceExpression t1 expr
+				_ -&gt; return $ JustTerm t1 
+</code></pre></div></div>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>So, as you can see, parsing can be very easily implemented in Haskell Extensions to additional syntax and grammmar can be easily done through adding more methods and tree nodes.</p>
+
+  </div>
+
+</article>
+
+<div id="comment-section">
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    
+    var disqus_config = function () {
+        this.page.url = "http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "/haskell/compilers/2018/05/07/parsing-in-haskell"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//fantastic001.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Stefan Nožinić</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Stefan Nožinić</li>
+          <li><a href="mailto:stefan@lugons.org">stefan@lugons.org</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/fantastic001"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">fantastic001</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/snstefan5"><span class="icon icon--twitter"><svg viewBox="0 0 16 16"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">snstefan5</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
