@@ -6,9 +6,128 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 06 Aug 2018 01:05:56 +0200</pubDate>
-    <lastBuildDate>Mon, 06 Aug 2018 01:05:56 +0200</lastBuildDate>
+    <pubDate>Thu, 23 Aug 2018 13:20:18 +0200</pubDate>
+    <lastBuildDate>Thu, 23 Aug 2018 13:20:18 +0200</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
+    
+      <item>
+        <title>Why Software Fails</title>
+        <description>
+&lt;hr /&gt;
+&lt;p&gt;layout: post
+title:  “Why some software projects fail? (and how to fix that)”
+date:   2018-08-23 12:15:00 +0100
+categories: software management opinion
+—&lt;/p&gt;
+
+&lt;p&gt;after some time and many projects and books I have caught some reason why software projects fail. Let’s face it: our world depends on software more than ever 
+before on anything before.  However, software projects usually fail or they make it to the end of their development (version release) but they are broken in some way. 
+Many software projects even do not make it to the final release and these which do, they are feature-short or have damaged performance.&lt;/p&gt;
+
+&lt;p&gt;After reading “Rapid Development” by S. McConnell, you start to realize that many software projects share common mistakes made during development which make them to fail 
+or to be broken when released. Many software projects do not make proper requirements analysis, architecture planning or risk management. Also, many of them face 
+problems involved with people, poor teamwork and loss of motivation. In this article, I am going to list and describe some of these common issues but if you think that
+these mistakes are worth further investigation, I suggest to read rapid development book by mentioned author above.&lt;/p&gt;
+
+&lt;h2 id=&quot;importance-of-planning&quot;&gt;Importance of planning&lt;/h2&gt;
+
+&lt;p&gt;There is huge part before implementation which will help in software development and which will come back to you as boomerang if you miss this phase. 
+I have worked on projects before where I did little or even no planning and where I started coding immediately. These projects were performance-poor or even did not 
+make it to the end at all. If you plan to develop project in a team, development is impossible without further planning.&lt;/p&gt;
+
+&lt;p&gt;Here I am going to divide planning process into four main phases:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;requirements analysis&lt;/li&gt;
+  &lt;li&gt;life cycle planning&lt;/li&gt;
+  &lt;li&gt;architecture planning&lt;/li&gt;
+  &lt;li&gt;design phase&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These phases are not disjoin and can overlap (and should).&lt;/p&gt;
+
+&lt;p&gt;First of all you should ask yourself “what am I doing?” and write down answer on the paper (or into text editor). Requirements analysis consists of defining what the software 
+should look like. In this phase you list all inputs and outputs of software, all features you want at near future, UI design. If you are developing GUI application then you
+should draw interface and all user interactions. If you are building console applications, write down all command line arguments and their possible use cases. If you 
+are building web app, design frontend side and interaction with user. If you are designing background service, define how it will behave and change state. You can 
+draw state machine for your software if possible where you describe all possible states and their transitions. If you are developing software for customer, ask questions such
+that customer needs to explain what he/she wants in detail. You can write use case scenario in form “Given X, when I do Y then Z” where X is state, Y is user action and Z is result 
+and/or new state. In this process you also define performance requirements: how software fast needs to be? What is size of data processed. What is time required for one 
+entry processing? This also means that you have to take into account user interaction. You should make use case such that user can do tasks fast (required time of interaction).&lt;/p&gt;
+
+&lt;p&gt;After requirements analysis, there is life cycle planning. In this phase you choose how to deliver product and what is process during development. For instance, the oldest 
+one is waterfall where you go step by step in planning (from requirements analysis to architecture then to design and then to code / testing / QA) without overlapping.
+This model is not used in many cases and is good if you have fully-specified software requirements. Examples of these are cases where you have to port software to 
+another platform or to another language or technology. In that case you already have software and you know exactly what is needed.&lt;/p&gt;
+
+&lt;p&gt;Another life cycle which is used for projects smaller than 500 lines of code (scripts and prototyping) is code and fix. Here you jump to coding without any planning. This
+is enough for scripts and prototypes. The reason why I am mentioning this is to show that planning does not to be done for simple scripts but you have to draw clear red line
+where border is.&lt;/p&gt;
+
+&lt;p&gt;Method used today the most is evolutionary delivery. Where you do general requirements analysis and architectural analysis (and possibly some kind of code design) and 
+then work in stages by versions. Every stage consists of further requirements,  design, coding and testing and finally delivery. After delivery, you take feedback from customer
+and decide on next features (requirements) and repeat process.&lt;/p&gt;
+
+&lt;p&gt;After life cycle analysis, based on selected model, we probably will do architectural analysis. In this step we define components of our software in general. Here 
+we define do we have database, back-end, frontend? How do components interact with each other. Do we have some services running in background and how they communicate? 
+Here we do not define our classes and UML diagrams. We just make black boxes and decide what parts do they communicate with.&lt;/p&gt;
+
+&lt;p&gt;After architectural process, for each component, we do design process. Design depends on type of component. For database we will probably do entity relationship diagram. 
+For back-end we will define classes, methods and API. For frontend we will define how we are planning to make interface to user and how to communicate with back-end. Here we choose 
+technology stack which is going to be used and also make design compatible with technology stack. For instance, we do not worry about memory management if we are using Java 
+but we do worry about it if we are using C and we have to take this into consideration. 
+Also, in design phase we can provide unit tests for our API and even write some of them.&lt;/p&gt;
+
+&lt;p&gt;After this, we are ready to start with construction.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-important-coding-is&quot;&gt;How important coding is?&lt;/h2&gt;
+
+&lt;p&gt;After all above mentioned process, you probably realize that coding is very small part of whole process and typically is easy one. After you do proper planning, 
+coding becomes just implementing functions inside components. You probably won’t come to problems in this phase.&lt;/p&gt;
+
+&lt;h2 id=&quot;major-risks&quot;&gt;Major risks&lt;/h2&gt;
+
+&lt;p&gt;Here is list of all major risks in most fo software projects. You should do risk management and make sure to control these risks.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;undermining motivation - treating people like children, not having empathy, acting as a bad-ass manager&lt;/li&gt;
+  &lt;li&gt;weak personnel&lt;/li&gt;
+  &lt;li&gt;not going well with bad apples in a team, not resolving issues in a team&lt;/li&gt;
+  &lt;li&gt;not informing upper-management of trouble or behind-schedule things, making “can-do” schedules instead of carefully thinking&lt;/li&gt;
+  &lt;li&gt;adding people to a late project&lt;/li&gt;
+  &lt;li&gt;noisy, crowded offices&lt;/li&gt;
+  &lt;li&gt;friction between developers and customers&lt;/li&gt;
+  &lt;li&gt;unrealistic expectations&lt;/li&gt;
+  &lt;li&gt;lack of effective project sponsorship&lt;/li&gt;
+  &lt;li&gt;lack of user input&lt;/li&gt;
+  &lt;li&gt;lack of stakeholder (marketing, sales, engineering, finance, …) cooperation&lt;/li&gt;
+  &lt;li&gt;wishful thinking - if we work hard enough and get lucky, we will succeed!&lt;/li&gt;
+  &lt;li&gt;overly-optimistic schedules&lt;/li&gt;
+  &lt;li&gt;insufficient risk management - not taking into account what can get wrong and making room to fix it&lt;/li&gt;
+  &lt;li&gt;insufficient planning&lt;/li&gt;
+  &lt;li&gt;abandonment of planning under pressure&lt;/li&gt;
+  &lt;li&gt;too much time of fuzzy process like budgeting&lt;/li&gt;
+  &lt;li&gt;jumping directly to coding without design and planning&lt;/li&gt;
+  &lt;li&gt;inadequate design&lt;/li&gt;
+  &lt;li&gt;shortening QA&lt;/li&gt;
+  &lt;li&gt;omitting necessary tasks from estimates&lt;/li&gt;
+  &lt;li&gt;planning to catch up later&lt;/li&gt;
+  &lt;li&gt;code-like-hell programming&lt;/li&gt;
+  &lt;li&gt;unnecessary requirements in the beginning&lt;/li&gt;
+  &lt;li&gt;developer gold-plating - need to try brand new technologies, language features or implement non-required features&lt;/li&gt;
+  &lt;li&gt;push me - pull me negotiation - make schedule longer but add additional features even though project is behind schedule&lt;/li&gt;
+  &lt;li&gt;research-oriented development&lt;/li&gt;
+  &lt;li&gt;silver-bullet syndrome - using technology without previously having experience with it&lt;/li&gt;
+  &lt;li&gt;switching tools in the middle of a project&lt;/li&gt;
+  &lt;li&gt;lack of automated source code control&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Thu, 23 Aug 2018 00:00:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/2018/08/23/why-software-fails.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/2018/08/23/why-software-fails.html</guid>
+        
+        
+      </item>
     
       <item>
         <title>Introduction to computing with CUDA</title>
@@ -1871,152 +1990,6 @@ stack.assignAction(lambda: print(stack.getHelp()), &quot;Get help&quot;)
         
         
         <category>python</category>
-        
-      </item>
-    
-      <item>
-        <title>Functional JavaScript</title>
-        <description>&lt;p&gt;In this article I will try to explain some aspects of JS which enable us to write more functional code 
-and shorter code as well.&lt;/p&gt;
-
-&lt;h1 id=&quot;node&quot;&gt;Node&lt;/h1&gt;
-
-&lt;p&gt;You can try examples in node, just type &lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt; to open interactive mode.&lt;/p&gt;
-
-&lt;h1 id=&quot;function-definitions&quot;&gt;Function definitions&lt;/h1&gt;
-
-&lt;p&gt;Let’s explain function definitions in JS:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function f(x)
-{
-	return x*x;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;also we can assign function to variables (since functions are first-class objects)&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; const g = function(x) {return x*x;}
-undefined
-&amp;gt; g(5)
-25
-&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;objects-in-js&quot;&gt;Objects in JS&lt;/h1&gt;
-
-&lt;p&gt;Objects are basically dictionaries and are defined like JSON:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; obj = {&quot;a&quot;: 1, &quot;b&quot;: 2}
-{ a: 1, b: 2 }
-&amp;gt; obj.a
-1
-&amp;gt; obj[&quot;a&quot;]
-1
-&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Functions can also be parts of objects.&lt;/p&gt;
-
-&lt;h1 id=&quot;lambda-functions&quot;&gt;Lambda functions&lt;/h1&gt;
-
-&lt;p&gt;Since functions are first-class objects we can do this:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; function filter(arr, f) { 
-... for (var i = 0; i&amp;lt;arr.length; i++) { 
-..... if (f(arr[i])) console.log(arr[i]);
-..... }
-... }
-undefined
-&amp;gt; filter([1,2,3], function (x) {return x % 2 == 0})
-2
-undefined
-&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;arrays have filter function as their method:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; [1,2,3].filter(function (x) {return x% 2 == 0})
-[ 2 ]
-&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Also, arrays have map method in them:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; [1,2,3].map(f)
-[1,4,9]
-&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Also they have reduce (right) method:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; [1,2,3].reduce(function (z,x) {return z+x;}, 0)
-6
-&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;We can use arrow notation to make our code shorter, for instance:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; arr.reduce((z,x) =&amp;gt; z*z+x, 0)                                                                                                        	12                                                                                                                                     	&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;this-hell&quot;&gt;this hell&lt;/h1&gt;
-
-&lt;p&gt;Now we will explain constructors which are functions that return objects.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; function MyObject() { 
-... return {
-..... a: 1,
-..... b: 2
-..... }
-... }
-undefined
-&amp;gt; obj = MyObject()
-{ a: 1, b: 2 }
-&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;In functions, one special (invisible) parameter is also passed: this. Value of this depends on how function is called.&lt;/p&gt;
-
-&lt;p&gt;If function is called like f(…) then this refers to global state (i.e state defined by browser or nodeJS environment).&lt;/p&gt;
-
-&lt;p&gt;If function is called with new construct: new f(…) then this is empty.&lt;/p&gt;
-
-&lt;p&gt;If function is called as method of some object then this refers to this object: myobj.myfunction() - this refers to myobj.&lt;/p&gt;
-
-&lt;p&gt;Since we here deal with functional approach, we will not consider “new” construct and, when calling functions as methods of some object, will ensure that our function does not modify state of “this”.&lt;/p&gt;
-
-&lt;h1 id=&quot;spread-syntax&quot;&gt;Spread syntax&lt;/h1&gt;
-
-&lt;p&gt;Let’s suppose we have array called arr:&lt;/p&gt;
-
-&lt;p&gt;if we call function with f(…arr) all its elements will become arguments of function. This 3-dot notation basically extracts 
-data from array as normal, comma-separated, values.&lt;/p&gt;
-
-&lt;p&gt;Also, with this syntax we can grab head and tail of array:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; [head, ...tail] = arr 
-[ 1, 2, 3 ]
-&amp;gt; tail
-[ 2, 3 ]
-&amp;gt; head
-1
-&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;pattern-matching&quot;&gt;Pattern matching&lt;/h1&gt;
-
-&lt;p&gt;Pattern matching is not standardized yet but there’s proposal here: https://github.com/tc39/proposal-pattern-matching&lt;/p&gt;
-</description>
-        <pubDate>Tue, 23 Jan 2018 17:15:00 +0100</pubDate>
-        <link>http://fantastic001.github.io/functional-programming/software/javascript/2018/01/23/functional-javascript.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/functional-programming/software/javascript/2018/01/23/functional-javascript.html</guid>
-        
-        
-        <category>functional-programming</category>
-        
-        <category>software</category>
-        
-        <category>javascript</category>
         
       </item>
     
