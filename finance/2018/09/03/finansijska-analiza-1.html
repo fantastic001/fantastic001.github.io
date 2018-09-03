@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-109687688-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-109687688-1');
+</script>
+
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Uvod u finansijsku analizu - 1. deo</title>
+  <meta name="description" content="Finansijska analiza je oblast koja spaja finansije, matematiku a od skoro i računarske nauke. Ona ne samo da nam može značiti kada je reč o novcu nego i bilo...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://fantastic001.github.io/finance/2018/09/03/finansijska-analiza-1.html">
+  <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
+</head>
+
+  <!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Uvod u finansijsku analizu - 1. deo | Stefan Nožinić</title>
+<meta name="generator" content="Jekyll v3.7.0" />
+<meta property="og:title" content="Uvod u finansijsku analizu - 1. deo" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Finansijska analiza je oblast koja spaja finansije, matematiku a od skoro i računarske nauke. Ona ne samo da nam može značiti kada je reč o novcu nego i bilo čemu što iziskuje procenjivanje vrednosti nečega u nekoj jedinici za koju smo se dogovorili da je jedinica vrednovanja. U praksi je najčešće to novac jer njime možemo kupiti proizvode i usluge i ceo svet se njime koristi ali se neka grupa ljudi interno može dogovoriti o svooj internoj jedinici vrednosti ali je važno da se ona može prikazati brojem." />
+<meta property="og:description" content="Finansijska analiza je oblast koja spaja finansije, matematiku a od skoro i računarske nauke. Ona ne samo da nam može značiti kada je reč o novcu nego i bilo čemu što iziskuje procenjivanje vrednosti nečega u nekoj jedinici za koju smo se dogovorili da je jedinica vrednovanja. U praksi je najčešće to novac jer njime možemo kupiti proizvode i usluge i ceo svet se njime koristi ali se neka grupa ljudi interno može dogovoriti o svooj internoj jedinici vrednosti ali je važno da se ona može prikazati brojem." />
+<link rel="canonical" href="http://fantastic001.github.io/finance/2018/09/03/finansijska-analiza-1.html" />
+<meta property="og:url" content="http://fantastic001.github.io/finance/2018/09/03/finansijska-analiza-1.html" />
+<meta property="og:site_name" content="Stefan Nožinić" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-09-03T19:15:00+02:00" />
+<script type="application/ld+json">
+{"description":"Finansijska analiza je oblast koja spaja finansije, matematiku a od skoro i računarske nauke. Ona ne samo da nam može značiti kada je reč o novcu nego i bilo čemu što iziskuje procenjivanje vrednosti nečega u nekoj jedinici za koju smo se dogovorili da je jedinica vrednovanja. U praksi je najčešće to novac jer njime možemo kupiti proizvode i usluge i ceo svet se njime koristi ali se neka grupa ljudi interno može dogovoriti o svooj internoj jedinici vrednosti ali je važno da se ona može prikazati brojem.","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/finance/2018/09/03/finansijska-analiza-1.html"},"@type":"BlogPosting","url":"http://fantastic001.github.io/finance/2018/09/03/finansijska-analiza-1.html","headline":"Uvod u finansijsku analizu - 1. deo","dateModified":"2018-09-03T19:15:00+02:00","datePublished":"2018-09-03T19:15:00+02:00","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Stefan Nožinić</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+<!--
+    <div class="site-description">
+      <p>This is my blog where I will express my thoughts about everything which I'm interested in.
+</p>
+    </div>
+-->
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Uvod u finansijsku analizu - 1. deo</h1>
+    <p class="post-meta"><time datetime="2018-09-03T19:15:00+02:00" itemprop="datePublished">Sep 3, 2018</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Finansijska analiza je oblast koja spaja finansije, matematiku a od skoro i računarske nauke. 
+Ona ne samo da nam može značiti kada je reč o novcu nego i bilo čemu što iziskuje procenjivanje vrednosti nečega 
+u nekoj jedinici za koju smo se dogovorili da je jedinica vrednovanja. U praksi je najčešće to novac jer njime možemo 
+kupiti proizvode i usluge i ceo svet se njime koristi ali se neka grupa ljudi interno može dogovoriti o svooj internoj jedinici
+vrednosti ali je važno da se ona može prikazati brojem.</p>
+
+<p>U ovom članku i u nastavcima će se za jedinicu uzimati novac.</p>
+
+<h2 id="osnovni-zadaci-finansijske-analize">Osnovni zadaci finansijske analize</h2>
+
+<p>Koliko god oblast bila kompleksna, ona ima samo dva zadatka a to su: procena vrednosti i donošenje odluka. Zadatak se svodi 
+na procenu vrednosti svih mogućih opcija i uzimanje one najvrednije. Dakle, suština je procena vrednosti. U ovom članku ću prikazati 
+kako izgleda procena vrednosti za neka jednostavna finansijska instrumenta koj ne uključuju rizik u svoju kalkulaciju i time su jako prediktabilni.</p>
+
+<h2 id="šta-je-imovina">Šta je imovina?</h2>
+
+<p>Mi svi koristimo pojam imovina da označimo šta neko poseduje. Međutim, za nas je važno i da matematički definišemo šta znači imovina 
+kako bismo lakše mogli da koristimo matematičke modele za procenu njene vrednosti.</p>
+
+<p>Mi možemo posedovati imovinu u raznim oblicima, ljudima najčešće pada na pamet nekretnine kao što je kuća, stan, automobil ali imovina može biti i nematerijalna kao što su znanje, reputacija, patent, poslovna tajna. Ostali tipovi imovine su: akcije, opcije, obveznice itd…</p>
+
+<p>Kao što vidimo, imovina može biti svašta a nama treba matematička definicija iste, zbog ovoga uvodimo sledeću definiciju (koja je opet apstraktna za sada):</p>
+
+<p>Imovina u trenutk T je lista protoka novca u budućnosti.</p>
+
+<p>Dakle, imovina je zapravo: (P(T), P(T + dt), P(t + 2dt), …)</p>
+
+<p>Protok novca u datom trenutku može biti i negativna vrednost. Za takvu imovinu kažemo da je “obaveza” (eng. liability).</p>
+
+<h2 id="principi-finansijske-analize">Principi finansijske analize</h2>
+
+<p>Sada, kada smo uveli pojam imovine, treba uvesti i neke pretpostavke na kojima ćemo bazirati svo naše dalje izlaganje a to su:</p>
+
+<ol>
+  <li>Ništa nije besplatno</li>
+  <li>Ljudi preferiraju uvek više novca nego manje novca</li>
+  <li>Ljudi preferiraju novac sada umesto novac kasnije</li>
+  <li>Ljudi ne preferiraju rizik</li>
+  <li>Svako radi u svom najboljem interesu</li>
+  <li>Finansijska tržišta teže da izjednače ponudu i potražnju</li>
+  <li>Finansijska tržišta su jako adaptibilna</li>
+  <li>Podela rizika je centralna stavka finansijske inovacije</li>
+</ol>
+
+<p>Okej, verujem da neki principi izgledaju jako logično dok neki su nerazumljivi. Ovde smo ih samo naveli a kasnije ćemo u praksi pokazati kako svaki od ovih principa prirodno nadolazi kao priroda čoveka. Ove hipoteze ne zavise od političkog i ekonomskog modela neke države. Ove hipoteze su posledica čovekovog razmišljanja koje je duboko usađeno u njemu. Ako mislite da nije tako, pišite u komentarima i rado ću dati kontra-argument. :)</p>
+
+<h2 id="procena-vrednosti">Procena vrednosti</h2>
+
+<p>Kao što se vidi iz gornje definiije imovine, imovina je definisana kao nešto što zavisi od vremena. Zbog ovoga, kaa računamo vrednost 
+imovine, jako je važno da tu vrednost računamo u zavisnosti od vremena. Trenutna vrednost neke imovine se može izraziti kao V = V(P(T), P(T + dt), ….) dakle kao funkcija svih budućih protoka novca (kojih može biti i beskonačno mnogo).</p>
+
+<p>ada treba da odredimo funkciju V koja će nam dati vrednost imovine opisane sa listom protoka novca P.</p>
+
+<p>Pre toga, uvedimo da je T vreme na godinu dana tako da dt = 1 znači vreme od jedne godine a dt = 2 znači vreme od dve godine itd.</p>
+
+<p>Isto takk, uvedimo da se mi nalazimo u trenutku T=0 kako bismo lakše mogli zapisati naredne delove.</p>
+
+<p>Posle ovakvog dogovora (koji ne umanjuje opštost) imamo da je V = V(P(0), P(1), ….).</p>
+
+<p>Pre nego što definišemo funkciju V, treba uvesti fenomen koji je posledica gore-navedenih principa.</p>
+
+<h2 id="vremenska-vrednost-novca">Vremenska vrednost novca</h2>
+
+<p>Zamislite da vam ja dam ugovor koji kaže da ću vam dati 1000 dinara za godinu dana. Koliko biste platili sada za taj ugovor? Ako biste platili tačno 1000 dinara onda mi je velika čast da poslujem sa vama. :) Realnost je da nećete dati 1000 dinara kako bih vam ja vratio tih istih 1000 dinara za godinu dana. Zašto? Zato što su ljudi nestrpljivi, rekli smo da preferiraju novac sada a ne novac kasnije. Kako možete da kompenzujete tih godinu dana čekanja? Tako što možete da mi date manje para sada za godinu dana kasnije. Zamislimo sada situaciju da ja odem i ponudim ugovor na tržištu od 100 ljudi. Svako može da ponudi cenu i onaj ko ponudi najviše dobija ugovor. Dakle princip aukcije. Zamislimo sada da je poslednja cena 990 dinara. Dakle, neko će se strpiti godinu dana za 10 dinara dobitka. Kao što vidimo, danas dinar ne vredi kao dinar za godinu dana. Ovde nisam ni pomenuo inflaciju i slično, to dolazi kasnije. Ovde sam samo rekao da ljudi preferiraju pare sada a ne pare kasnije. Dakle i bez inflacije i bez rizika i slično, opet ću morati da platim kamatu na pozamljenih 990 dinara tako da ću za godinu dana morati da ratim 1000. Upravo smo, uz pomoć tržišta, odredili cenu ovog mog ugovora. Kako izgleda protok novca za vas koji dobijete taj ugovor:</p>
+
+<p>P = (0, 1000, 0, …., 0)</p>
+
+<p>Dakle sada ne dobijate ništa a za godinu dana dobijate 1000 dinara. Cenu smo odredili isto i znamo da je V = 990.</p>
+
+<p>Dakle znamo da je cena niža od protoka noca za godinu dana tako da je 990 = k * 1000.</p>
+
+<p>Ovo je posedica nestrpljenja kod tržišta i tako zaključujemo da 1000 dinara danas nije iste vrednosti kao 1000 dinara sutra ili bilo kad u vremenu. Novac gubi vrednost saim tim što vreme protiče.</p>
+
+<h2 id="a-sada-procena-vrednosti">A sada, procena vrednosti</h2>
+
+<p>Našu funkciju V možemo dedfinisati kao zbir svih protoka novca ALI moramo paziti da ne sabiramo babe i žabe. Protok novca u budućnosti moramo konvertovati u ekvivalentnu vrednost danas.</p>
+
+<p>V = P(0) + k(1)P(1) + k(2)P(2) + …</p>
+
+<p>k(T) je smanjenje u trenutku t. Nravno kako T raste, k(T) opada jer sve više moramo da čekamo i zato manje vrednujemo protoke novca koji su dalje u budućnosti.</p>
+
+<p>Naravno, k može varirati tokom vremena ali zbog jednostavnosti uvedimo da je K(T) = 1 / (1+r)^T gde je r kamatna stopa uzrokovana
+vremenskom vrednošću novca. Iz ove jednakosti vidimo da je k uvek manje od 1 i da se sa porastom T, k smannjuje.</p>
+
+<p>r se lako može utvrditi na tržištu kao što smo videli u primeru.</p>
+
+<p>Sada ćemo uvesti neke primere finansijskih instrumenata i njihove vrednosti kako se računaju.</p>
+
+<h2 id="večne-obveznice">Večne obveznice</h2>
+
+<p>Zamislimo da imamo ugovor koji večno isplaćuje C tokom svake godine i tako zauvek. Ovo čak postoji i u praksi, na primer, Britanska vlada izdaje večne obveznice.</p>
+
+<p>Dakle, V = C/(1+r) + C/(1+r)^2 + …</p>
+
+<p>ovu sumu možemo zapisati i u zatvorenoj formi kao: V = C / r.</p>
+
+<p>Dakle, ako znamo vrednost obveznice i godišnju isplatu, možemo lako izračunati kamatu r.</p>
+
+<h2 id="večne-obveznice-sa-rastom">Večne obveznice sa rastom</h2>
+
+<p>Sada zamislimo da imamo obveznicu koja isplaćuje C i svake godine raste za g procenata, onda je vrednost:</p>
+
+<p>V = C(1+g)/(1+r) + C(1+g)^2 / (1 + r)^2 + ….</p>
+
+<p>Kao i gornja, i ova suma se može izračunati što daje: V = C / (r - g) uz uslov da je g &lt; r.</p>
+
+<p>Pored matematičkog smisla, ovaj uslov ima smisla i u realnosti. Dakle ne možemo imati rast veći od kamate a da je to održivo večno. Na primer, Kina ima rast oko 10% ali pošto su kamate znatno niže, ona taj rast ne može da ima večno. Ako to ne bi važilo, ceo univerzum bi pričao kineski i bili bi toliko bogati da bi sve na ovom svetu bilo njihovo što naravno nije moguće.</p>
+
+<h2 id="ograničene-obveznice">Ograničene obveznice</h2>
+
+<p>Većina obveznica je ograničeno i ne izdaju se na period od beskonačno vremena nego su ograničene na N godina. Za njih dobijamo:</p>
+
+<p>V = C / (1 + r) + C / (1+r)^2 + …. C / (1 + r)^N = C((1 - 1/(1 + r)^N) / r)</p>
+
+<p>U praksi ovakve obveznice su jao česte. Na primer, na sajtu za javni dugRepublike Srbije se mogu naći obveznice koje država nudi građanima. Građani daju pare državi sada kako bi ona finansirala svoje potrebe a onda država isplaćuje rate građanu na određeni vremenski period. Ovo je i najsigurniji finansijski instrument pogotovo ako vam obveznice izdaje država jer ona garantuje da će vam ih uvek isplatiti. Ako država nema para da vam ih isplati, može da ih odštampa u najgorem slučaju. Kod korporativnih obveznica postoji rizik da firma bankrotira ali to je već tema za neki naredni ćlanak.</p>
+
+  </div>
+
+</article>
+
+<div id="comment-section">
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    
+    var disqus_config = function () {
+        this.page.url = "http://fantastic001.github.io/finance/2018/09/03/finansijska-analiza-1.html";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "/finance/2018/09/03/finansijska-analiza-1"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//fantastic001.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Stefan Nožinić</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Stefan Nožinić</li>
+          <li><a href="mailto:stefan@lugons.org">stefan@lugons.org</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/fantastic001"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">fantastic001</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/snstefan5"><span class="icon icon--twitter"><svg viewBox="0 0 16 16"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">snstefan5</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

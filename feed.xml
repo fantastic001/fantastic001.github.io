@@ -6,9 +6,136 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 03 Sep 2018 20:04:44 +0200</pubDate>
-    <lastBuildDate>Mon, 03 Sep 2018 20:04:44 +0200</lastBuildDate>
+    <pubDate>Mon, 03 Sep 2018 20:06:56 +0200</pubDate>
+    <lastBuildDate>Mon, 03 Sep 2018 20:06:56 +0200</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
+    
+      <item>
+        <title>Uvod u finansijsku analizu - 1. deo</title>
+        <description>&lt;p&gt;Finansijska analiza je oblast koja spaja finansije, matematiku a od skoro i računarske nauke. 
+Ona ne samo da nam može značiti kada je reč o novcu nego i bilo čemu što iziskuje procenjivanje vrednosti nečega 
+u nekoj jedinici za koju smo se dogovorili da je jedinica vrednovanja. U praksi je najčešće to novac jer njime možemo 
+kupiti proizvode i usluge i ceo svet se njime koristi ali se neka grupa ljudi interno može dogovoriti o svooj internoj jedinici
+vrednosti ali je važno da se ona može prikazati brojem.&lt;/p&gt;
+
+&lt;p&gt;U ovom članku i u nastavcima će se za jedinicu uzimati novac.&lt;/p&gt;
+
+&lt;h2 id=&quot;osnovni-zadaci-finansijske-analize&quot;&gt;Osnovni zadaci finansijske analize&lt;/h2&gt;
+
+&lt;p&gt;Koliko god oblast bila kompleksna, ona ima samo dva zadatka a to su: procena vrednosti i donošenje odluka. Zadatak se svodi 
+na procenu vrednosti svih mogućih opcija i uzimanje one najvrednije. Dakle, suština je procena vrednosti. U ovom članku ću prikazati 
+kako izgleda procena vrednosti za neka jednostavna finansijska instrumenta koj ne uključuju rizik u svoju kalkulaciju i time su jako prediktabilni.&lt;/p&gt;
+
+&lt;h2 id=&quot;šta-je-imovina&quot;&gt;Šta je imovina?&lt;/h2&gt;
+
+&lt;p&gt;Mi svi koristimo pojam imovina da označimo šta neko poseduje. Međutim, za nas je važno i da matematički definišemo šta znači imovina 
+kako bismo lakše mogli da koristimo matematičke modele za procenu njene vrednosti.&lt;/p&gt;
+
+&lt;p&gt;Mi možemo posedovati imovinu u raznim oblicima, ljudima najčešće pada na pamet nekretnine kao što je kuća, stan, automobil ali imovina može biti i nematerijalna kao što su znanje, reputacija, patent, poslovna tajna. Ostali tipovi imovine su: akcije, opcije, obveznice itd…&lt;/p&gt;
+
+&lt;p&gt;Kao što vidimo, imovina može biti svašta a nama treba matematička definicija iste, zbog ovoga uvodimo sledeću definiciju (koja je opet apstraktna za sada):&lt;/p&gt;
+
+&lt;p&gt;Imovina u trenutk T je lista protoka novca u budućnosti.&lt;/p&gt;
+
+&lt;p&gt;Dakle, imovina je zapravo: (P(T), P(T + dt), P(t + 2dt), …)&lt;/p&gt;
+
+&lt;p&gt;Protok novca u datom trenutku može biti i negativna vrednost. Za takvu imovinu kažemo da je “obaveza” (eng. liability).&lt;/p&gt;
+
+&lt;h2 id=&quot;principi-finansijske-analize&quot;&gt;Principi finansijske analize&lt;/h2&gt;
+
+&lt;p&gt;Sada, kada smo uveli pojam imovine, treba uvesti i neke pretpostavke na kojima ćemo bazirati svo naše dalje izlaganje a to su:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Ništa nije besplatno&lt;/li&gt;
+  &lt;li&gt;Ljudi preferiraju uvek više novca nego manje novca&lt;/li&gt;
+  &lt;li&gt;Ljudi preferiraju novac sada umesto novac kasnije&lt;/li&gt;
+  &lt;li&gt;Ljudi ne preferiraju rizik&lt;/li&gt;
+  &lt;li&gt;Svako radi u svom najboljem interesu&lt;/li&gt;
+  &lt;li&gt;Finansijska tržišta teže da izjednače ponudu i potražnju&lt;/li&gt;
+  &lt;li&gt;Finansijska tržišta su jako adaptibilna&lt;/li&gt;
+  &lt;li&gt;Podela rizika je centralna stavka finansijske inovacije&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Okej, verujem da neki principi izgledaju jako logično dok neki su nerazumljivi. Ovde smo ih samo naveli a kasnije ćemo u praksi pokazati kako svaki od ovih principa prirodno nadolazi kao priroda čoveka. Ove hipoteze ne zavise od političkog i ekonomskog modela neke države. Ove hipoteze su posledica čovekovog razmišljanja koje je duboko usađeno u njemu. Ako mislite da nije tako, pišite u komentarima i rado ću dati kontra-argument. :)&lt;/p&gt;
+
+&lt;h2 id=&quot;procena-vrednosti&quot;&gt;Procena vrednosti&lt;/h2&gt;
+
+&lt;p&gt;Kao što se vidi iz gornje definiije imovine, imovina je definisana kao nešto što zavisi od vremena. Zbog ovoga, kaa računamo vrednost 
+imovine, jako je važno da tu vrednost računamo u zavisnosti od vremena. Trenutna vrednost neke imovine se može izraziti kao V = V(P(T), P(T + dt), ….) dakle kao funkcija svih budućih protoka novca (kojih može biti i beskonačno mnogo).&lt;/p&gt;
+
+&lt;p&gt;ada treba da odredimo funkciju V koja će nam dati vrednost imovine opisane sa listom protoka novca P.&lt;/p&gt;
+
+&lt;p&gt;Pre toga, uvedimo da je T vreme na godinu dana tako da dt = 1 znači vreme od jedne godine a dt = 2 znači vreme od dve godine itd.&lt;/p&gt;
+
+&lt;p&gt;Isto takk, uvedimo da se mi nalazimo u trenutku T=0 kako bismo lakše mogli zapisati naredne delove.&lt;/p&gt;
+
+&lt;p&gt;Posle ovakvog dogovora (koji ne umanjuje opštost) imamo da je V = V(P(0), P(1), ….).&lt;/p&gt;
+
+&lt;p&gt;Pre nego što definišemo funkciju V, treba uvesti fenomen koji je posledica gore-navedenih principa.&lt;/p&gt;
+
+&lt;h2 id=&quot;vremenska-vrednost-novca&quot;&gt;Vremenska vrednost novca&lt;/h2&gt;
+
+&lt;p&gt;Zamislite da vam ja dam ugovor koji kaže da ću vam dati 1000 dinara za godinu dana. Koliko biste platili sada za taj ugovor? Ako biste platili tačno 1000 dinara onda mi je velika čast da poslujem sa vama. :) Realnost je da nećete dati 1000 dinara kako bih vam ja vratio tih istih 1000 dinara za godinu dana. Zašto? Zato što su ljudi nestrpljivi, rekli smo da preferiraju novac sada a ne novac kasnije. Kako možete da kompenzujete tih godinu dana čekanja? Tako što možete da mi date manje para sada za godinu dana kasnije. Zamislimo sada situaciju da ja odem i ponudim ugovor na tržištu od 100 ljudi. Svako može da ponudi cenu i onaj ko ponudi najviše dobija ugovor. Dakle princip aukcije. Zamislimo sada da je poslednja cena 990 dinara. Dakle, neko će se strpiti godinu dana za 10 dinara dobitka. Kao što vidimo, danas dinar ne vredi kao dinar za godinu dana. Ovde nisam ni pomenuo inflaciju i slično, to dolazi kasnije. Ovde sam samo rekao da ljudi preferiraju pare sada a ne pare kasnije. Dakle i bez inflacije i bez rizika i slično, opet ću morati da platim kamatu na pozamljenih 990 dinara tako da ću za godinu dana morati da ratim 1000. Upravo smo, uz pomoć tržišta, odredili cenu ovog mog ugovora. Kako izgleda protok novca za vas koji dobijete taj ugovor:&lt;/p&gt;
+
+&lt;p&gt;P = (0, 1000, 0, …., 0)&lt;/p&gt;
+
+&lt;p&gt;Dakle sada ne dobijate ništa a za godinu dana dobijate 1000 dinara. Cenu smo odredili isto i znamo da je V = 990.&lt;/p&gt;
+
+&lt;p&gt;Dakle znamo da je cena niža od protoka noca za godinu dana tako da je 990 = k * 1000.&lt;/p&gt;
+
+&lt;p&gt;Ovo je posedica nestrpljenja kod tržišta i tako zaključujemo da 1000 dinara danas nije iste vrednosti kao 1000 dinara sutra ili bilo kad u vremenu. Novac gubi vrednost saim tim što vreme protiče.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-sada-procena-vrednosti&quot;&gt;A sada, procena vrednosti&lt;/h2&gt;
+
+&lt;p&gt;Našu funkciju V možemo dedfinisati kao zbir svih protoka novca ALI moramo paziti da ne sabiramo babe i žabe. Protok novca u budućnosti moramo konvertovati u ekvivalentnu vrednost danas.&lt;/p&gt;
+
+&lt;p&gt;V = P(0) + k(1)P(1) + k(2)P(2) + …&lt;/p&gt;
+
+&lt;p&gt;k(T) je smanjenje u trenutku t. Nravno kako T raste, k(T) opada jer sve više moramo da čekamo i zato manje vrednujemo protoke novca koji su dalje u budućnosti.&lt;/p&gt;
+
+&lt;p&gt;Naravno, k može varirati tokom vremena ali zbog jednostavnosti uvedimo da je K(T) = 1 / (1+r)^T gde je r kamatna stopa uzrokovana
+vremenskom vrednošću novca. Iz ove jednakosti vidimo da je k uvek manje od 1 i da se sa porastom T, k smannjuje.&lt;/p&gt;
+
+&lt;p&gt;r se lako može utvrditi na tržištu kao što smo videli u primeru.&lt;/p&gt;
+
+&lt;p&gt;Sada ćemo uvesti neke primere finansijskih instrumenata i njihove vrednosti kako se računaju.&lt;/p&gt;
+
+&lt;h2 id=&quot;večne-obveznice&quot;&gt;Večne obveznice&lt;/h2&gt;
+
+&lt;p&gt;Zamislimo da imamo ugovor koji večno isplaćuje C tokom svake godine i tako zauvek. Ovo čak postoji i u praksi, na primer, Britanska vlada izdaje večne obveznice.&lt;/p&gt;
+
+&lt;p&gt;Dakle, V = C/(1+r) + C/(1+r)^2 + …&lt;/p&gt;
+
+&lt;p&gt;ovu sumu možemo zapisati i u zatvorenoj formi kao: V = C / r.&lt;/p&gt;
+
+&lt;p&gt;Dakle, ako znamo vrednost obveznice i godišnju isplatu, možemo lako izračunati kamatu r.&lt;/p&gt;
+
+&lt;h2 id=&quot;večne-obveznice-sa-rastom&quot;&gt;Večne obveznice sa rastom&lt;/h2&gt;
+
+&lt;p&gt;Sada zamislimo da imamo obveznicu koja isplaćuje C i svake godine raste za g procenata, onda je vrednost:&lt;/p&gt;
+
+&lt;p&gt;V = C(1+g)/(1+r) + C(1+g)^2 / (1 + r)^2 + ….&lt;/p&gt;
+
+&lt;p&gt;Kao i gornja, i ova suma se može izračunati što daje: V = C / (r - g) uz uslov da je g &amp;lt; r.&lt;/p&gt;
+
+&lt;p&gt;Pored matematičkog smisla, ovaj uslov ima smisla i u realnosti. Dakle ne možemo imati rast veći od kamate a da je to održivo večno. Na primer, Kina ima rast oko 10% ali pošto su kamate znatno niže, ona taj rast ne može da ima večno. Ako to ne bi važilo, ceo univerzum bi pričao kineski i bili bi toliko bogati da bi sve na ovom svetu bilo njihovo što naravno nije moguće.&lt;/p&gt;
+
+&lt;h2 id=&quot;ograničene-obveznice&quot;&gt;Ograničene obveznice&lt;/h2&gt;
+
+&lt;p&gt;Većina obveznica je ograničeno i ne izdaju se na period od beskonačno vremena nego su ograničene na N godina. Za njih dobijamo:&lt;/p&gt;
+
+&lt;p&gt;V = C / (1 + r) + C / (1+r)^2 + …. C / (1 + r)^N = C((1 - 1/(1 + r)^N) / r)&lt;/p&gt;
+
+&lt;p&gt;U praksi ovakve obveznice su jao česte. Na primer, na sajtu za javni dugRepublike Srbije se mogu naći obveznice koje država nudi građanima. Građani daju pare državi sada kako bi ona finansirala svoje potrebe a onda država isplaćuje rate građanu na određeni vremenski period. Ovo je i najsigurniji finansijski instrument pogotovo ako vam obveznice izdaje država jer ona garantuje da će vam ih uvek isplatiti. Ako država nema para da vam ih isplati, može da ih odštampa u najgorem slučaju. Kod korporativnih obveznica postoji rizik da firma bankrotira ali to je već tema za neki naredni ćlanak.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 03 Sep 2018 19:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/finance/2018/09/03/finansijska-analiza-1.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/finance/2018/09/03/finansijska-analiza-1.html</guid>
+        
+        
+        <category>finance</category>
+        
+      </item>
     
       <item>
         <title>Why some software projects fail? (and how to fix that)</title>
@@ -1879,115 +2006,6 @@ fix some things manually.&lt;/p&gt;
         <category>agile</category>
         
         <category>organization</category>
-        
-      </item>
-    
-      <item>
-        <title>ArgumentStack</title>
-        <description>&lt;p&gt;ArgumentStack is a small python library which helps you to make argument parsing easy. It is based on nice argument 
-structure where your arguments are structured like a tree. Nice example of this is nmcli command for network manager, for instance you can do:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nmcli dev 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and it will list all devices, but if you do:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nmcli dev wifi 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;it will list only wifi devices which are scanned. However if you do:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nmcli general 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;it will show general status info. Similar example is Mako, if you do:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako projects 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;it will show list of projects currently in database, but if you do:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project X subprojects
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;it will show X’s subprojects. ArgumentStack functionality is based on adding arguments to stack and then assigning action for 
-current stack state. It supports push and pop functions for stack. For example, in nmcli part we would implement above functionality 
-like:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from ArgumentStack import * 
-import sys 
-
-# define needed functions as actions 
-
-stack = ArgumentStack(&quot;Wrong command&quot;) # to constructor it is passed error message for non-existing commands
-
-stack.pushCommand(&quot;dev&quot;)
-stack.assignAction(dev_status, &quot;device status&quot;) # nmcli dev
-
-stack.pushCommand(&quot;wifi&quot;)
-stack.assignAction(wifi_scanned, &quot;WIFI device list&quot;) # nmcli dev wifi 
-stack.pop() # now state is: nmcli dev 
-
-stack.pushCommand(&quot;ethernet&quot;) # nmcli dev ethernet
-stack.assignAction(ethernet_status, &quot;Ethernet status&quot;)
-stack.popAll() # now state is: nmcli
-
-stack.pushCommand(&quot;general&quot;)
-stack.assignAction(general_info, &quot;General status info&quot;) # nmcli general 
-
-stack.pushVariable(&quot;interface&quot;)
-stack.assignAction(info_for_interface, &quot;info for interface&quot;) # nmcli general &amp;lt;interface&amp;gt;
-# interface is passed as keyword argument to function info_for_interface
-
-sys.execute(sys.argv) # argument parsing and calling apropirate functions
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Important note here is that our functions have to take keyword arguments such that variables can be passed (as our interface variable for general action, last state).&lt;/p&gt;
-
-&lt;p&gt;You can make action for getting help, for instance, above stack.execute(…) call just add:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;stack.popAll()
-stack.pushCommand(&quot;help&quot;)
-stack.assignAction(lambda: print(stack.getHelp()), &quot;Get help&quot;)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;example-using-lambda-expressions&quot;&gt;Example using lambda expressions&lt;/h1&gt;
-
-&lt;p&gt;You can use lambda expressions if your functions are one line of code:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/python &lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;src&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; 
-
-
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sys&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ArgumentStack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wrong command&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pushCommand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hello&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pushCommand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;world&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;assignAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hello world!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;say hello to world&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pushCommand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;to&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pushVariable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;assignAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;s&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;say hello to somebody&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;popAll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pushCommand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;help&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;assignAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getHelp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Get help&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;installation&quot;&gt;Installation&lt;/h1&gt;
-
-&lt;p&gt;ArgumentStack can be easily installed via pip:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install ArgumentStack 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-</description>
-        <pubDate>Wed, 07 Feb 2018 15:15:00 +0100</pubDate>
-        <link>http://fantastic001.github.io/python/2018/02/07/argumentstack.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/python/2018/02/07/argumentstack.html</guid>
-        
-        
-        <category>python</category>
         
       </item>
     
