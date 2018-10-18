@@ -6,9 +6,76 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 03 Sep 2018 20:06:56 +0200</pubDate>
-    <lastBuildDate>Mon, 03 Sep 2018 20:06:56 +0200</lastBuildDate>
+    <pubDate>Thu, 18 Oct 2018 12:04:44 +0200</pubDate>
+    <lastBuildDate>Thu, 18 Oct 2018 12:04:44 +0200</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
+    
+      <item>
+        <title>Uvod u finansijsku analizu - 2. deo</title>
+        <description>&lt;p&gt;U prethodnom delu sam uveo neke osnovne termine i koncepte u finansijskoj analizi. Ovde ću nastaviti sa analizom još nekih finansijskih instrumenata
+koje možemo upotrebiti bilo direktno bilo u modelovanju.&lt;/p&gt;
+
+&lt;h2 id=&quot;akcije&quot;&gt;Akcije&lt;/h2&gt;
+
+&lt;p&gt;Akcija je udeo u kompaniji. Ona investitoru omogućava glasaško pravo za biranje upravnog odbora kao i pravo na dividendu. Dividenda je deo profita koji, na odluku upravnog
+odboora, idu investitorima. Najčešće u intervalima od 3 meseca ili godinu dana ali to opet zavisi od odluke upravnog odbora.&lt;/p&gt;
+
+&lt;p&gt;Investitoor svoju zarad može da dobije na 2 načina: od dividendi ili od prodaje akcije (kapitalna dobit). U analizi koja sledi pretpostavićemo da investitor ne prodaje akciju i da zarađuje samo od dividendi.&lt;/p&gt;
+
+&lt;p&gt;Dakle, jedini protok novca koji postoji u tom slučaju jeste zarada od dividendi:&lt;/p&gt;
+
+&lt;p&gt;Akcija = {D1, D2, ….}&lt;/p&gt;
+
+&lt;p&gt;ako uzmemo model procene vrednosti po kom smo procenjivali i obveznice, dobijamo da je cena akcija: &amp;lt;pre&amp;gt; &lt;script type=&quot;math/tex&quot;&gt;V = \sum_{i=1}^\infty \frac{D_i}{(1 + r)^i}&lt;/script&gt; &amp;lt;/pre&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;Ovde r izražava rizik kao i kamatnu stopu.&lt;/p&gt;
+
+&lt;p&gt;Sada možemo analizirati neke trivijalne slučajeve koji nam mogu pomoći da lakše razumemo prirodu cene akcije.&lt;/p&gt;
+
+&lt;h2 id=&quot;akcije-koje-imaju-konstantnu-dividendu&quot;&gt;Akcije koje imaju konstantnu dividendu&lt;/h2&gt;
+
+&lt;p&gt;Iako većina kompanija nema fiksnu dividendu (težnja za rastom), analiza ovog slučaja daje rezultat koji nam može pomoći da analiziramo kompleksnije slučajeve:&lt;/p&gt;
+
+&lt;p&gt;U ovom slučaju je akcija = {D, D, D, …} i onda dobijamo modell kao kod fiksnih večnih obveznica da je &amp;lt;pre&amp;gt; &lt;script type=&quot;math/tex&quot;&gt;v = D / r&lt;/script&gt; &amp;lt;/pre&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;Dakle, sa povećanjem rizika se cena smanjuje a sa povećanjem dividende se cena povećava.&lt;/p&gt;
+
+&lt;h2 id=&quot;akcije-sa-konstantnim-rastom&quot;&gt;Akcije sa konstantnim rastom&lt;/h2&gt;
+
+&lt;p&gt;Naravno, gornji model nije realan jer ne uzima u obzir da profit kompanije može da raste. Zbog ovoga uvodimo malo kompleksniji model koji kaže da se dividenda u svakoj iteraciji povećava 
+za g procenata i time dobijamo da je akcija = {D, D(1+g), D(1+g)^2, …}. Iz ovoga se dobija da je &amp;lt;pre&amp;gt; &lt;script type=&quot;math/tex&quot;&gt;V = \frac{D}{r - g}&lt;/script&gt; &amp;lt;/pre&amp;gt;.&lt;/p&gt;
+
+&lt;p&gt;Odavde se može zaključiti da što je rast veći (manji od r) i što je početna dividenda veća, to je cena akcije veća. Ako je rast mali u poređenju sa rizikom, onda to utiče na smanjenje
+vrednosti akcije. iz ovog modela se može i izraziti rizik koji kaže da je: &amp;lt;pre&amp;gt; &lt;script type=&quot;math/tex&quot;&gt;r = \frac{D}{P} + g&lt;/script&gt; &amp;lt;/pre&amp;gt;. Izraz D/P se može videti sa listinga akcije na berzi i on
+predstavlja odnos poslednje isplaćene dividende i trenutne cene akcije. Ako znamo koliki je potencijalni rast ove kompanije, znamo i koliki je rizik.&lt;/p&gt;
+
+&lt;h2 id=&quot;berza&quot;&gt;Berza&lt;/h2&gt;
+
+&lt;p&gt;Berza je mesto za trgovanje akcijama i drugim hartijama od vrednosti. Što se akcije tiče, bitno je napomenuti da tu imamo dva tržišta: primarno i sekundarno. Na primarnom tržištu je prodavac uvek kompanija koja svoje akcije prodaje po prvi put (Initial Public Offering - IPO) koja ima potrebu za investiranjem u svooju tehnologiju i time traži finansijsku pomoć javnosti 
+kako bi finansirala svoje operacije. Na sekundarnom tržištu investitori trguju akcijama i tu se cene određuju principom ponude i potražnje a koje smo modelovali gore sa dva jednoostavna modela.&lt;/p&gt;
+
+&lt;p&gt;Trgovanje izgleda tako što investitori koji žele akciju da kupe kažu koliko su spremni da plate za nju dok investitori koji prodaju akcciju kažu koliko su spremni da dobiju za akciju (koliko je cene). Kada se izjednači minimmalna cena prodavca (ona najmanja) i maksimalna cena koju je ponudio neki kupac, onda se desi transakcija između ta dva investitora. Ovo se danas uglavnom radi elektronski preko Interneta.&lt;/p&gt;
+
+&lt;h2 id=&quot;opcije&quot;&gt;Opcije&lt;/h2&gt;
+
+&lt;p&gt;Ovde ću samo ukratko objasniti šta su opcije i kako rade, mislim daova dva blogposta ne treba da budu literatura iz finansijske analize. Dakle, opcije su hartije od vrednosti
+sa kojima se isto može trgovati kao i sa bilo kojim drugim hartijama od vrednosti. Opcija nam daje pravo da kupimo ili prodamo akciju po ceni koja je određena opciijom u zadatom terminu ili do zadatog termina. Dakle, one nas ne obavezuju da izvršimo transakciju već nam daju pravo da po fiksnoj ceni izvršimo transakciju. Tako, na primer, ako imamo opciju koja kaže da možemo kupiti akciju A po ceni od $500 u roku od mesec dana a cena akcije posle 15 bude $650 onda mi možemo iskoristiti opciju i kupiti po $500 a prodati po $650 i profitirati $150. Međutim, pošto ništa nije besplatno, u ovu računicu moramo uračunati i cenu oppcije C tako da bismo zapravo dobili $150 - C.&lt;/p&gt;
+
+&lt;h2 id=&quot;literatura&quot;&gt;Literatura&lt;/h2&gt;
+
+&lt;p&gt;MIT ima dobar kurs na ovu temu: https://ocw.mit.edu/courses/sloan-school-of-management/15-401-finance-theory-i-fall-2008/video-lectures-and-slides/&lt;/p&gt;
+
+&lt;p&gt;Dobra knjiga: M. Capihski T. Zastawniak - Mathematics for finance&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 18 Oct 2018 11:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/finance/2018/10/18/finansijska-analiza-2.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/finance/2018/10/18/finansijska-analiza-2.html</guid>
+        
+        
+        <category>finance</category>
+        
+      </item>
     
       <item>
         <title>Uvod u finansijsku analizu - 1. deo</title>
@@ -1742,270 +1809,6 @@ code needed to implement some stuff. I will post about that when I make changes.
         <category>height3d</category>
         
         <category>c++</category>
-        
-      </item>
-    
-      <item>
-        <title>Mako A-Z</title>
-        <description>&lt;p&gt;This article explains all Mako’s functionality which is present in current version of time of this article. For introduction
-what is Mako and some basics, see &lt;a href=&quot;http://fantastic001.github.io/organization/mako/2017/07/29/mako.html&quot;&gt;this&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;This article is continuation of article mentioned above so I recommend you to read above article first if you haven’t used Mako 
-earlier.&lt;/p&gt;
-
-&lt;h1 id=&quot;schedules&quot;&gt;Schedules&lt;/h1&gt;
-
-&lt;p&gt;For schedules to work, you will have to create needed projects and subprojects inside them. Schedule is basically your weekly
-plan of what to do during next week. To create new schedule, just run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako schedule new 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;to show lastly created schedule, just run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako schedule
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now you will see that our schedule is empty, to add entry in schedule you can run the following command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako schedule add 1 15 2 myproject mysubproject
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;First number represents day in a week (1=Monday, 7=Sunday), second number represents starting time of task (15h or 3PM) and 
-last number represents task duration - how long you plan doing this activity. Then you have to specify project and subproject.&lt;/p&gt;
-
-&lt;p&gt;Now you can keep making your schedule. When week ends and you want new schedule, just run &lt;code class=&quot;highlighter-rouge&quot;&gt;mako schedule new&lt;/code&gt; and you’ll get new empty schedule. If you’ve made mistake during data entry into schedule, you can delete entries:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako schedule remove 1 15 2 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;First you specify day, then starting point and then how many hours to clear. In this way, you can remove multiple entries for 
-different projects.&lt;/p&gt;
-
-&lt;p&gt;You can see that we do not specify tasks in schedule entries, just project and subproject. This is because Mako will 
-give us ability to see what tasks we need to do today, it will look into schedule, see what projects and subprojects are scheduled, see undone tasks for each of them, sort them by urgency and print them such that it respects the time we have given in schedule. 
-To use this functionality, just run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako today
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and you’ll get list of tasks for today. Mako won’t increase spent time for tasks so you need to do it manually:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako project myproject subproject mysubproject task &quot;task description&quot; do &amp;lt;NUM HOURS&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;schedule-conditions&quot;&gt;Schedule conditions&lt;/h1&gt;
-
-&lt;p&gt;Schedule conditions is list of conditions to be satisfied for schedule to be correct. These conditions we can specify ourselves.
-For example, we can add condition to forbid adding entries on Sunday (so we can rest of work) or not to add specific project 
-during some time period or to some project has to be in some time period (for example, work hours or university or important meetings).&lt;/p&gt;
-
-&lt;p&gt;Every condition is one JSON file in &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.mako/db/Schedule conditions/&lt;/code&gt; (or different path if you specify different database path, this is default). Every JSON file is JSON-encoded data with following fields:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;description - description of condition&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;project_name&lt;/code&gt; - specifies project name for which condition is applied&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;subproject_name&lt;/code&gt; - specified subproject name for which condition is applied&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;These are required fields for every condition, additional, optional fields are:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;allowed_days&lt;/code&gt; - days in which project/subproject pair can be added, defaults to [1,…,7]&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;min_start_by_day&lt;/code&gt; - minimal time when entry can start in schedule for every day, defaults to [0,0,0,0,0,0,0] - it can start every day after 0AM.&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;max_start_by_day&lt;/code&gt; - maximal time in day when project can start, default to (23, 23, …, 23)&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;min_duration&lt;/code&gt; - minimal amount of hours for entry in schedule to fill, defaults to 0&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;max_duration&lt;/code&gt; - maximal amount of hours for entry to fill, defaults to 23&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;allowed_date&lt;/code&gt; - allowed dates when entry can be used in schedule, default to (1, …, 31)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For example, to limit yourself to cannot add work hours on weekends:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{
-	&quot;description&quot;: &quot;Do not work on weekends&quot;,
-	&quot;project_name&quot;: &quot;Work&quot;,
-	&quot;subproject_name&quot;: &quot;UpWork&quot;,
-	&quot;allowed_days&quot;: [1,2,3,4,5]
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;When you add new condition, it is applied to all future schedules (not current one), so let’s make new schedule:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako schedule new
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now you’ll see your condition is listed. Let’s try to add work to weekend&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako schedule add 6 12 4 Work Upwork 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Mako will output that condition is not satisfied and will output all descriptions of unsatisfied conditions.&lt;/p&gt;
-
-&lt;h1 id=&quot;metrics-and-progress&quot;&gt;Metrics and progress&lt;/h1&gt;
-
-&lt;p&gt;Mako enables you to measure some metrics and track your progress. You have to specify your metrics in &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.mako/db/Measurements&lt;/code&gt;. 
-For every metric, you have to create one directory and create &lt;code class=&quot;highlighter-rouge&quot;&gt;measure.json&lt;/code&gt; file. For example, the following structure:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;.
-./Notes size
-./Notes size/measure.json
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;We create &lt;code class=&quot;highlighter-rouge&quot;&gt;measure.json&lt;/code&gt; like JSON-encoded data with the following required fields:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt; - unique identifier for metric, it si recommended to be without spaces&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;action&lt;/code&gt; - measurement method to use&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Action can be one of the following and every has its own parameters:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;filesystem.directory.size&lt;/code&gt; - Measures the size of directory in megabytes, requires &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; parameter which is path of directory which size is being measured&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;filesystem.file.lineCount&lt;/code&gt; - requires &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; and computes number of lines in particular file&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;org.sections.done.count&lt;/code&gt; - requires &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; parameter which is path to .org file, action computes number of DONE sections in file&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;org.sections.count&lt;/code&gt; - requires &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; and computes number of sections in .org file&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;os.script&lt;/code&gt; - measurement based on output of executing some script. Requires parameters: &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; - path to the script, &lt;code class=&quot;highlighter-rouge&quot;&gt;interpreter&lt;/code&gt; - interpreter to run script with (default: sh), &lt;code class=&quot;highlighter-rouge&quot;&gt;result_as&lt;/code&gt; - path to file where result is stored (stdout to take output as result), &lt;code class=&quot;highlighter-rouge&quot;&gt;args&lt;/code&gt; - string which represents arguments to script, it is specified like you would pass arguments in command-line.&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;table.entry.count&lt;/code&gt; - counts entries in a given table. Parameters: &lt;code class=&quot;highlighter-rouge&quot;&gt;table_name&lt;/code&gt; - name of Mako table, &lt;code class=&quot;highlighter-rouge&quot;&gt;filter&lt;/code&gt; - specified filter which is used to count only entries where this string is included.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;To show all metrics in database, run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako metrics
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;To run all measurement, run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako measure
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;tables&quot;&gt;Tables&lt;/h1&gt;
-
-&lt;p&gt;Tables are a method to store your custom notes and data in tables. It is like small database which comes with Mako. To create table run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako tables new mytable &quot;A|B|C&quot; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;table&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;So you have to specify table name and its header, every column is separated by ‘&lt;/td&gt;
-      &lt;td&gt;’.&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;To show table, run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako table mytable 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and you’ll see empty table, to add an entry to it, run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako table mytable add &quot;1|2|3&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;so you basically separate different columns of your entry with pipeline like you do when you create table. You can filter table 
-when you want to search for something:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako table mytable filter &quot;2&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;which will output only entries where at least one column contains specified string.&lt;/p&gt;
-
-&lt;p&gt;In tables you can keep track of something important to you and then measure how many things you have done by using metric which counts entries in table.&lt;/p&gt;
-
-&lt;p&gt;Etries in table are shortened such that it fills screen nice, you can show whole entry by using:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako table mytable entry 1 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;here 1 is number of entry which you can get when you are showing table with &lt;code class=&quot;highlighter-rouge&quot;&gt;mako table mytable&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;To delete entry:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako table mytable entry 1 delete 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;To update entry:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako table mytable entry 1 update &quot;column 1|column 2|column 3&quot;.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;reporting-system&quot;&gt;Reporting system&lt;/h1&gt;
-
-&lt;p&gt;Mako can make reports on various topics. At this time, two kinds of reports are supported: monthly and quartely reports. These reports
-show some statistics about tasks and projects in general. To generate monthly report, run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako reports generate monthly 2018 1 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;where you specify year and month for which you want statistics.&lt;/p&gt;
-
-&lt;p&gt;For quarter reports, run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako reports generate quarterly 2018 1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;to generate statistics for the first quarter in 2018.&lt;/p&gt;
-
-&lt;p&gt;To list reports you can do:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako reports
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and to show particular report, run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako reports show reportName 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;exportingimporting-database-tofrom-json&quot;&gt;Exporting/importing database to/from JSON&lt;/h1&gt;
-
-&lt;p&gt;Mako can export its whole database in one json file which you can easily transfer over devices or upload somewhere. For example, you can export whole database and then encrypt it and save to cloud for backup. It can also import database from json.&lt;/p&gt;
-
-&lt;p&gt;To export database:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako database export json mydb.json
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;or to import database:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako database import json mydb.json
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;importing-data-from-taskwarrior&quot;&gt;Importing data from Taskwarrior&lt;/h1&gt;
-
-&lt;p&gt;You can import data from taskwarrior with:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mako database import taskwarrior ~/.task
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Here just note that taskwarrior is not as powerful as Mako and is not strict as Mako so you can end up with additional work to 
-fix some things manually.&lt;/p&gt;
-
-&lt;h1 id=&quot;what-to-expect-in-future-releases&quot;&gt;What to expect in future releases&lt;/h1&gt;
-
-&lt;p&gt;In future versions, these things are planned to be implemented:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;makoc - curses frontend for Mako (it is partially done now)&lt;/li&gt;
-  &lt;li&gt;making new schedules from templates&lt;/li&gt;
-  &lt;li&gt;automatic sync to cloud with encryption&lt;/li&gt;
-  &lt;li&gt;filter expressions for filtering table entries, like SQL syntax&lt;/li&gt;
-  &lt;li&gt;support for importing schedules from Libreoffice calc documents&lt;/li&gt;
-  &lt;li&gt;Web server to access mako from other devices to your computer.&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Fri, 09 Feb 2018 15:15:00 +0100</pubDate>
-        <link>http://fantastic001.github.io/mako/agile/organization/2018/02/09/mako-a-z.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/mako/agile/organization/2018/02/09/mako-a-z.html</guid>
-        
-        
-        <category>mako</category>
-        
-        <category>agile</category>
-        
-        <category>organization</category>
         
       </item>
     
