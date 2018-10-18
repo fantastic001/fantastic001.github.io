@@ -6,8 +6,8 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 18 Oct 2018 12:04:44 +0200</pubDate>
-    <lastBuildDate>Thu, 18 Oct 2018 12:04:44 +0200</lastBuildDate>
+    <pubDate>Thu, 18 Oct 2018 12:13:36 +0200</pubDate>
+    <lastBuildDate>Thu, 18 Oct 2018 12:13:36 +0200</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
     
       <item>
@@ -26,7 +26,7 @@ odboora, idu investitorima. Najčešće u intervalima od 3 meseca ili godinu dan
 
 &lt;p&gt;Akcija = {D1, D2, ….}&lt;/p&gt;
 
-&lt;p&gt;ako uzmemo model procene vrednosti po kom smo procenjivali i obveznice, dobijamo da je cena akcija: &amp;lt;pre&amp;gt; &lt;script type=&quot;math/tex&quot;&gt;V = \sum_{i=1}^\infty \frac{D_i}{(1 + r)^i}&lt;/script&gt; &amp;lt;/pre&amp;gt;&lt;/p&gt;
+&lt;p&gt;ako uzmemo model procene vrednosti po kom smo procenjivali i obveznice, dobijamo da je cena akcija: &lt;script type=&quot;math/tex&quot;&gt;V = \sum_{i=1}^\infty \frac{D_i}{(1 + r)^i}&lt;/script&gt;&lt;/p&gt;
 
 &lt;p&gt;Ovde r izražava rizik kao i kamatnu stopu.&lt;/p&gt;
 
@@ -36,17 +36,17 @@ odboora, idu investitorima. Najčešće u intervalima od 3 meseca ili godinu dan
 
 &lt;p&gt;Iako većina kompanija nema fiksnu dividendu (težnja za rastom), analiza ovog slučaja daje rezultat koji nam može pomoći da analiziramo kompleksnije slučajeve:&lt;/p&gt;
 
-&lt;p&gt;U ovom slučaju je akcija = {D, D, D, …} i onda dobijamo modell kao kod fiksnih večnih obveznica da je &amp;lt;pre&amp;gt; &lt;script type=&quot;math/tex&quot;&gt;v = D / r&lt;/script&gt; &amp;lt;/pre&amp;gt;&lt;/p&gt;
+&lt;p&gt;U ovom slučaju je akcija = {D, D, D, …} i onda dobijamo modell kao kod fiksnih večnih obveznica da je &lt;script type=&quot;math/tex&quot;&gt;v = D / r&lt;/script&gt;&lt;/p&gt;
 
 &lt;p&gt;Dakle, sa povećanjem rizika se cena smanjuje a sa povećanjem dividende se cena povećava.&lt;/p&gt;
 
 &lt;h2 id=&quot;akcije-sa-konstantnim-rastom&quot;&gt;Akcije sa konstantnim rastom&lt;/h2&gt;
 
 &lt;p&gt;Naravno, gornji model nije realan jer ne uzima u obzir da profit kompanije može da raste. Zbog ovoga uvodimo malo kompleksniji model koji kaže da se dividenda u svakoj iteraciji povećava 
-za g procenata i time dobijamo da je akcija = {D, D(1+g), D(1+g)^2, …}. Iz ovoga se dobija da je &amp;lt;pre&amp;gt; &lt;script type=&quot;math/tex&quot;&gt;V = \frac{D}{r - g}&lt;/script&gt; &amp;lt;/pre&amp;gt;.&lt;/p&gt;
+za g procenata i time dobijamo da je akcija = {D, D(1+g), D(1+g)^2, …}. Iz ovoga se dobija da je &lt;script type=&quot;math/tex&quot;&gt;V = \frac{D}{r - g}&lt;/script&gt;&lt;/p&gt;
 
 &lt;p&gt;Odavde se može zaključiti da što je rast veći (manji od r) i što je početna dividenda veća, to je cena akcije veća. Ako je rast mali u poređenju sa rizikom, onda to utiče na smanjenje
-vrednosti akcije. iz ovog modela se može i izraziti rizik koji kaže da je: &amp;lt;pre&amp;gt; &lt;script type=&quot;math/tex&quot;&gt;r = \frac{D}{P} + g&lt;/script&gt; &amp;lt;/pre&amp;gt;. Izraz D/P se može videti sa listinga akcije na berzi i on
+vrednosti akcije. iz ovog modela se može i izraziti rizik koji kaže da je: &lt;script type=&quot;math/tex&quot;&gt;r = \frac{D}{P} + g&lt;/script&gt; . Izraz D/P se može videti sa listinga akcije na berzi i on
 predstavlja odnos poslednje isplaćene dividende i trenutne cene akcije. Ako znamo koliki je potencijalni rast ove kompanije, znamo i koliki je rizik.&lt;/p&gt;
 
 &lt;h2 id=&quot;berza&quot;&gt;Berza&lt;/h2&gt;
