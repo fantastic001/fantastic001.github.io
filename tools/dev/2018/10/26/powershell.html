@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-109687688-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-109687688-1');
+</script>
+
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Powershell - next generation shell</title>
+  <meta name="description" content="Recently I started using Powershell which friend of mine recommended. Powershell is Microsoft’s product built on .NET platform which introduces .NET function...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://fantastic001.github.io/tools/dev/2018/10/26/powershell.html">
+  <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
+</head>
+
+  <!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Powershell - next generation shell | Stefan Nožinić</title>
+<meta name="generator" content="Jekyll v3.7.0" />
+<meta property="og:title" content="Powershell - next generation shell" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Recently I started using Powershell which friend of mine recommended. Powershell is Microsoft’s product built on .NET platform which introduces .NET functionality in interactive interface. When I say interactive I mean both console and GUI but here we will consider only console aspects of powershell and I won’t discuss powershell host development. (maybe in future articles)" />
+<meta property="og:description" content="Recently I started using Powershell which friend of mine recommended. Powershell is Microsoft’s product built on .NET platform which introduces .NET functionality in interactive interface. When I say interactive I mean both console and GUI but here we will consider only console aspects of powershell and I won’t discuss powershell host development. (maybe in future articles)" />
+<link rel="canonical" href="http://fantastic001.github.io/tools/dev/2018/10/26/powershell.html" />
+<meta property="og:url" content="http://fantastic001.github.io/tools/dev/2018/10/26/powershell.html" />
+<meta property="og:site_name" content="Stefan Nožinić" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-10-26T11:15:00+02:00" />
+<script type="application/ld+json">
+{"description":"Recently I started using Powershell which friend of mine recommended. Powershell is Microsoft’s product built on .NET platform which introduces .NET functionality in interactive interface. When I say interactive I mean both console and GUI but here we will consider only console aspects of powershell and I won’t discuss powershell host development. (maybe in future articles)","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/tools/dev/2018/10/26/powershell.html"},"@type":"BlogPosting","url":"http://fantastic001.github.io/tools/dev/2018/10/26/powershell.html","headline":"Powershell - next generation shell","dateModified":"2018-10-26T11:15:00+02:00","datePublished":"2018-10-26T11:15:00+02:00","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Stefan Nožinić</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+<!--
+    <div class="site-description">
+      <p>This is my blog where I will express my thoughts about everything which I'm interested in.
+</p>
+    </div>
+-->
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Powershell - next generation shell</h1>
+    <p class="post-meta"><time datetime="2018-10-26T11:15:00+02:00" itemprop="datePublished">Oct 26, 2018</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Recently I started using Powershell which friend of mine recommended. Powershell is Microsoft’s product built on .NET platform which introduces .NET functionality in interactive 
+interface. When I say interactive I mean both console and GUI but here we will consider only console aspects of powershell and I won’t discuss powershell host development. (maybe in future articles)</p>
+
+<p>As we know, standard way of thinking about console applications is there is 3 channels of communication to user: standard input, standard output and standard error. We send character sequence
+to standard input and receive character sequence to standard output and standard error. All 3 channels are character-based which means we get information as array of characters. 
+This approach is used since late 60s and is used now and nothing has been changed. Main reason for this situation is compatibility with legacy apps. If you are a developer, you probably use Vim, Emacs, GCC, etc… and you know these tools are developed  20 or 30 years ago. Still, they are so powerful that they are still used now. The problem with this approach is that we face day-to-day challenges where we need to combine these tools such that we can do complex operations on our systems. This becomes more and more challenging since we need to interface two or more 
+tools to do that. Solution has been developed also in previous century and it is shell pipe-lining. For instance, let’s take example that we want to filter lines in file containing “FILTER ME” and then replace all appearances of “REPLACE ME” with “REPLACED”. We have one tool to get contents of file, another tool which reads standard input and outputs filtered lines to standard output and another tool which reads from standard input and outputs to standard output every line with replaced text.</p>
+
+<p>For reading files, we can use tool called cat. For filtering we can use tool called grep and last but not the least, for replacement we can use sed. Now we use cat to output file contents to standard output, then we take that standard output and add it to standard input for grep which outputs filtered lines to standard output. Now we take standard output of grep and bring it to standard input of sed to get final result on standard output which is showed as result on screen.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat file.txt | grep "FILTER ME" | sed "s/REPLACE ME/REPLACED/g"
+</code></pre></div></div>
+
+<p>Now, let’s consider slightly complicated problem. Let’s say we have file containing list of filenames and we want to replace appearance of “.txt” with “.text” and then create all of them. We can do this by running:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat files.txt | sed "s/\.txt/.text/g" | xargs -n1 touch 
+</code></pre></div></div>
+
+<p>so what does this command do? Let’s go piece by piece. First we get contents of the file to standard output, then we replace needed stuff and finally we call touch which is tool that makes files. The problem is that touch receives command line arguments instead of reading from standard input so we need tool which traverses line by line of standard input and calls touch for every line passing that line as argument to touch. This is why we need to use xargs.</p>
+
+<p>Now let’s take even more complicated problem: we want to rename all files which satisfy condition that their name ends with “.txt” and are not readable by others. Now we can use command “ls” to get information about files but since we are getting text to standard output, we will need to parse that output first to get some kind of ability to filter and map stuff. Now we start to see disadvantages of text stdin,stdout and stderr approaches. Powershell solves this issue by introducing objects instead of sequence of characters.</p>
+
+<h1 id="powershell-solution">Powershell solution</h1>
+
+<p>Powershell solved this problem by introducing that, instead of pure character-based standard output and standard input, we use object-oriented approach. Now on standard output and on standard input, there are objects instead of basic text. Now you can ask, what about legacy apps? Well, Well their output is represented as list of strings where each string is one line while objects in standard input are converted to strings and sent to these apps.</p>
+
+<p>So, Powershell enables you to use everything which you could use earlier in other shells and adds additional functionality. Powershell has its own commands called commandlets 
+which are C# libraries built to be used as powershell commandlets. This enabled commandlets to get and send objects instead of pure text. Let’s take our last two problems and solve them using powershell.</p>
+
+<p>First problem was that we had file containing file names and we wanted to replace “.txt” with “.text” and create them all.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc ./files.txt | % {$_ -replace ".txt", ".text"} | % {touch $_}
+</code></pre></div></div>
+
+<p>Now it seems more complicated but take a few minutes to analyse this command further: first we read contents with gc and we get list of strings. With “%” we are executing some function for every element in given list and that element is passed to that function as “$_”. This is like map functionality in functional programming languages. First function we use is function that takes one line and returns that line with replaced text. Second function takes line and calls touch on it. This can be put in one function instead of two, for instance:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc ./files.txt | % {touch ($_ -replace ".txt", ".text")}
+</code></pre></div></div>
+
+<p>For the secund problem we can do:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gci | ? {$_.Name -match ".*\.txt"} | ? {$_.Mode -notmatch ".*r.."} | % {mv $_ "new-$_"}
+</code></pre></div></div>
+
+<p>As you can see, we can use “?” command for filtering, just provide function (inside brackets) which returns condition for filtering.</p>
+
+<p>We can rewrite this command to include one filter with AND operator:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gci | ? {$_.Name -match ".*\.txt" -and $_.Mode -notmatch ".*r.."} | % {mv $_ "new-$_"}
+</code></pre></div></div>
+
+<h1 id="additional-interesting-commandlets">Additional interesting commandlets</h1>
+
+<p>We can read JSON files and output them as objects too: for instance:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc ./object.json                                                                                                                                               
+{
+        "Something": "value",
+        "list": [
+                {
+                        "name": "object1"
+                },
+                {
+                        "name": "object2"
+                },
+                {
+                        "name": "object3"
+                },
+        ]
+}
+</code></pre></div></div>
+
+<p>Now we can do this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc object.json | ConvertFrom-Json
+</code></pre></div></div>
+
+<p>and we will get powershell representing our data. Similar thing we can do with CSV and XML files. Also, we can serialize objects back also:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gci | ConvertTo-Json
+</code></pre></div></div>
+
+<p>For instance for CSV:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc data.csv | ConvertFrom-Csv
+</code></pre></div></div>
+
+<p>Also, there are commandllets for making HTTP requests, REST requests etc. You can also make your own commandlets from powershell or from C#.</p>
+
+
+  </div>
+
+</article>
+
+<div id="comment-section">
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    
+    var disqus_config = function () {
+        this.page.url = "http://fantastic001.github.io/tools/dev/2018/10/26/powershell.html";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "/tools/dev/2018/10/26/powershell"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//fantastic001.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Stefan Nožinić</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Stefan Nožinić</li>
+          <li><a href="mailto:stefan@lugons.org">stefan@lugons.org</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/fantastic001"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">fantastic001</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/snstefan5"><span class="icon icon--twitter"><svg viewBox="0 0 16 16"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">snstefan5</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -6,9 +6,112 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 18 Oct 2018 12:13:36 +0200</pubDate>
-    <lastBuildDate>Thu, 18 Oct 2018 12:13:36 +0200</lastBuildDate>
+    <pubDate>Fri, 26 Oct 2018 17:26:30 +0200</pubDate>
+    <lastBuildDate>Fri, 26 Oct 2018 17:26:30 +0200</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
+    
+      <item>
+        <title>Powershell - next generation shell</title>
+        <description>&lt;p&gt;Recently I started using Powershell which friend of mine recommended. Powershell is Microsoft’s product built on .NET platform which introduces .NET functionality in interactive 
+interface. When I say interactive I mean both console and GUI but here we will consider only console aspects of powershell and I won’t discuss powershell host development. (maybe in future articles)&lt;/p&gt;
+
+&lt;p&gt;As we know, standard way of thinking about console applications is there is 3 channels of communication to user: standard input, standard output and standard error. We send character sequence
+to standard input and receive character sequence to standard output and standard error. All 3 channels are character-based which means we get information as array of characters. 
+This approach is used since late 60s and is used now and nothing has been changed. Main reason for this situation is compatibility with legacy apps. If you are a developer, you probably use Vim, Emacs, GCC, etc… and you know these tools are developed  20 or 30 years ago. Still, they are so powerful that they are still used now. The problem with this approach is that we face day-to-day challenges where we need to combine these tools such that we can do complex operations on our systems. This becomes more and more challenging since we need to interface two or more 
+tools to do that. Solution has been developed also in previous century and it is shell pipe-lining. For instance, let’s take example that we want to filter lines in file containing “FILTER ME” and then replace all appearances of “REPLACE ME” with “REPLACED”. We have one tool to get contents of file, another tool which reads standard input and outputs filtered lines to standard output and another tool which reads from standard input and outputs to standard output every line with replaced text.&lt;/p&gt;
+
+&lt;p&gt;For reading files, we can use tool called cat. For filtering we can use tool called grep and last but not the least, for replacement we can use sed. Now we use cat to output file contents to standard output, then we take that standard output and add it to standard input for grep which outputs filtered lines to standard output. Now we take standard output of grep and bring it to standard input of sed to get final result on standard output which is showed as result on screen.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat file.txt | grep &quot;FILTER ME&quot; | sed &quot;s/REPLACE ME/REPLACED/g&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, let’s consider slightly complicated problem. Let’s say we have file containing list of filenames and we want to replace appearance of “.txt” with “.text” and then create all of them. We can do this by running:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat files.txt | sed &quot;s/\.txt/.text/g&quot; | xargs -n1 touch 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;so what does this command do? Let’s go piece by piece. First we get contents of the file to standard output, then we replace needed stuff and finally we call touch which is tool that makes files. The problem is that touch receives command line arguments instead of reading from standard input so we need tool which traverses line by line of standard input and calls touch for every line passing that line as argument to touch. This is why we need to use xargs.&lt;/p&gt;
+
+&lt;p&gt;Now let’s take even more complicated problem: we want to rename all files which satisfy condition that their name ends with “.txt” and are not readable by others. Now we can use command “ls” to get information about files but since we are getting text to standard output, we will need to parse that output first to get some kind of ability to filter and map stuff. Now we start to see disadvantages of text stdin,stdout and stderr approaches. Powershell solves this issue by introducing objects instead of sequence of characters.&lt;/p&gt;
+
+&lt;h1 id=&quot;powershell-solution&quot;&gt;Powershell solution&lt;/h1&gt;
+
+&lt;p&gt;Powershell solved this problem by introducing that, instead of pure character-based standard output and standard input, we use object-oriented approach. Now on standard output and on standard input, there are objects instead of basic text. Now you can ask, what about legacy apps? Well, Well their output is represented as list of strings where each string is one line while objects in standard input are converted to strings and sent to these apps.&lt;/p&gt;
+
+&lt;p&gt;So, Powershell enables you to use everything which you could use earlier in other shells and adds additional functionality. Powershell has its own commands called commandlets 
+which are C# libraries built to be used as powershell commandlets. This enabled commandlets to get and send objects instead of pure text. Let’s take our last two problems and solve them using powershell.&lt;/p&gt;
+
+&lt;p&gt;First problem was that we had file containing file names and we wanted to replace “.txt” with “.text” and create them all.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gc ./files.txt | % {$_ -replace &quot;.txt&quot;, &quot;.text&quot;} | % {touch $_}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now it seems more complicated but take a few minutes to analyse this command further: first we read contents with gc and we get list of strings. With “%” we are executing some function for every element in given list and that element is passed to that function as “$_”. This is like map functionality in functional programming languages. First function we use is function that takes one line and returns that line with replaced text. Second function takes line and calls touch on it. This can be put in one function instead of two, for instance:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gc ./files.txt | % {touch ($_ -replace &quot;.txt&quot;, &quot;.text&quot;)}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For the secund problem we can do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gci | ? {$_.Name -match &quot;.*\.txt&quot;} | ? {$_.Mode -notmatch &quot;.*r..&quot;} | % {mv $_ &quot;new-$_&quot;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As you can see, we can use “?” command for filtering, just provide function (inside brackets) which returns condition for filtering.&lt;/p&gt;
+
+&lt;p&gt;We can rewrite this command to include one filter with AND operator:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gci | ? {$_.Name -match &quot;.*\.txt&quot; -and $_.Mode -notmatch &quot;.*r..&quot;} | % {mv $_ &quot;new-$_&quot;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;additional-interesting-commandlets&quot;&gt;Additional interesting commandlets&lt;/h1&gt;
+
+&lt;p&gt;We can read JSON files and output them as objects too: for instance:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gc ./object.json                                                                                                                                               
+{
+        &quot;Something&quot;: &quot;value&quot;,
+        &quot;list&quot;: [
+                {
+                        &quot;name&quot;: &quot;object1&quot;
+                },
+                {
+                        &quot;name&quot;: &quot;object2&quot;
+                },
+                {
+                        &quot;name&quot;: &quot;object3&quot;
+                },
+        ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we can do this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gc object.json | ConvertFrom-Json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and we will get powershell representing our data. Similar thing we can do with CSV and XML files. Also, we can serialize objects back also:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gci | ConvertTo-Json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For instance for CSV:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gc data.csv | ConvertFrom-Csv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Also, there are commandllets for making HTTP requests, REST requests etc. You can also make your own commandlets from powershell or from C#.&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 26 Oct 2018 11:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/tools/dev/2018/10/26/powershell.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/tools/dev/2018/10/26/powershell.html</guid>
+        
+        
+        <category>tools</category>
+        
+        <category>dev</category>
+        
+      </item>
     
       <item>
         <title>Uvod u finansijsku analizu - 2. deo</title>
@@ -1094,721 +1197,6 @@ print(name * times)
         <category>libraries</category>
         
         <category>projects</category>
-        
-      </item>
-    
-      <item>
-        <title>height3d</title>
-        <description>&lt;p&gt;During one of my research projects in Petnica Science Center, I have developed small open source framework which adds C++ features to
-OpenGL and lays around it. I will give short introduction in this article how to use Height3D framework to make your job of creating small 3D apps easier.&lt;/p&gt;
-
-&lt;h1 id=&quot;installation&quot;&gt;Installation&lt;/h1&gt;
-
-&lt;p&gt;Height3D can be downloaded on &lt;a href=&quot;https://github.com/fantastic001/Height3D&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;To install it, just run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cmake . 
-make 
-make install 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;basic-handling-of-buffers-and-shaders&quot;&gt;Basic handling of buffers and shaders&lt;/h1&gt;
-
-&lt;p&gt;First of all, it functions just like OpenGL, you have to write shaders and link and compile them. Then you send data 
-to shaders and these data get rendered on the screen. Currently Height3S has support for SDL to render graphics on your window.&lt;/p&gt;
-
-&lt;p&gt;Basic vertex shader is shown below:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#version 120
-attribute vec4 vPosition;
-
-void main()
-{
-  gl_Position = vPosition;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Here we just set our vertex coordinates. Fragment shader is shown below:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#version 120
-attribute vec4 vPosition;
-
-void main()
-{
-  gl_Position = vPosition;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;As you can see, you write shaders just you would write them in your standard OpenGL application, these are asic shaders suitable for drawing 2D objects.&lt;/p&gt;
-
-&lt;p&gt;Now let’s see our code implementation for this particular example:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;
-
-#define GL3_PROTOTYPES 1
-#include &amp;lt;GL/glew.h&amp;gt;
-
-#include &amp;lt;core/Vector.hpp&amp;gt;
-
-#include &amp;lt;SDL2/SDL.h&amp;gt;
-
-#include &quot;debug.hpp&quot;
-#include &quot;shaders.hpp&quot;
-#include &quot;sdl_init.hpp&quot;
-
-#include &quot;core/Buffer.hpp&quot;
-#include &quot;core/Vector.hpp&quot;
-
-#include &quot;gui/Window.hpp&quot;
-
-using namespace std;
-
-int main()
-{
-
-	Window win(512, 512, &quot;tutorial&quot;);
-	
-	glClearColor ( 1.0, 0.0, 0.0, 1.0 );
-	glClear ( GL_COLOR_BUFFER_BIT );
-	win.redraw();
-	win.delay(2000);
-	
-	glClearColor ( 0.0, 1.0, 0.0, 1.0 );
-	glClear ( GL_COLOR_BUFFER_BIT );
-	win.redraw();
-	win.delay(2000);
-	
-	glClearColor ( 0.0, 0.0, 1.0, 1.0 );
-	glClear ( GL_COLOR_BUFFER_BIT );
-	win.redraw();
-	win.delay(2000);
-	
-	glewInit();
-	Program program;
-	program.addShader(Shader(GL_VERTEX_SHADER, &quot;functional/basic//shader.vp&quot;));
-	program.addShader(Shader(GL_FRAGMENT_SHADER, &quot;functional/basic/shader.fp&quot;));
-	program.link();
-	program.bind();
-
-	int loc = program.getAttributeLocation(&quot;vPosition&quot;);
-	program.enableAttributeArray(loc);
-	Vector vertices[3] = {
-		Vector(-1.0, -1.0, 0.0, 0.0),
-		Vector(1.0, -1.0, 0.0, 0.0),
-		Vector(0.0, 1.0, 0.0, 0.0)
-	};
-	GLfloat g_vertex_buffer_data[] = {
-
-		-1.0f, -1.0f, 0.0f,
-
-		1.0f, -1.0f, 0.0f,
-
-		0.0f,  1.0f, 0.0f,
-	
-	}; 
-
-	Buffer buf(GL_ARRAY_BUFFER);
-	buf.sendData(vertices, 3, false);
-	buf.bind();
-	
-	program.setAttributeArray(loc, 3);
-	
-	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -&amp;gt; 1 triangle
-	
-	win.redraw();
-	win.delay(2000);
-	
-	SDL_Quit();
-	return 0;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;As you can see, here we can recognize basic opengl element with GLEW. The catch point here is that we have Objects &lt;code class=&quot;highlighter-rouge&quot;&gt;Program&lt;/code&gt; which 
-is responsile for compiling and linking our shaders and &lt;code class=&quot;highlighter-rouge&quot;&gt;Buffer&lt;/code&gt; which is OOP implementation of buffer communication to GPU.&lt;/p&gt;
-
-&lt;p&gt;In this example, we draw our window with three colors and then draw red triangle on it.&lt;/p&gt;
-
-&lt;h1 id=&quot;textures&quot;&gt;Textures&lt;/h1&gt;
-
-&lt;p&gt;We can also use textures to color our objects, for example the following code will draw triangle with nice gradient on it:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;
-
-#define GL3_PROTOTYPES 1
-#include &amp;lt;GL/glew.h&amp;gt;
-
-#include &amp;lt;core/Vector.hpp&amp;gt;
-
-#include &amp;lt;SDL2/SDL.h&amp;gt;
-
-#include &quot;core/Program.hpp&quot;
-#include &quot;core/Buffer.hpp&quot;
-#include &quot;core/Vector.hpp&quot;
-#include &quot;core/Texture.hpp&quot;
-
-#include &quot;gui/Window.hpp&quot;
-
-#include &amp;lt;textures/GradientTextureFactory.hpp&amp;gt;
-
-using namespace std;
-
-int main()
-{
-
-	Window win(512, 512, &quot;tutorial&quot;);
-	
-	glClearColor ( 0.0, 0.0, 0.0, 1.0 );
-	glClear ( GL_COLOR_BUFFER_BIT );
-	win.redraw();
-	win.delay(2000);
-	
-	glewInit();
-	Program program;
-	program.addShader(Shader(GL_VERTEX_SHADER, &quot;functional/textures/shader.vp&quot;));
-	program.addShader(Shader(GL_FRAGMENT_SHADER, &quot;functional/textures/shader.fp&quot;));
-	program.link();
-	program.bind();
-
-	int loc = program.getAttributeLocation(&quot;vPosition&quot;);
-	int coords_loc = program.getAttributeLocation(&quot;uv&quot;);
-	int sampler_loc = program.getUniformLocation(&quot;image&quot;);
-	program.enableAttributeArray(loc);
-	program.enableAttributeArray(coords_loc);
-	Vector vertices[3] = {
-		Vector(-1.0, -1.0, 0.0, 0.0),
-		Vector(1.0, -1.0, 0.0, 0.0),
-		Vector(0.0, 1.0, 0.0, 0.0)
-	};
-
-	float coordinates[] = {
-		0.0, 1.0,
-		1.0, 1.0,
-		0.5, 0.0
-	};
-
-	Buffer buf(GL_ARRAY_BUFFER);
-	buf.sendData(vertices, 3, false);
-	buf.bind();
-	
-	program.setAttributeArray(loc, 3);
-
-	Buffer coords_buffer(GL_ARRAY_BUFFER);
-	coords_buffer.sendData(coordinates, 6);
-	coords_buffer.bind();
-	program.setAttributeArray(coords_loc, 2);
-
-	/*float image[512][512][3];
-	for (int i = 0; i&amp;lt;512; i++) 
-	{
-		for (int j = 0; j&amp;lt;512; j++) 
-		{
-			image[i][j][2] = 1.0;
-			image[i][j][1] = 0;
-			image[i][j][0] = j / 512.0;
-		}
-	}
-	Texture t(GL_TEXTURE_2D, 512, 512);
-	t.sendData(image);*/
-	Texture t = GradientTextureFactory(Color(0, 0, 1.0), Color(1.0, 0, 0), 512, 512).getTexture();
-	t.bind();
-
-	program.setUniformValue(sampler_loc);
-	
-	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -&amp;gt; 1 triangle
-	
-	win.redraw();
-	win.delay(2000);
-	
-	SDL_Quit();
-	return 0;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;But now we will also have to modify our shader:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#version 120
-
-attribute vec4 vPosition;
-attribute vec2 uv;
-varying vec2 st;
-
-void main()
-{
-  gl_Position = vPosition;
-  st = uv;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and fragment shader:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#version 120
-
-varying vec2 st;
-uniform sampler2D image;
-
-void main()
-{
-  gl_FragColor = texture2D(image, st);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;When we compile and test this, we will get something like below:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/height3d/1.png&quot; alt=&quot;Gradient&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Here we are using gradient texture factory class to construct texture for us.&lt;/p&gt;
-
-&lt;h1 id=&quot;phong-shading-and-scene-class&quot;&gt;Phong shading and Scene class&lt;/h1&gt;
-
-&lt;p&gt;This before was just introduction of what Height3D can do but it is not all!&lt;/p&gt;
-
-&lt;p&gt;To fully use benefits of OOP, there’s class SDLLoop which can be subclassed and you can implement event handling, initialization and similar things there. Also, this class exposes &lt;code class=&quot;highlighter-rouge&quot;&gt;onFrame()&lt;/code&gt; method which can be implemented to do drawing of objects for us.&lt;/p&gt;
-
-&lt;p&gt;Also, there’s &lt;code class=&quot;highlighter-rouge&quot;&gt;Scene&lt;/code&gt; class which can draw all objects for you, using that class you can set camera position, perspective parameters
-as well as to add objects. Here important thing is to distinguish between object and model. Model is descruption of how something is drawn on unit cube, it specifies vertex coordinates, texture coordinates, vertex normals etc. You can implement your own model 
-by sublassing &lt;code class=&quot;highlighter-rouge&quot;&gt;AbstractModel&lt;/code&gt; class and then implementing needed methods. In these methods, you have to return needed coordinates, colors and normals.&lt;/p&gt;
-
-&lt;p&gt;Object is made of model, its size, position, assigned texture etc…&lt;/p&gt;
-
-&lt;p&gt;For all our examples we will use the following code skeleton:&lt;/p&gt;
-
-&lt;p&gt;vertex shader:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#version 120
-
-attribute vec4 vPosition;
-attribute vec4 vColor;
-attribute vec2 uv;
-attribute vec4 Normal;
-
-
-varying vec3 N;
-varying vec3 L;
-varying vec3 E;
-
-uniform mat4 model;
-uniform mat4 perspective;
-uniform vec4 LightPosition;
-
-void main()
-{
-  gl_Position = perspective * model * vPosition;
-
-  N = Normal.xyz;
-  L = LightPosition.xyz - vPosition.xyz;
-  if (LightPosition.w == 0) L = LightPosition.xyz;
-  E = vPosition.xyz;
-
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;fragment shader:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#version 120
-
-
-uniform sampler2D image;
-
-uniform vec4 ambientProduct, diffuseProduct, specularProduct;
-uniform vec4 LightPosition;
-uniform float shininess;
-
-varying vec3 N;
-varying vec3 L;
-varying vec3 E;
-
-
-void main()
-{
-  vec3 NN = normalize(N);
-  vec3 EE = normalize(E);
-  vec3 LL = normalize(L);
-  vec4 ambient, diffuse, specular;
-
-  vec3 H = normalize(LL+EE);
-  float kd = max(dot(LL,NN), 0.0);
-  float ks = pow(max(dot(NN, H), 0.0), shininess);
-
-  ambient = ambientProduct;
-  diffuse = kd*diffuseProduct;
-  specular = ks*specularProduct;
-  gl_FragColor = vec4((ambient + diffuse + specular).xyz, 1.0);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and our code will look like this:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;
-
-#define GL3_PROTOTYPES 1
-#include &amp;lt;GL/glew.h&amp;gt;
-
-#include &amp;lt;core/Vector.hpp&amp;gt;
-
-#include &amp;lt;SDL2/SDL.h&amp;gt;
-
-#include &amp;lt;core/Program.hpp&amp;gt;
-#include &amp;lt;core/Buffer.hpp&amp;gt;
-#include &amp;lt;core/Vector.hpp&amp;gt;
-#include &amp;lt;core/Texture.hpp&amp;gt;
-#include &amp;lt;core/Scene.hpp&amp;gt;
-#include &amp;lt;core/SceneObject.hpp&amp;gt;
-#include &amp;lt;core/AbstractModel.hpp&amp;gt;
-
-#include &amp;lt;gui/Window.hpp&amp;gt;
-
-#include &amp;lt;cmath&amp;gt;
-
-#include &amp;lt;loops/SDLLoop.hpp&amp;gt;
-#include &amp;lt;loops/SDLEvent.hpp&amp;gt;
-
-using namespace std;
-
-class PhongCubeModel : public AbstractModel 
-{
-protected: 
-	std::vector&amp;lt;float&amp;gt; genVertices() 
-	{
-		// we have to return vector&amp;lt;float&amp;gt; instance which represents vertex coordinates of our model 
-	}
-	vector&amp;lt;int&amp;gt; genIndices() {
-		// here we have to return vertex indices, i.e. order of which vertices are drawn 
-	}
-
-	vector&amp;lt;float&amp;gt; genTextureCoordinates() {
-		// here we return texture coordinates
-	}
-
-	vector&amp;lt;float&amp;gt; genVertexColors() {
-		// here we return vertex colours in case textures are not used in shader
-		// we will use textures in shaders so you only have to pay attention the size of this vector is appropirate
-	}
-
-	vector&amp;lt;float&amp;gt; genNormals() 
-	{
-		// here we have to return normals for each vertex
-	}
-};
-
-class MyPhongLoop : public SDLLoop 
-{
-
-	Program program;
-	int vertexLocation, texCoordLocation, vertexColorLocation, samplerLocation, modelLocation, perspectiveLocation;
-	int normalLocation, ambientProductLocation, diffuseProductLocation, specularProductLocation, lightPositionLocation, shininessLocation;
-	Scene scene;
-
-	SceneObject* cube;
-
-	// angle of rotation
-	float alpha;
-
-public:
-	MyPhongLoop(Window *w) : SDLLoop(w) 
-	{
-		cout &amp;lt;&amp;lt; &quot;Initializing glew\n&quot;;
-		glewInit();
-
-		cout &amp;lt;&amp;lt; &quot;Binding program\n&quot;;
-		program.addShader(Shader(GL_VERTEX_SHADER, &quot;functional/phong/shader.vp&quot;));
-		program.addShader(Shader(GL_FRAGMENT_SHADER, &quot;functional/phong/shader.fp&quot;));
-		program.link();
-		program.bind();
-		
-		cout &amp;lt;&amp;lt; &quot;Getting locations of shader parameters\n&quot;;
-		vertexLocation = program.getAttributeLocation(&quot;vPosition&quot;);
-		texCoordLocation = program.getAttributeLocation(&quot;uv&quot;);
-		vertexColorLocation = program.getAttributeLocation(&quot;vColor&quot;);
-		samplerLocation = program.getUniformLocation(&quot;image&quot;);
-		modelLocation = program.getUniformLocation(&quot;model&quot;);
-		perspectiveLocation= program.getUniformLocation(&quot;perspective&quot;);
-		normalLocation = program.getAttributeLocation(&quot;Normal&quot;);
-		ambientProductLocation = program.getUniformLocation(&quot;ambientProduct&quot;);
-		diffuseProductLocation = program.getUniformLocation(&quot;diffuseProduct&quot;);
-		specularProductLocation = program.getUniformLocation(&quot;specularProduct&quot;);
-		lightPositionLocation = program.getUniformLocation(&quot;LightPosition&quot;);
-		shininessLocation = program.getUniformLocation(&quot;shininess&quot;);
-		
-		cout &amp;lt;&amp;lt;  program.getAttributeLocation(&quot;vPosition&quot;)&amp;lt;&amp;lt; endl;
-		cout &amp;lt;&amp;lt;  program.getAttributeLocation(&quot;uv&quot;)&amp;lt;&amp;lt; endl;
-		cout &amp;lt;&amp;lt;  program.getAttributeLocation(&quot;vColor&quot;)&amp;lt;&amp;lt; endl;
-		cout &amp;lt;&amp;lt;  program.getUniformLocation(&quot;image&quot;)&amp;lt;&amp;lt; endl;
-		cout &amp;lt;&amp;lt;  program.getUniformLocation(&quot;model&quot;)&amp;lt;&amp;lt; endl;
-		cout &amp;lt;&amp;lt;  program.getUniformLocation(&quot;perspective&quot;)&amp;lt;&amp;lt; endl;
-		cout &amp;lt;&amp;lt;  program.getAttributeLocation(&quot;Normal&quot;)&amp;lt;&amp;lt; endl;
-		cout &amp;lt;&amp;lt;  program.getUniformLocation(&quot;ambientProduct&quot;)&amp;lt;&amp;lt; endl;
-		cout &amp;lt;&amp;lt;  program.getUniformLocation(&quot;diffuseProduct&quot;)&amp;lt;&amp;lt; endl;
-		cout &amp;lt;&amp;lt;  program.getUniformLocation(&quot;specularProduct&quot;)&amp;lt;&amp;lt; endl;
-		cout &amp;lt;&amp;lt;  program.getUniformLocation(&quot;LightPosition&quot;)&amp;lt;&amp;lt; endl;
-		cout &amp;lt;&amp;lt;  program.getUniformLocation(&quot;shininess&quot;)&amp;lt;&amp;lt; endl;
-		
-		cout &amp;lt;&amp;lt; &quot;Normal location: &quot; &amp;lt;&amp;lt; normalLocation &amp;lt;&amp;lt; endl;
-
-		program.enableAttributeArray(vertexLocation);
-		program.enableAttributeArray(texCoordLocation);
-		program.enableAttributeArray(vertexColorLocation);
-		program.enableAttributeArray(normalLocation);
-	}
-	
-
-protected:
-	void onInit() 
-	{
-		cout &amp;lt;&amp;lt; &quot;Setting scene\n&quot;;
-		scene.setCamera(0, 0, 0, Vector(0, 0.0, 1.00), Vector(0, 1, 0));
-		scene.setPerspective(3.1415 / 2, 1.0, 0.1, 10);
-		cube = scene.addObject(new SceneObject(
-			new  PhongCubeModel(), // use cube model to draw this object
-			new Texture(GL_TEXTURE_2D, 1, 1, GL_RGB), // use dummy texture 
-			0.0, 0.0, 0.0, // location 
-			0.0, 0.0, // angles of rotation 
-			0.5, 0.5, 0.5,  // size
-			Material(
-				Color(1.0,0,0), // ambiental conductivity
-				Color(1.0, 0, 0), // diffusional conductivity
-				Color(1.0, 0, 0), // specular conductivity
-				2, 1, 0.2, // diffusion params
-				1 // shininess
-			)
-		));
-		SceneObject *cube2 = scene.addObject(
-			new SceneObject(
-				new PhongCubeModel(),
-				new Texture(GL_TEXTURE_2D, 1, 1, GL_RGB),
-				5.0, 0.0, 0.0,
-				0.0, 0.0, 
-				0.5, 0.5, 0.5,
-				Material(
-					Color(1, 0, 0),
-					Color(1, 0, 0),
-					Color(1,0,0),
-					1, 0, 1,
-					1
-				)
-			)
-		);
-		alpha = 0.0;
-		cout &amp;lt;&amp;lt; &quot;Adding light\n&quot;;
-		scene.addLight(new Light(0, 2, 0, // position
-				Color(0.2, 0.0, 0.0), // ambient component
-				Color(0.4, 0.0, 0.0), // diffuse component
-				Color(0.4, 0.8, 0.9) // specular component
-			),
-			lightPositionLocation, ambientProductLocation, diffuseProductLocation, specularProductLocation
-		); 
-	}
-
-	void onKeyPress(Event e) 
-	{
-		if (e == SDLEvent::asEvent(SDLK_LEFT)) alpha -= 3.14 / 20;
-		if (e == SDLEvent::asEvent(SDLK_RIGHT)) alpha += 3.14 / 20;
-		scene.setCamera(0,1,0, Vector(5*cos(alpha), -1, 5*sin(alpha)), Vector(0,1,0));
-	}
-
-	void onKeyRelease(Event e) 
-	{
-		
-	}
-
-	void onQuit() 
-	{
-		SDL_Quit();
-	}
-
-	void onFrame() 
-	{
-		cout &amp;lt;&amp;lt; &quot;Drawing\n&quot;;
-		scene.drawObjects(
-			&amp;amp;program, 
-			modelLocation, 
-			perspectiveLocation, 
-			vertexLocation, 
-			texCoordLocation, 
-			vertexColorLocation, 
-			samplerLocation,
-			true, // use phong lighting model
-			shininessLocation,
-			normalLocation
-		);
-	}
-};
-
-int main()
-{
-
-	cout &amp;lt;&amp;lt; &quot;Running phong&quot;;
-	Window win(512, 512, &quot;tutorial&quot;);
-	MyPhongLoop loop(&amp;amp;win);
-	loop.run();
-	return 0;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now we can implement our mode, for example, to be cube:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class PhongCubeModel : public AbstractModel
-{
-protected:
-        std::vector&amp;lt;float&amp;gt; genVertices()
-        {
-                float vertices[24] =
-                {
-                        // bottom face
-                        -1.0, -1.0, -1.0,
-                        1.0, -1.0, -1.0,
-                        -1.0, -1.0, 1.0,
-                        1.0, -1.0, 1.0,
-
-                        // top face
-                        -1.0, 1.0, -1.0,
-                        1.0, 1.0, -1.0,
-                        -1.0, 1.0, 1.0,
-                        1.0, 1.0, 1.0,
-                };
-                return vector&amp;lt;float&amp;gt;(vertices, vertices+24);
-        }
-        vector&amp;lt;int&amp;gt; genIndices() {
-
-                int indices[36] =
-                {
-                        // bottom face
-                        0, 1, 2,
-                        1, 2, 3,
-
-                        // left face
-                        0, 2, 4,
-                        4, 6, 2,
-
-                        // right face
-                        1, 3, 5,
-                        5, 3, 7,
-
-                        // front face
-                        0, 1, 4,
-                        4, 1, 5,
-
-                        // back face
-                        2, 3, 7,
-                        7, 6, 2,
-
-                        // top face
-                        4, 5, 6,
-                        5, 6, 7
-                };
-                return vector&amp;lt;int&amp;gt;(indices, indices+36);
-        }
-
-        vector&amp;lt;float&amp;gt; genTextureCoordinates() {
-
-                float textures[16] = {
-                        0.0, 0.0,
-                        0.0, 0.0,
-                        0.0, 0.0,
-                        0.0, 0.0,
-                        0.0, 0.0,
-                        0.0, 0.0,
-                        0.0, 0.0,
-                        0.0, 0.0,
-                };
-                return vector&amp;lt;float&amp;gt;(textures, textures+16);
-        }
-
-        vector&amp;lt;float&amp;gt; genVertexColors() {
-
-                float colors[32] =
-                {
-                        1.0, 0.0, 0.0, 1.0,
-                        0.0, 1.0, 0.0, 1.0,
-                        0.0, 0.0, 1.0, 1.0,
-                        1.0, 1.0, 0.0, 1.0,
-
-                        1.0, 0.0, 0.0, 1.0,
-                        0.0, 1.0, 0.0, 1.0,
-                        0.0, 0.0, 1.0, 1.0,
-                        1.0, 1.0, 0.0, 1.0
-                };
-                return vector&amp;lt;float&amp;gt;(colors, colors+32);
-        }
-
-        vector&amp;lt;float&amp;gt; genNormals()
-        {
-                cout &amp;lt;&amp;lt; &quot;Generating normals\n&quot;;
-                float a[24] = {
-                -1.0, -1.0, -1.0,
-                1.0, -1.0, -1.0,
-                -1.0, -1.0, 1.0,
-                1.0, -1.0, 1.0,
-                -1.0, 1.0, -1.0,
-                1.0, 1.0, -1.0,
-                -1.0, 1.0, 1.0,
-                1.0, 1.0, 1.0
-                };
-                return vector&amp;lt;float&amp;gt;(a, a+24);
-        }
-};
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;so when you compile your program, you’ll get something like this:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/height3d/2.png&quot; alt=&quot;Cube&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;You can now use your arrows to navigate through the scene.&lt;/p&gt;
-
-&lt;h1 id=&quot;height-fields&quot;&gt;Height fields&lt;/h1&gt;
-
-&lt;p&gt;You can make models easily by making height fields. A height field is model which has two levels: bottom and top one. For every coordinate on unit cube, it draws surface starting from bottom level and neding on top level. You can specify height by giving function 
-which returns &lt;code class=&quot;highlighter-rouge&quot;&gt;pair&amp;lt;float, float&amp;gt;&lt;/code&gt; where first number is starting height and second number is ending height. To use this, you have to include  HeightfieldModel class:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;structures/heightfield/LayeredHeightfield.hpp&amp;gt;
-#include &amp;lt;structures/heightfield/LayeredHeightfieldModel.hpp&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;For example, to make a cube, you will use something like this:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;LayeredHeightfield h = new LayeredHeightfield(128); // as its constructor, we pass precision, how many samples we want in unit cube, too high precision means better look but consumes more memory
-
-h-&amp;gt;addLevel(); // we have to add level to it, every level is one heightfield. For example if we want two cubes separated by space and one is on top of another, we will have to levels!
-
-h-&amp;gt;assign([=] (int level, float x, float z) -&amp;gt; pair&amp;lt;float, float&amp;gt; {return make_pair(0, 1);}); // we use lambda functions here
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;And now we can use our heightfield to construct model and object with it:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cube = scene.addObject(new SceneObject(
-	new  LayeredHeightfieldModel(h), // use cube model to draw this object
-	new Texture(GL_TEXTURE_2D, 1, 1, GL_RGB), // use dummy texture 
-	0.0, 0.0, 0.0, // location 
-	0.0, 0.0, // angles of rotation 
-	0.5, 0.5, 0.5,  // size
-	Material(
-		Color(1.0,0,0), // ambiental conductivity
-		Color(1.0, 0, 0), // diffusional conductivity
-		Color(1.0, 0, 0), // specular conductivity
-		2, 1, 0.2, // diffusion params
-		1 // shininess
-	)
-));
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;more&quot;&gt;More&lt;/h1&gt;
-
-&lt;p&gt;This project is still in development and I know that there’s still much of boilerplate code and I will work to decrease amount of 
-code needed to implement some stuff. I will post about that when I make changes. You can see more examples on repository under 
-&lt;code class=&quot;highlighter-rouge&quot;&gt;functional&lt;/code&gt; directory, here are some photos what can be done (from examples in repository):&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/height3d/3.png&quot; alt=&quot;Example 1&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/height3d/4.png&quot; alt=&quot;Example 1&quot; /&gt;&lt;/p&gt;
-</description>
-        <pubDate>Fri, 16 Feb 2018 15:15:00 +0100</pubDate>
-        <link>http://fantastic001.github.io/height3d/c++/2018/02/16/height3d.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/height3d/c++/2018/02/16/height3d.html</guid>
-        
-        
-        <category>height3d</category>
-        
-        <category>c++</category>
         
       </item>
     
