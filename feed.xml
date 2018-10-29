@@ -6,9 +6,67 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 26 Oct 2018 17:26:30 +0200</pubDate>
-    <lastBuildDate>Fri, 26 Oct 2018 17:26:30 +0200</lastBuildDate>
+    <pubDate>Mon, 29 Oct 2018 13:08:23 +0100</pubDate>
+    <lastBuildDate>Mon, 29 Oct 2018 13:08:23 +0100</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
+    
+      <item>
+        <title>Creating Facebook Messenger bots made simple</title>
+        <description>&lt;p&gt;Every day there are more and more chat bots which are useful for various businesses and even individuals. Imagine that you have created simple app with few options and you do not want (or you are too lazy) to make frontend (or even REST API) for it. You have limited number of users which are willing to use your app and are happy with simple things that do not require install or registration. Chat bots come handy in this situation. In this article, I will explain how to set up your own chat bot on Facebook Messenger with library I have developed. Currently library only supports text messages which is enough in most applications but in the future I plan to introduce more functionality.&lt;/p&gt;
+
+&lt;h1 id=&quot;installation&quot;&gt;Installation&lt;/h1&gt;
+
+&lt;p&gt;Library is Python library which you can download &lt;a href=&quot;https://github.com/fantastic001/mbot&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To install it simply run:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python setup.py install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Make sure your user have proper privileges or to run it inside virtualenv.&lt;/p&gt;
+
+&lt;p&gt;Now we can make simple “hello world” bot. Just create your Python script with the following code:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from src import * 
+class MyBot(WebHookServer):
+	def handle_message(self, sender_id, text, timestamp):
+		if text == &quot;hello&quot;:
+			return &quot;hello!&quot;
+TOKEN = &quot;&quot;
+VERIFY_TOKEN = &quot;&quot;
+MyBot(TOKEN, port=563, verify_token=VERIFY_TOKEN).serve()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Let’s analyse what have we done here. First of all, we subclass WebHookServer and implement function &lt;code class=&quot;highlighter-rouge&quot;&gt;on_message&lt;/code&gt;. This is function which is called when our bot receives message and provides access to ID of sender, text of message and timestamp of message. Function should return response to message. If it returns None or “” then bot won’t respond to given message. If function returns some string, that string will be response from our bot. As simple as that!&lt;/p&gt;
+
+&lt;p&gt;Then we have defined two variables, token and verify token. They will be set properly when we register our bot on Messenger developer panel. In the end, we run our bot as web server. When we register our bot to Messenger, every message will be passed to this server and server will respond in a form of HTTP request to Messenger.&lt;/p&gt;
+
+&lt;h1 id=&quot;registration-to-messenger&quot;&gt;Registration to Messenger&lt;/h1&gt;
+
+&lt;p&gt;Now we have to register our bot to Messenger. First of all, we need to set up web server properly to use SSL and to correctly route to our bot instance. I will give example of nginx configuration:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        location /webhook/ {
+            proxy_set_header Host $host;
+            proxy_pass http://127.0.0.1:563/;
+        }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As you can see, we just need to redirect requests from &lt;code class=&quot;highlighter-rouge&quot;&gt;/webhook&lt;/code&gt; location on our web server to internal bot running on specified port. We also need to set up HTTPS, please see 
+&lt;a href=&quot;https://www.nginx.com/blog/using-free-ssltls-certificates-from-lets-encrypt-with-nginx/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now we have to register our bot, so go to &lt;a href=&quot;https://developers.facebook.com/docs/messenger-platform/&quot;&gt;Developer console&lt;/a&gt; and go to “My apps” and and click on “New app”. If you are not registered to developer console, you will need to do it first. When creating app, you will enter URL to your webhook and your verification token. Also you will see your token and you need to update these two variables in code and re-run app. After that, you will be prompted from developer console to verify your application. You just click to verify and library will handle verification for you. After that, you will be able to chat with your bot. :)&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 29 Oct 2018 10:15:00 +0100</pubDate>
+        <link>http://fantastic001.github.io/tools/dev/2018/10/29/mbot.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/tools/dev/2018/10/29/mbot.html</guid>
+        
+        
+        <category>tools</category>
+        
+        <category>dev</category>
+        
+      </item>
     
       <item>
         <title>Powershell - next generation shell</title>
@@ -1075,128 +1133,6 @@ linked to HTML.&lt;/p&gt;
         <category>purescript</category>
         
         <category>web</category>
-        
-      </item>
-    
-      <item>
-        <title>Easy widgets library for Python based on URWID</title>
-        <description>&lt;p&gt;Recently I have been developing python library for handling interface in console. The best solution I have found 
-was URWID which is used in WICD interface (WiFi manager in console). I wasn’t satisfied enough with library 
-and I started develping from URWID base to make something easier to use and in this article I will 
-explain basic usage of that library.&lt;/p&gt;
-
-&lt;h1 id=&quot;installation&quot;&gt;Installation&lt;/h1&gt;
-
-&lt;p&gt;You can install library via pip, just run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install easy_widgets 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;or you can download it from &lt;a href=&quot;https://github.com/fantastic001/easy_widgets.git&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&quot;basic-usage&quot;&gt;Basic usage&lt;/h1&gt;
-
-&lt;p&gt;First of all, you have to import and initialize library:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from easy_widgets import *
-Application.init()
-
-# whole code goes here 
-
-Application.run() 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and then you can insert whole code between initialization and 
-run lines.&lt;/p&gt;
-
-&lt;h1 id=&quot;adding-main-menu&quot;&gt;Adding main menu&lt;/h1&gt;
-
-&lt;p&gt;There’s &lt;code class=&quot;highlighter-rouge&quot;&gt;Menu&lt;/code&gt; class which can be used for creating menus in applications. This class is subclass of &lt;code class=&quot;highlighter-rouge&quot;&gt;Widget&lt;/code&gt; which means it has 
-&lt;code class=&quot;highlighter-rouge&quot;&gt;show()&lt;/code&gt; method. Convetion is that all classes which end with &lt;code class=&quot;highlighter-rouge&quot;&gt;Box&lt;/code&gt; are dialogs and they are shown with &lt;code class=&quot;highlighter-rouge&quot;&gt;exec()&lt;/code&gt; method while 
-other widgets are shown with &lt;code class=&quot;highlighter-rouge&quot;&gt;show()&lt;/code&gt; method. As you can guess, Box objects are shown like dialogs, keeping parent widgets behind them. In conclusion widgets are shown on whole screen while dialogs are shown only on part of screen keeping parent visible as well.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Menu&lt;/code&gt; is of type widget and can be shown with &lt;code class=&quot;highlighter-rouge&quot;&gt;show()&lt;/code&gt; method. This class also has method &lt;code class=&quot;highlighter-rouge&quot;&gt;addOption&lt;/code&gt; which recieves function accepting one argument (urwid button instance) and title of item in menu.&lt;/p&gt;
-
-&lt;p&gt;The following example illustrates how to use Menu class.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;m = Menu(&quot;The main menuy&quot;)
-m.addOption(&quot;Do something&quot;, lambda btn: do_something())
-m.addOption(&quot;Exit&quot;, lambda btn: Application.exit())
-
-m.show()
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;message-box&quot;&gt;Message box&lt;/h1&gt;
-
-&lt;p&gt;Message box is dialog which is suited for showing messages, you can show it like this:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;msg = MessageBox(&quot;Title&quot;, &quot;description&quot;)
-msg.exec()
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;or you can add it to main menu:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;m.addOption(&quot;Show message box&quot;, lambda b: MessageBox(&quot;Msg&quot;, &quot;This is message box&quot;).exec())
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;input-of-text&quot;&gt;Input of text&lt;/h1&gt;
-
-&lt;p&gt;Text input object is widget object which is aimed to be used 
-for text input, it accepts function which is called with entered 
-text as its argument, for example:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;TextInput(&quot;What is your name&quot;, lambda ans: MessageBox(&quot;Hello&quot;, &quot;Hello %s&quot; % ans).exec()).show()
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;wizzards&quot;&gt;Wizzards&lt;/h1&gt;
-
-&lt;p&gt;Wizzard is special object for making wizzards such that you can easily make some kind of setup script, for example wizzard which will print person’s name specified number of times:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from easy_widgets import * 
-
-Application.init()
-
-menu = Menu(&quot;Just exit now&quot;)
-menu.addOption(&quot;OK&quot;, lambda b,p: Application.exit())
-
-
-name = &quot;&quot;
-times = 0 
-
-def setName(x):
-    global name 
-    name = x
-def setTimes(x):
-    global times 
-    times = x
-
-w = Wizzard(menu)\
-    .withChoices(&quot;Select number&quot;, &quot;times&quot;, [(1, &quot;one&quot;), (2, &quot;two&quot;)])\
-    .withInput(&quot;Enter your name&quot;, &quot;name&quot;)\
-    .withParam(&quot;name&quot;, setName)\
-    .withParam(&quot;times&quot;, setTimes)
-
-
-w.show()
-
-Application.run()
-print(name * times)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
-
-&lt;p&gt;This is small library which lets you make awesome stuff quickly and easily. There are many other features, please see &lt;code class=&quot;highlighter-rouge&quot;&gt;test.py&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;test_wizzard.py&lt;/code&gt; for more examples. This library is also used in Mako’s curses client.&lt;/p&gt;
-</description>
-        <pubDate>Thu, 08 Mar 2018 15:15:00 +0100</pubDate>
-        <link>http://fantastic001.github.io/python/libraries/projects/2018/03/08/easy-widgets.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/python/libraries/projects/2018/03/08/easy-widgets.html</guid>
-        
-        
-        <category>python</category>
-        
-        <category>libraries</category>
-        
-        <category>projects</category>
         
       </item>
     
