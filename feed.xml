@@ -6,9 +6,152 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 29 Oct 2018 13:08:23 +0100</pubDate>
-    <lastBuildDate>Mon, 29 Oct 2018 13:08:23 +0100</lastBuildDate>
+    <pubDate>Wed, 05 Dec 2018 19:07:26 +0100</pubDate>
+    <lastBuildDate>Wed, 05 Dec 2018 19:07:26 +0100</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
+    
+      <item>
+        <title>Python data structures</title>
+        <description>&lt;p&gt;Python is very simple and high level language that everyone can learn to prototype their ideas. But this does not come without a price. Because of its high level 
+library, it is much harder to know what is implemented inside it. I know that you can now say “well you don’t need to know, that’s beauty of encapsulation etc…” but when it comes to performance, you should really be careful of what data structures you use. Here in this article I am going to explore few builtin data structures in Python and explain how to implement missing ones.&lt;/p&gt;
+
+&lt;h1 id=&quot;lists--or-are-they&quot;&gt;Lists … or are they?&lt;/h1&gt;
+
+&lt;p&gt;You probably know about lists in Python, if you don’t, here is example:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l = [1,2,3]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Pretty simple, right? You can access elements by indexing:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l[2] # will be 3 
+l[0] # will be 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;you can even add elements to it:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l.append(5)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now the problem with these lists is that they are not actually lists! I bet computer science professors are angry at Python developers for assigning wrong names to things. Lists in Python
+are actually dynamic arrays. They are dynamic arrays of pointers to objects. In C++, one can implement this behaviour using &lt;code class=&quot;highlighter-rouge&quot;&gt;std::vector&lt;/code&gt; for instance like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;std::vector&amp;lt;PythonObject&amp;gt; l;
+l.push_back(PythonObject::Integer(1));
+l.push_back(PythonObject::Integer(2));
+l.push_back(PythonObject::Integer(3));
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;so lists in Python behave like vector in C++. Accessing elements is fast and adding elements is fast on average. When capacity of array is full, addition will double its capacity and copy contents to new array.&lt;/p&gt;
+
+&lt;h1 id=&quot;but-what-about-real-lists&quot;&gt;But what about real lists?&lt;/h1&gt;
+
+&lt;p&gt;Well, as far as I know, there is no implementation of linked lists in Python. Please correct me if I am wrong down in comment section. Linked lists can be easily implemented and I will explain its implementation now.&lt;/p&gt;
+
+&lt;p&gt;First of all, we will need simple class called &lt;code class=&quot;highlighter-rouge&quot;&gt;list_node&lt;/code&gt; to represent node of our list. This object will contain value and pointer to next node.Python provides really nice
+way to implement such simple class and it is called named tuple:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from collections import namedtuple
+list_node = namedtuple(&quot;list_node&quot;, [&quot;value&quot;, &quot;next&quot;])
+my_node = list_node(value=2, next=None)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This is implementation of simple node of single-linked list.&lt;/p&gt;
+
+&lt;p&gt;This is implementation of whole container:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class list_node:
+    def __init__(self, value, next):
+        self.value = value
+        self.next = next
+
+class linked_list:
+    
+    def __init__(self, values=None):
+        self.head = None
+        self.first = None
+        if values is not None:
+            for v in values:
+                self.append(v)
+
+    def append(self, value):
+        if self.head is None:
+            self.head = list_node(value=value, next=None)
+            self.first = self.head
+        else:
+            self.head.next = list_node(value=value, next=None)
+            self.head = self.head.next
+
+    def __iter__(self):
+        curr = self.first
+        while curr is not None:
+            yield curr.value
+            curr = curr.next
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and now you can do something like:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l = linked_list([1,2,3])
+l.append(4)
+for v in l:
+    print(v)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;From here, we can implement double-linked list:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class list_node:
+    def __init__(self, value, next, prev):
+        self.value = value
+        self.next = next
+        self.prev = prev
+
+class linked_list:
+    
+    def __init__(self, values=None):
+        self.head = None
+        self.first = None
+        if values is not None:
+            for v in values:
+                self.append(v)
+
+    def append(self, value):
+        if self.head is None:
+            self.head = list_node(value=value, next=None, prev=None)
+            self.first = self.head
+        else:
+            self.head.next = list_node(value=value, next=None, prev=self.head)
+            self.head = self.head.next
+
+    def __iter__(self):
+        curr = self.first
+        while curr is not None:
+            yield curr.value
+            curr = curr.next
+
+    def pop_last(self):
+        if self.head is not None:
+            self.head = self.head.prev
+            if self.head is None:
+                self.first = None
+            else:
+                self.head.next = None
+        else:
+            raise ValueError(&quot;List is empty&quot;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, other data structures can be implemented from this.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 05 Dec 2018 10:15:00 +0100</pubDate>
+        <link>http://fantastic001.github.io/dev/algorithms/2018/12/05/python-data-structures.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/dev/algorithms/2018/12/05/python-data-structures.html</guid>
+        
+        
+        <category>dev</category>
+        
+        <category>algorithms</category>
+        
+      </item>
     
       <item>
         <title>Creating Facebook Messenger bots made simple</title>
@@ -1063,76 +1206,6 @@ koji “sjaše” sa vaše grbače.&lt;/p&gt;
         <category>opinion</category>
         
         <category>education</category>
-        
-      </item>
-    
-      <item>
-        <title>Purescript - a nice path to web</title>
-        <description>&lt;p&gt;Recently I have been playing with Haskell and functional programming. I’ve found a nice Haskell-like language which compiles to Javascript which means 
-it is very suitable for web. It is PureScript and you can easily set up project with pulp and run it. It can be used to develop backend part or frontend part.&lt;/p&gt;
-
-&lt;h1 id=&quot;installation-of-tools&quot;&gt;Installation of tools&lt;/h1&gt;
-
-&lt;p&gt;Tools needed for purescript project can be installed via npm:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm install pulp purescript bower
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Most of purescript packages can be installed with bower, for example AFF library:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bower install purescript-aff 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;pulp is PureScript’s equivalent of gulp and it is used to run, build and initialize project. It can be also used to generate javascript code which can be 
-linked to HTML.&lt;/p&gt;
-
-&lt;p&gt;After installation, you should add pulp to path:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export PATH=&quot;$PATH:node_modules/.bin/&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now you can initialize project:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pulp init 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;To generate JS file:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pulp browserify -t script.js 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;To build project and run:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pulp run
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;To launch REPL with project’s environment:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pulp repl
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;===Learning PureScript===&lt;/p&gt;
-
-&lt;p&gt;If you know Haskell you will easily understand PS, just see &lt;a href=&quot;https://github.com/purescript/documentation/blob/master/language/Differences-from-Haskell.md&quot;&gt;what is different&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;===Building UI with PS===&lt;/p&gt;
-
-&lt;p&gt;There’s nice module for PureScript where you can easily build reactive UIs. It is called Halogen and &lt;a href=&quot;https://github.com/slamdata/purescript-halogen/tree/master/docs&quot;&gt;here&lt;/a&gt; you can reead guide to it.&lt;/p&gt;
-
-&lt;p&gt;===Building backend===&lt;/p&gt;
-
-&lt;p&gt;There is wrapper around node-express for purescript and &lt;a href=&quot;https://abhinavsarkar.net/posts/ps-simple-rest-service/&quot;&gt;here&lt;/a&gt; is simple guide to it.&lt;/p&gt;
-</description>
-        <pubDate>Tue, 03 Apr 2018 00:15:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/haskell/purescript/web/2018/04/02/purescript.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/haskell/purescript/web/2018/04/02/purescript.html</guid>
-        
-        
-        <category>haskell</category>
-        
-        <category>purescript</category>
-        
-        <category>web</category>
         
       </item>
     
