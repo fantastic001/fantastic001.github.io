@@ -6,8 +6,8 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 15 Dec 2018 17:08:04 +0100</pubDate>
-    <lastBuildDate>Sat, 15 Dec 2018 17:08:04 +0100</lastBuildDate>
+    <pubDate>Sat, 15 Dec 2018 17:11:17 +0100</pubDate>
+    <lastBuildDate>Sat, 15 Dec 2018 17:11:17 +0100</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
     
       <item>
@@ -70,7 +70,7 @@ algorithm to update w. We start with some initial guess and update w as follows:
 
 &lt;p&gt;Now, as we have calculated this error gradient, we just need to calculate gradient for every possible function. Well, this is easy:&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\frac{\partial f_{j}}{\partiial w_{i,j}} = x_{i}&lt;/script&gt;
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\frac{\partial f_{j}}{\partial w_{i,j}} = x_{i}&lt;/script&gt;
 
 &lt;h1 id=&quot;advanced-stuff&quot;&gt;“Advanced stuff”&lt;/h1&gt;
 
