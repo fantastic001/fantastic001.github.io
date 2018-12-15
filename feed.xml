@@ -6,8 +6,8 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 15 Dec 2018 17:01:29 +0100</pubDate>
-    <lastBuildDate>Sat, 15 Dec 2018 17:01:29 +0100</lastBuildDate>
+    <pubDate>Sat, 15 Dec 2018 17:08:04 +0100</pubDate>
+    <lastBuildDate>Sat, 15 Dec 2018 17:08:04 +0100</lastBuildDate>
     <generator>Jekyll v3.7.0</generator>
     
       <item>
@@ -64,8 +64,7 @@ algorithm to update w. We start with some initial guess and update w as follows:
 
 &lt;p&gt;but wait again… we said earlier that our f is scalar function but here we say that neural network has M output nodes, WTF??? Well, we can still update our weights, just with slightly modified gradient of error:&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\nabla E = \sum_{n=0}^K (f(x_{n}, w_{t}) - y_{n})\nabla f = \sum_{n=0}^K \sum_{j=0}&amp;M (f_{j}(x_{n}, w_{t}) - y_{n,j}) \nabla f_{j} %]]&gt;&lt;/script&gt;
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\nabla E = \sum_{n=0}^K (f(x_{n}, w_{t}) - y_{n})\nabla f = \sum_{n=0}^K \sum_{j=0}^M (f_{j}(x_{n}, w_{t}) - y_{n,j}) \nabla f_{j}&lt;/script&gt;
 
 &lt;p&gt;Now we are back in the game, we just treat this product as scalar product and we are fine. It can be proven mathematically that this is correct assumption but here there is no need for it.&lt;/p&gt;
 
