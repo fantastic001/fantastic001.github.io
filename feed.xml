@@ -6,9 +6,91 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 19 Dec 2018 00:30:15 +0100</pubDate>
-    <lastBuildDate>Wed, 19 Dec 2018 00:30:15 +0100</lastBuildDate>
-    <generator>Jekyll v3.7.0</generator>
+    <pubDate>Sun, 01 Sep 2019 20:57:09 +0200</pubDate>
+    <lastBuildDate>Sun, 01 Sep 2019 20:57:09 +0200</lastBuildDate>
+    <generator>Jekyll v4.0.0</generator>
+    
+      <item>
+        <title>Docker explained for getting things done</title>
+        <description>&lt;p&gt;I have read a lot of guides  on how to use Docker and lot of them start explaining Docker complicated way. From writing Dockerfiles and with docker-compose. The goal of this article is to 
+explain Docker the easy way, such that someone can use it as soon as possible. I mean, at the end, Docker is just yet another tool and we should not spend rest of our lives masteerring it.&lt;/p&gt;
+
+&lt;p&gt;So, here we go:&lt;/p&gt;
+
+&lt;h1 id=&quot;docker-container-vs-docker-image&quot;&gt;Docker container vs Docker image&lt;/h1&gt;
+
+&lt;p&gt;In short, Docker images are like classes, like base systems etc.. They are immutable and they cannot be changed in any way. They are “as it is”. On the other hand, containers are instances of images. They can be changed (its file system structure for instance).&lt;/p&gt;
+
+&lt;p&gt;Every container can expose some ports, share file system structure with host etc….&lt;/p&gt;
+
+&lt;h1 id=&quot;basic-commands-to-get-you-started-asap&quot;&gt;Basic commands to get you started ASAP&lt;/h1&gt;
+
+&lt;p&gt;The most minimalistic image is busybox. It is image which requires very small amount of memory and other resources but it comes with few tools with limited functionality. Just basic UNIX commands and nothing more. Let’s create container from that image:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --name example -it busybox
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;so, in run command, we create container with name “example” and run it. You can see that we did not specify command which will be executed on container. If we do not specify command, default command for image will be executed (in this case: /bin/sh). We also pass interactive flag (-i) to enable binding to host stdout, stderr and stdin. Also, we pass -t flag to emulate pseudo-tty.&lt;/p&gt;
+
+&lt;p&gt;you can specify explicitly command like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --name example -it busybox /bin/sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;More complex images can be found at https://hub.docker.com/&lt;/p&gt;
+
+&lt;p&gt;Now, when we have started container, we can see it running by executing:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker ps 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To execute new command in already running container, call:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker exec example your-command
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To enable interactive and ptty mode (for /bin/bash for instance), you can specify -it flag.&lt;/p&gt;
+
+&lt;p&gt;Now, when was container starter? Well, when we have run &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run&lt;/code&gt;. This command creates and starts container immediately.If we want step by step process, it would go like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker create –name someImage
+docker start myContainer
+docker exec -it myContainer bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Also, you can create image from existing container (such that it can be used to make other containers):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker commit myccontainer myimage:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and also you can publish image to Docker Hub such that community can use it.&lt;/p&gt;
+
+&lt;p&gt;When you create image, you can put it into tarball to send to a friend and restore it from tarball&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker save mmyImage &amp;gt; myImage.tar
+docker load &amp;lt; myImage.tar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;This was very short article to get you started using docker without need to write your own Dockerfile. You can search Docker Hub for already existing images.&lt;/p&gt;
+
+&lt;p&gt;Good luck and happy development. :)&lt;/p&gt;
+</description>
+        <pubDate>Sun, 01 Sep 2019 19:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/devops/docker/admin/linux/2019/09/01/docker.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/devops/docker/admin/linux/2019/09/01/docker.html</guid>
+        
+        
+        <category>devops</category>
+        
+        <category>docker</category>
+        
+        <category>admin</category>
+        
+        <category>Linux</category>
+        
+      </item>
     
       <item>
         <title>Neural networks are not too hard to understand theoretically - part 2</title>
@@ -981,97 +1063,11 @@ be big effort to paralellize code.&lt;/p&gt;
 
 </description>
         <pubDate>Mon, 06 Aug 2018 00:15:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/cuda/2018/08/05/cuda-intro.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/cuda/2018/08/05/cuda-intro.html</guid>
+        <link>http://fantastic001.github.io/cuda/2018/08/06/cuda-intro.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/cuda/2018/08/06/cuda-intro.html</guid>
         
         
         <category>cuda</category>
-        
-      </item>
-    
-      <item>
-        <title>Drejfusov model</title>
-        <description>&lt;p&gt;Drejfusov model je jedan od modela koji mogu da se koriste u obrazovanju (na primer, u vrednovanju obrazovanja) kao i prilikom zapošljavanja i sličnih praksi gde je potrebno klasifikovati nečije znanje oodređene oblasti kako bi se utvrdili neki parametri (na primer, visina plate).&lt;/p&gt;
-
-&lt;p&gt;Ovaj model prvo definiše značenje reči “iskustvo” i to definiše kao promenu u razmišljanju ili u količini veština koje poseduje određena individua. Tu količinu veština možemo klasifikovati u jednu od 5 mogućih grupa gde je naredna grupa smatrana za napredniju grupu od one prethodne.&lt;/p&gt;
-
-&lt;h1 id=&quot;prva-klasa&quot;&gt;Prva klasa&lt;/h1&gt;
-
-&lt;p&gt;Prva klasa se naziva u početnička klasa. U ovu klasu spada znanje individue koje je na početničkom nivou i ovo je inicijalna klasa za svaku veštinu koju počinjemo da učimo. Ovu klasu kod individue možemo primetiti na osnoovu ponašanja individue prema problemima koji zahtevaju znanje veštine za koju želimo da ispitamo da li pripada početničkoj klasi. Često se može primetiti da individue u ovom stadijumu znanja ispoljevaju sledeće osobine:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;bez prethodnog ili sa malim iskustvom iz date oblasti ili veštine&lt;/li&gt;
-  &lt;li&gt;Potrebna su joj pravila ili “recepti” kako da upotrebljava veštinu i da rešava probleme pomoću nje.&lt;/li&gt;
-  &lt;li&gt;Ima poteškoća u rešavanju i trivijalnih problema&lt;/li&gt;
-  &lt;li&gt;Nema želju za izučavanjem veštine&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Ovakve individue u ovom stadijumu je pre svega potrebno motivisati ako želimo da im osiguramo znanje željene veštine. Motivacija može zavisiti od osobe do osobe ali se najčešće metode koji se bazira na prikazivanju primene veštine popkazao kao dobar.&lt;/p&gt;
-
-&lt;h1 id=&quot;druga-klasa&quot;&gt;Druga klasa&lt;/h1&gt;
-
-&lt;p&gt;Druga klasa ili napredna početnička klasa je klasa u koju spadaju osobe koje imaju naprednije znanje od prve klase i u ovu klasu dospevaju osobe iz prve klase koje su uspešno motivisane za dalje izučavanje veštine koja je od interesa.&lt;/p&gt;
-
-&lt;p&gt;Ovu klasu karakterišu sledeće osobine:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Želja osobe za daljim napredovanjem i učenjem&lt;/li&gt;
-  &lt;li&gt;još uvek ima poteškoća i sa trivijalnim problemima&lt;/li&gt;
-  &lt;li&gt;Klasifikacija problema u grupe relevantnih i irelevantnih problema&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Dakle, suštinski, ovu klasu od prve razlikuje samo želja za napredovanjem i sposobnost prepoznavanja problema koji su relevantni za ovu veštinu.&lt;/p&gt;
-
-&lt;p&gt;Za unapređenje ove klase na narednu, potrebno je uvesti osobu u tematiku kroz teorijski i praktičan rad na trivijalnim problemima iz zadate oblasti/veštine.&lt;/p&gt;
-
-&lt;h1 id=&quot;treća-klasa&quot;&gt;Treća klasa&lt;/h1&gt;
-
-&lt;p&gt;Ova klasa je naprednija od prethodne (druge klase) i često se naziva “kompetentna klasa”. Nju karakterišu sledeće osobine individue:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Dobija iskustvo na osnovu prethodnih (već rešenih) problema iz date oblasti upotrebom željenih veština.&lt;/li&gt;
-  &lt;li&gt;Želja za rešavanjem novih problema&lt;/li&gt;
-  &lt;li&gt;Sposobnost obučavanja prve klase (početničke)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Ovo je najčešća klasa u koju spadaju veštine i oblasti kojima se bavimo na poslu ili za koje se edukujemo tokom studija (uz pretpostavku da smo redovni u zadatim okruženjima i da ispunjavamo zadate norme).&lt;/p&gt;
-
-&lt;p&gt;Takođe, ovo je klasa veština i sposobnosti gde se najčešće staje i ne prelazi na sledeći nivo. Kako bi se to izbeglo, potrebno je da osoba pored rešavanja problema, bude motivisana da dodatno inovira nova rešenja.&lt;/p&gt;
-
-&lt;h1 id=&quot;četvrta-klasa&quot;&gt;Četvrta klasa&lt;/h1&gt;
-
-&lt;p&gt;Ova klasa se istoo naziva i “profesionalna klasa” i često je karakterišu sledeće osobine osobe:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Sposobnost za samo-unapređivanjem&lt;/li&gt;
-  &lt;li&gt;Učenje posmatrajući druge i iz tuđih iskustava&lt;/li&gt;
-  &lt;li&gt;Sitne inovacije u oblasti&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Za ovu klasu, osoobi više nije potreban tutor i ona može da nastavi da samu sebe edukuje dodatno dok se nalazi u ovom i u sledećem stadijumu.&lt;/p&gt;
-
-&lt;h1 id=&quot;peta-klasa&quot;&gt;Peta klasa&lt;/h1&gt;
-
-&lt;p&gt;Ova klasa je najnaprednija i često se naziva i “ekspertska klasa”. Za svaku veštinu, obično je pravilo da samo 5% populacije pripada ovoj klasi. Osobe u ovoj klasi se često nazivaju i 
-“eksperti” i važe za lidere u datoj oblasti. Osobe u ovoj klasi često karakteriše:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Sposobnost inoviranja novih metodologija, proizvoda, modeela itd&lt;/li&gt;
-  &lt;li&gt;Veoma osposobljena intuicija za datu oblast&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Poreed ovoga, postoji i teorija da osobe u ovom stadijumu, zbog jako osposobljenog intuitivnog razmišljanja, gube sposobnost objašnjavanja metoda i podučavanja osoba u nižim stadijumima.&lt;/p&gt;
-
-&lt;h1 id=&quot;zaključak&quot;&gt;Zaključak&lt;/h1&gt;
-
-&lt;p&gt;Ovakav model klasifikacije može biti koristan za lakše prilagođivanje edukatora osoobi za koju je potrebno izvršiti edukaciju za određenu oblast. Prvi korak je klasifikacija znanja osobe iz date oblasti/veštine a onda primeniti potrebne radnje kako bi se ta osoba podigla na naredni nivo. Ovaj proces se onda ponavlja i na sledećem nivou ako je potrebno dodatno unapređivanje. Naravno, kada osoba dostigne četvrti nivo, više nema smisla raditi tutoring osobe i onda je na njoj da li će ostati na datom nivou ili postati ekspert.&lt;/p&gt;
-</description>
-        <pubDate>Thu, 21 Jun 2018 19:15:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/education/2018/06/21/Drejfusov-model.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/education/2018/06/21/Drejfusov-model.html</guid>
-        
-        
-        <category>education</category>
         
       </item>
     
