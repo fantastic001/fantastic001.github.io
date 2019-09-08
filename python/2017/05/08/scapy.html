@@ -114,7 +114,7 @@ može da se izbegne na neki način ali meni nije uspelo, ako neko uspe, napišit
 <h2 id="sastavljanje-paketa">Sastavljanje paketa</h2>
 
 <p>Ako želimo da sastavimo neki paket koji u svom IP delu sadrži adresu odredišta, u svom TCP delu sadrži odredišni port 
-sa sadržj datom kao string, to možemo učiniti na sledeći način:</p>
+sa sadržajem datim kao string, to možemo učiniti na sledeći način:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pkt = IP(dst="192.168.4.5")/TCP(dport=55)/"Poruka"
 </code></pre></div></div>

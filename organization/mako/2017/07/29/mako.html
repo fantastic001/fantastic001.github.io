@@ -99,15 +99,15 @@
     <p><img src="/images/mako.png" alt="Mako screenshot" /></p>
 
 <p>In the past few months I have been developing my own tool for managing tasks, schedules and To-Do lists. 
-The main reasong I decided to develop my own tool instead of using available tools is simple - I haven’t found any tool which 
+The main reason I decided to develop my own tool instead of using available tools is simple - I haven’t found any tool which 
 has all-in-one setup and works on Linux, from CLI and has sync to some cloud. There’s additional thing, I am strong believer in privacy of individual’s data so I do not trust other services enough to upload my organizational data to their cloud systems. So I decided to make a tool which will be able to keep data in the cloud but keep it safe too. This is not implemented yet in Mako but I am working on that. Catch is to use encryption which is done on your computer and then upload encrypted data. Since Mako is open source, it is trusted that is is really on the client side.</p>
 
 <p>So what is Mako and what it does?</p>
 
 <p>Mako is a tool for keeping track of your tasks, To-Do lists, weekly schedules. It can also measure various things such that
-you are able to keep track of progress on projects and it can generate monthly and quartely reports of how your time is spent.</p>
+you are able to keep track of progress on projects and it can generate monthly and quarterly reports of how your time is spent.</p>
 
-<p>Since I strongly believe in UNIX philosophy for hte most part of software world, I have to say that when this kind of tool
+<p>Since I strongly believe in UNIX philosophy for the most part of software world, I have to say that when this kind of tool
 is concerned, this philosophy doesn’t work for me so Mako breaks this philosophy of having specific tool for specific task.</p>
 
 <h1 id="installation">Installation</h1>
@@ -118,7 +118,7 @@ is concerned, this philosophy doesn’t work for me so Mako breaks this philosop
 
 <h1 id="basic-usage">Basic usage</h1>
 
-<p>When you install Mako you are able to use it without any initialization part and configuration. So let’s exaplin basic 
+<p>When you install Mako you are able to use it without any initialization part and configuration. So let’s explain basic 
 infrastructure how database is organized.</p>
 
 <p>Set of tasks is divided into projects where every project has its subprojects. For example, you can have university project and 
@@ -152,9 +152,9 @@ university
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subproject algebra tasks add "Read chapter 1" 2017-08-21 2
 </code></pre></div></div>
 
-<p>First argument to task add option is desciption of the task, second is due date and third is estimated time to complete given task. This is important since Mako will calculate how much time you are spending on tasks and hoow this time relates to your expectations.</p>
+<p>First argument to task add option is description of the task, second is due date and third is estimated time to complete given task. This is important since Mako will calculate how much time you are spending on tasks and how this time relates to your expectations.</p>
 
-<p>Now we cna list tasks:</p>
+<p>Now we can list tasks:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subproject algebra tasks
 </code></pre></div></div>
@@ -175,7 +175,7 @@ university
 
 <h1 id="getting-help">Getting help</h1>
 
-<p>Since one blogpost is not enough to explain whole functionality and since I explained just a little bit of this tool, I suggest to run:</p>
+<p>Since one blog post is not enough to explain whole functionality and since I explained just a little bit of this tool, I suggest to run:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako help
 </code></pre></div></div>
