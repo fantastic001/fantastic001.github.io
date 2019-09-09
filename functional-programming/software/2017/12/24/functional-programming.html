@@ -32,15 +32,15 @@
 <meta name="generator" content="Jekyll v4.0.0" />
 <meta property="og:title" content="A bit of functional programming by example in Haskell" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarrifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventully be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straighforward and I will give explanation for things which may seem strange." />
-<meta property="og:description" content="Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarrifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventully be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straighforward and I will give explanation for things which may seem strange." />
+<meta name="description" content="Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventually be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straightforward and I will give explanation for things which may seem strange." />
+<meta property="og:description" content="Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventually be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straightforward and I will give explanation for things which may seem strange." />
 <link rel="canonical" href="http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html" />
 <meta property="og:url" content="http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html" />
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-12-24T12:15:00+01:00" />
 <script type="application/ld+json">
-{"description":"Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarrifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventully be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straighforward and I will give explanation for things which may seem strange.","headline":"A bit of functional programming by example in Haskell","dateModified":"2017-12-24T12:15:00+01:00","datePublished":"2017-12-24T12:15:00+01:00","@type":"BlogPosting","url":"http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html"},"@context":"https://schema.org"}</script>
+{"headline":"A bit of functional programming by example in Haskell","dateModified":"2017-12-24T12:15:00+01:00","description":"Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventually be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straightforward and I will give explanation for things which may seem strange.","datePublished":"2017-12-24T12:15:00+01:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html"},"url":"http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -98,12 +98,12 @@
   <div class="post-content" itemprop="articleBody">
     <p>Recently I’ve started reading about functional programming. When you have been programming using OOP principles 
 since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. 
-As you are older and older, new experiences come hard to gain. In this article I will try to make some clarrifications about this 
+As you are older and older, new experiences come hard to gain. In this article I will try to make some clarifications about this 
 approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking 
 so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the 
-bad things in these languages. I know you are sick of OOP or you will eventully be sick of OOP. I will try to explain some pitfalls 
+bad things in these languages. I know you are sick of OOP or you will eventually be sick of OOP. I will try to explain some pitfalls 
 of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell 
-but you don’t need to be familiar with Haskell to understand examples since they’re pretty straighforward and I will give explanation
+but you don’t need to be familiar with Haskell to understand examples since they’re pretty straightforward and I will give explanation
 for things which may seem strange.</p>
 
 <h1 id="mutability-thread-safeness-and-history">Mutability, thread-safeness and history</h1>
@@ -111,7 +111,7 @@ for things which may seem strange.</p>
 <p>First of all, functional programming is type of declarative programming which means that we explain what is something instead 
 of giving instructions step by step which is seen in imperative programming. 
 For example, in functional programming we say “factorial of n is n times factorial of n-1 where factorial of 0 is 1”. In 
-imperative approach, we say how to compute factorial of n: “start with 1 and say resul is 1 then increment counter to n and multiply result by counter and save it into result”. Here you can see big difference in way of thinking. I personally think that declarative approach is much simpler.</p>
+imperative approach, we say how to compute factorial of n: “start with 1 and say result is 1 then increment counter to n and multiply result by counter and save it into result”. Here you can see big difference in way of thinking. I personally think that declarative approach is much simpler.</p>
 
 <p>In above example you can see one important difference between these approaches. In declarative programming we define value only once. Translated in language you already know, think of this as using only constant variables instead of common variables which can change state later. This is called immutability which means “when defined once, cannot be changed later”. Take a look at the following example of C code:</p>
 
@@ -133,26 +133,26 @@ int main() {
 </code></pre></div></div>
 
 <p>Our function f changes state of x by increasing it by one and returns previous state increased by one. For a moment let’s 
-orget about this function definitiion and imagine we only see main function. What would you guess out of it? It seems logical 
+forget about this function definition and imagine we only see main function. What would you guess out of it? It seems logical 
 that f(x) is always equal to f(x) because mathematically it is logical to one function gives the same value for the same 
-parameters. Here we can see this is not the case. This program will output “6 7” which is not logical untill we see definition
-of function. In functional approach this is not possible at all! In functtional approach we cannot mutate state and function 
+parameters. Here we can see this is not the case. This program will output “6 7” which is not logical until we see definition
+of function. In functional approach this is not possible at all! In functional approach we cannot mutate state and function 
 will return the same output for the same input, ALWAYS!</p>
 
 <p>Now, you are probably asking why do we limit ourselves to not mutate objects? The answer is because we are undisciplined and 
 we need computers to limit us from making mistakes. It is always better to know you have bug when you read compile errors instead of 
 seeing end-user complains in bug tracker.</p>
 
-<p>Another reason why immutability is great is that your program is thread-safe. When you do not change state of anything, you do not have race conditions and your program can be paralelized easily. This starts to be more and more important since we are at saturation 
+<p>Another reason why immutability is great is that your program is thread-safe. When you do not change state of anything, you do not have race conditions and your program can be parallelized easily. This starts to be more and more important since we are at saturation 
 of Moor’s curve and the only way to make computers faster is by adding multiple cores and this can be used efficiently only
 if your program supports parallelism.</p>
 
 <p>Fun fact is that functional programming appeared before OOP. It appeared in 1950’s and was introduced in Lisp developed in MIT. The reason why functional programming didn’t survive was because, at that time, it was considered slow since architecture of computers didn’t 
-agree with this concept. OOP seemed as logical approach and was designed for enterprise. Functional programming now is comming back since we have much faster computers and have requirements which fit with this approach (parallelism for instance).</p>
+agree with this concept. OOP seemed as logical approach and was designed for enterprise. Functional programming now is coming back since we have much faster computers and have requirements which fit with this approach (parallelism for instance).</p>
 
 <h1 id="data-in-data-out-model">Data-in, data out model</h1>
 
-<p>This model has a few principples which makes your code more functional, you can implement this approach even in your OOP
+<p>This model has a few principles which makes your code more functional, you can implement this approach even in your OOP
 code and make it more thread-safe. These are principles you should follow in your existing projects, no matter what language do you 
 use:</p>
 
@@ -170,7 +170,7 @@ use:</p>
 
 <p>Let’s take an example where we will implement list of integers in C.</p>
 
-<p>Firt we will define our list element structure:</p>
+<p>First we will define our list element structure:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef struct ListElem_t
 {
@@ -216,11 +216,11 @@ from parameters and assigns next element to the element given as argument. At th
 
 <p>Nothing special so far, right?</p>
 
-<p>Now let’s make push method which will add element to the beggining of the list. This method will return a new instance of 
-list which will have head pointing to the new element while the remaining of the list is behind head so prevous head will be next 
+<p>Now let’s make push method which will add element to the begging of the list. This method will return a new instance of 
+list which will have head pointing to the new element while the remaining of the list is behind head so previous head will be next 
 element of new head. At the first it seems that we will need to copy whole list and add new element and return this new list. This 
 approach is inefficient. The good news are that we do not have to do that. We will need to make new element and new list instance 
-whic has head pointing to the new element. Next pointer of new element will be just head of our list in arguments so we basically 
+which has head pointing to the new element. Next pointer of new element will be just head of our list in arguments so we basically 
 do not copy anything. We can do this trick because immutability guarantees that elements of the list won’t be changed in any time.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>List* push(List* l, int value)
@@ -237,8 +237,8 @@ do not copy anything. We can do this trick because immutability guarantees that 
 }
 </code></pre></div></div>
 
-<p>If list is not empty, we simply create new list which has head of next elemen of head of our given list. 
-If list is empty, behavior of tail is not defined so we will end up with segmentation fault (we will try dereferencing NULL pointer).</p>
+<p>If list is not empty, we simply create new list which has head of next element of head of our given list. 
+If list is empty, behaviour of tail is not defined so we will end up with segmentation fault (we will try de-referencing NULL pointer).</p>
 
 <p>For debugging purposes we will make print function.</p>
 
@@ -273,7 +273,7 @@ list where it has one additional element.</p>
 
 <h1 id="introduction-to-haskell">Introduction to Haskell</h1>
 
-<p>Haskell is purely functional programing language. This means that functions recieve parameters, do not modify them and always return 
+<p>Haskell is purely functional programming language. This means that functions receive parameters, do not modify them and always return 
 result. This also means that function themselves are first class objects meaning that functions can be passed as parameters and 
 returned as result.</p>
 
@@ -297,16 +297,16 @@ sq x = x*x
 &gt;&gt;&gt;
 </code></pre></div></div>
 
-<p>so you can see that we can call function and easily get result. We first declare function by specifying  what types of argument it recieves and what type it returns. After that, we can define our function.</p>
+<p>so you can see that we can call function and easily get result. We first declare function by specifying  what types of argument it receives and what type it returns. After that, we can define our function.</p>
 
-<p>Now let’s define function that computes sum of two itegers:</p>
+<p>Now let’s define function that computes sum of two integers:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add :: Int -&gt; Int -&gt; Int 
 add a b = a+b
 </code></pre></div></div>
 
-<p>Here we have two parameters and result. The reson we declared function like above is that this declration is actully not a function 
-with two parameters. In Haskell, functions can recieve only one parameter and return only one result. Here we have function 
+<p>Here we have two parameters and result. The reason we declared function like above is that this declaration is actually not a function 
+with two parameters. In Haskell, functions can receive only one parameter and return only one result. Here we have function 
 which takes one integer and returns function which takes another integer which then returns their sum.</p>
 
 <p>This can be easily proven by passing only one parameter to the function:</p>
@@ -340,7 +340,7 @@ which takes one integer and returns function which takes another integer which t
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tail l
 </code></pre></div></div>
 
-<p>you can do list concaenation which will merge two lists in a new list:</p>
+<p>you can do list concatenation which will merge two lists in a new list:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>l = l1 ++ l2
 </code></pre></div></div>
@@ -362,7 +362,7 @@ which takes one integer and returns function which takes another integer which t
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>squares = [x*x | x &lt;- [1..10]]
 </code></pre></div></div>
 
-<p>or you can add additionall condition, for instance squares divisible by 3:</p>
+<p>or you can add additional condition, for instance squares divisible by 3:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>squares = [x*x | x &lt;- [1..10], x*x `mod` 3 == 0]
 </code></pre></div></div>

@@ -20,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Algorithm analysis in functional programming</title>
-  <meta name="description" content="This article has purpose to demonstrate the way of reasoning when algoritmh analysis comes for programs written in functional programming paradigm. I will gi...">
+  <meta name="description" content="This article has purpose to demonstrate the way of reasoning when algorithm analysis comes for programs written in functional programming paradigm. I will gi...">
 
   <link rel="stylesheet" href="/css/main.css">
   <link rel="canonical" href="http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html">
@@ -32,15 +32,15 @@
 <meta name="generator" content="Jekyll v4.0.0" />
 <meta property="og:title" content="Algorithm analysis in functional programming" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="This article has purpose to demonstrate the way of reasoning when algoritmh analysis comes for programs written in functional programming paradigm. I will give some examples in Haskell to demostrate methodology and also explain some core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic manner which is when we take limit where size of input goes to infinity." />
-<meta property="og:description" content="This article has purpose to demonstrate the way of reasoning when algoritmh analysis comes for programs written in functional programming paradigm. I will give some examples in Haskell to demostrate methodology and also explain some core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic manner which is when we take limit where size of input goes to infinity." />
+<meta name="description" content="This article has purpose to demonstrate the way of reasoning when algorithm analysis comes for programs written in functional programming paradigm. I will give some examples in Haskell to demonstrate methodology and also explain some core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic manner which is when we take limit where size of input goes to infinity." />
+<meta property="og:description" content="This article has purpose to demonstrate the way of reasoning when algorithm analysis comes for programs written in functional programming paradigm. I will give some examples in Haskell to demonstrate methodology and also explain some core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic manner which is when we take limit where size of input goes to infinity." />
 <link rel="canonical" href="http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html" />
 <meta property="og:url" content="http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html" />
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-01-16T23:15:00+01:00" />
 <script type="application/ld+json">
-{"description":"This article has purpose to demonstrate the way of reasoning when algoritmh analysis comes for programs written in functional programming paradigm. I will give some examples in Haskell to demostrate methodology and also explain some core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic manner which is when we take limit where size of input goes to infinity.","headline":"Algorithm analysis in functional programming","dateModified":"2018-01-16T23:15:00+01:00","datePublished":"2018-01-16T23:15:00+01:00","@type":"BlogPosting","url":"http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html"},"@context":"https://schema.org"}</script>
+{"headline":"Algorithm analysis in functional programming","dateModified":"2018-01-16T23:15:00+01:00","description":"This article has purpose to demonstrate the way of reasoning when algorithm analysis comes for programs written in functional programming paradigm. I will give some examples in Haskell to demonstrate methodology and also explain some core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic manner which is when we take limit where size of input goes to infinity.","datePublished":"2018-01-16T23:15:00+01:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html"},"url":"http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -96,14 +96,14 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p>This article has purpose to demonstrate the way of reasoning when algoritmh analysis comes for programs written in 
-functional programming paradigm. I will give some examples in Haskell to demostrate methodology and also explain some
+    <p>This article has purpose to demonstrate the way of reasoning when algorithm analysis comes for programs written in 
+functional programming paradigm. I will give some examples in Haskell to demonstrate methodology and also explain some
 core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic manner which is when 
 we take limit where size of input goes to infinity.</p>
 
 <h1 id="list-comprehension">List comprehension</h1>
 
-<p>Firt let’s start by simple things. List comprehension is a way to define new list in terms of existing one. It is similar to what 
+<p>First let’s start by simple things. List comprehension is a way to define new list in terms of existing one. It is similar to what 
 you can see in math. For example the following list:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>l = [x^2 | x &lt;- [1..10]]
@@ -134,7 +134,7 @@ fact 1 = 1
 fact n = n * fact (n-1)
 </code></pre></div></div>
 
-<p>so if we calculate fact 100 and call it again, or call fact 99 we will get result immediately. Tihs is because in functional 
+<p>so if we calculate fact 100 and call it again, or call fact 99 we will get result immediately. This is because in functional 
 programming, function always returns the same result when called with the same parameters so this can be cached. This 
 is good for us when worrying about time but may be bad if we worry about space. This complicates our time analysis 
 For example, consider Fibonacci number generator:</p>

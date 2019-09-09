@@ -40,7 +40,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-02-16T15:15:00+01:00" />
 <script type="application/ld+json">
-{"description":"During one of my research projects in Petnica Science Center, I have developed small open source framework which adds C++ features to OpenGL and lays around it. I will give short introduction in this article how to use Height3D framework to make your job of creating small 3D apps easier.","headline":"height3d","dateModified":"2018-02-16T15:15:00+01:00","datePublished":"2018-02-16T15:15:00+01:00","@type":"BlogPosting","url":"http://fantastic001.github.io/height3d/c++/2018/02/16/height3d.html","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/height3d/c++/2018/02/16/height3d.html"},"@context":"https://schema.org"}</script>
+{"headline":"height3d","dateModified":"2018-02-16T15:15:00+01:00","description":"During one of my research projects in Petnica Science Center, I have developed small open source framework which adds C++ features to OpenGL and lays around it. I will give short introduction in this article how to use Height3D framework to make your job of creating small 3D apps easier.","datePublished":"2018-02-16T15:15:00+01:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/height3d/c++/2018/02/16/height3d.html"},"url":"http://fantastic001.github.io/height3d/c++/2018/02/16/height3d.html","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -137,7 +137,7 @@ void main()
 }
 </code></pre></div></div>
 
-<p>As you can see, you write shaders just you would write them in your standard OpenGL application, these are asic shaders suitable for drawing 2D objects.</p>
+<p>As you can see, you write shaders just you would write them in your standard OpenGL application, these are basic shaders suitable for drawing 2D objects.</p>
 
 <p>Now let’s see our code implementation for this particular example:</p>
 
@@ -222,7 +222,7 @@ int main()
 </code></pre></div></div>
 
 <p>As you can see, here we can recognize basic opengl element with GLEW. The catch point here is that we have Objects <code class="highlighter-rouge">Program</code> which 
-is responsile for compiling and linking our shaders and <code class="highlighter-rouge">Buffer</code> which is OOP implementation of buffer communication to GPU.</p>
+is responsible for compiling and linking our shaders and <code class="highlighter-rouge">Buffer</code> which is OOP implementation of buffer communication to GPU.</p>
 
 <p>In this example, we draw our window with three colors and then draw red triangle on it.</p>
 
@@ -363,8 +363,8 @@ void main()
 <p>To fully use benefits of OOP, there’s class SDLLoop which can be subclassed and you can implement event handling, initialization and similar things there. Also, this class exposes <code class="highlighter-rouge">onFrame()</code> method which can be implemented to do drawing of objects for us.</p>
 
 <p>Also, there’s <code class="highlighter-rouge">Scene</code> class which can draw all objects for you, using that class you can set camera position, perspective parameters
-as well as to add objects. Here important thing is to distinguish between object and model. Model is descruption of how something is drawn on unit cube, it specifies vertex coordinates, texture coordinates, vertex normals etc. You can implement your own model 
-by sublassing <code class="highlighter-rouge">AbstractModel</code> class and then implementing needed methods. In these methods, you have to return needed coordinates, colors and normals.</p>
+as well as to add objects. Here important thing is to distinguish between object and model. Model is description of how something is drawn on unit cube, it specifies vertex coordinates, texture coordinates, vertex normals etc. You can implement your own model 
+by subclassing <code class="highlighter-rouge">AbstractModel</code> class and then implementing needed methods. In these methods, you have to return needed coordinates, colors and normals.</p>
 
 <p>Object is made of model, its size, position, assigned texture etc…</p>
 
@@ -754,7 +754,7 @@ protected:
 
 <h1 id="height-fields">Height fields</h1>
 
-<p>You can make models easily by making height fields. A height field is model which has two levels: bottom and top one. For every coordinate on unit cube, it draws surface starting from bottom level and neding on top level. You can specify height by giving function 
+<p>You can make models easily by making height fields. A height field is model which has two levels: bottom and top one. For every coordinate on unit cube, it draws surface starting from bottom level and ending on top level. You can specify height by giving function 
 which returns <code class="highlighter-rouge">pair&lt;float, float&gt;</code> where first number is starting height and second number is ending height. To use this, you have to include  HeightfieldModel class:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;structures/heightfield/LayeredHeightfield.hpp&gt;

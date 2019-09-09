@@ -6,8 +6,8 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 08 Sep 2019 23:29:05 +0200</pubDate>
-    <lastBuildDate>Sun, 08 Sep 2019 23:29:05 +0200</lastBuildDate>
+    <pubDate>Mon, 09 Sep 2019 23:41:46 +0200</pubDate>
+    <lastBuildDate>Mon, 09 Sep 2019 23:41:46 +0200</lastBuildDate>
     <generator>Jekyll v4.0.0</generator>
     
       <item>
@@ -517,7 +517,7 @@ which are C# libraries built to be used as powershell commandlets. This enabled 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gc data.csv | ConvertFrom-Csv
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Also, there are commandllets for making HTTP requests, REST requests etc. You can also make your own commandlets from powershell or from C#.&lt;/p&gt;
+&lt;p&gt;Also, there are commandlets for making HTTP requests, REST requests etc. You can also make your own commandlets from powershell or from C#.&lt;/p&gt;
 
 </description>
         <pubDate>Fri, 26 Oct 2018 11:15:00 +0200</pubDate>
@@ -538,8 +538,8 @@ koje možemo upotrebiti bilo direktno bilo u modelovanju.&lt;/p&gt;
 
 &lt;h2 id=&quot;akcije&quot;&gt;Akcije&lt;/h2&gt;
 
-&lt;p&gt;Akcija je udeo u kompaniji. Ona investitoru omogućava glasaško pravo za biranje upravnog odbora kao i pravo na dividendu. Dividenda je deo profita koji, na odluku upravnog
-odboora, idu investitorima. Najčešće u intervalima od 3 meseca ili godinu dana ali to opet zavisi od odluke upravnog odbora.&lt;/p&gt;
+&lt;p&gt;Akcija je udeo u kompaniji. Ona investitoru omogućava glasačko pravo za biranje upravnog odbora kao i pravo na dividendu. Dividenda je deo profita koji, na odluku upravnog
+odbora, idu investitorima. Najčešće u intervalima od 3 meseca ili godinu dana ali to opet zavisi od odluke upravnog odbora.&lt;/p&gt;
 
 &lt;p&gt;Investitoor svoju zarad može da dobije na 2 načina: od dividendi ili od prodaje akcije (kapitalna dobit). U analizi koja sledi pretpostavićemo da investitor ne prodaje akciju i da zarađuje samo od dividendi.&lt;/p&gt;
 
@@ -557,7 +557,7 @@ odboora, idu investitorima. Najčešće u intervalima od 3 meseca ili godinu dan
 
 &lt;p&gt;Iako većina kompanija nema fiksnu dividendu (težnja za rastom), analiza ovog slučaja daje rezultat koji nam može pomoći da analiziramo kompleksnije slučajeve:&lt;/p&gt;
 
-&lt;p&gt;U ovom slučaju je akcija = {D, D, D, …} i onda dobijamo modell kao kod fiksnih večnih obveznica da je &lt;script type=&quot;math/tex&quot;&gt;v = D / r&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;U ovom slučaju je akcija = {D, D, D, …} i onda dobijamo model kao kod fiksnih večnih obveznica da je &lt;script type=&quot;math/tex&quot;&gt;v = D / r&lt;/script&gt;&lt;/p&gt;
 
 &lt;p&gt;Dakle, sa povećanjem rizika se cena smanjuje a sa povećanjem dividende se cena povećava.&lt;/p&gt;
 
@@ -572,15 +572,15 @@ predstavlja odnos poslednje isplaćene dividende i trenutne cene akcije. Ako zna
 
 &lt;h2 id=&quot;berza&quot;&gt;Berza&lt;/h2&gt;
 
-&lt;p&gt;Berza je mesto za trgovanje akcijama i drugim hartijama od vrednosti. Što se akcije tiče, bitno je napomenuti da tu imamo dva tržišta: primarno i sekundarno. Na primarnom tržištu je prodavac uvek kompanija koja svoje akcije prodaje po prvi put (Initial Public Offering - IPO) koja ima potrebu za investiranjem u svooju tehnologiju i time traži finansijsku pomoć javnosti 
-kako bi finansirala svoje operacije. Na sekundarnom tržištu investitori trguju akcijama i tu se cene određuju principom ponude i potražnje a koje smo modelovali gore sa dva jednoostavna modela.&lt;/p&gt;
+&lt;p&gt;Berza je mesto za trgovanje akcijama i drugim hartijama od vrednosti. Što se akcije tiče, bitno je napomenuti da tu imamo dva tržišta: primarno i sekundarno. Na primarnom tržištu je prodavac uvek kompanija koja svoje akcije prodaje po prvi put (Initial Public Offering - IPO) koja ima potrebu za investiranjem u svoju tehnologiju i time traži finansijsku pomoć javnosti 
+kako bi finansirala svoje operacije. Na sekundarnom tržištu investitori trguju akcijama i tu se cene određuju principom ponude i potražnje a koje smo modelovali gore sa dva jednostavna modela.&lt;/p&gt;
 
-&lt;p&gt;Trgovanje izgleda tako što investitori koji žele akciju da kupe kažu koliko su spremni da plate za nju dok investitori koji prodaju akcciju kažu koliko su spremni da dobiju za akciju (koliko je cene). Kada se izjednači minimmalna cena prodavca (ona najmanja) i maksimalna cena koju je ponudio neki kupac, onda se desi transakcija između ta dva investitora. Ovo se danas uglavnom radi elektronski preko Interneta.&lt;/p&gt;
+&lt;p&gt;Trgovanje izgleda tako što investitori koji žele akciju da kupe kažu koliko su spremni da plate za nju dok investitori koji prodaju akciju kažu koliko su spremni da dobiju za akciju (koliko je cene). Kada se izjednači minimalna cena prodavca (ona najmanja) i maksimalna cena koju je ponudio neki kupac, onda se desi transakcija između ta dva investitora. Ovo se danas uglavnom radi elektronski preko Interneta.&lt;/p&gt;
 
 &lt;h2 id=&quot;opcije&quot;&gt;Opcije&lt;/h2&gt;
 
-&lt;p&gt;Ovde ću samo ukratko objasniti šta su opcije i kako rade, mislim daova dva blogposta ne treba da budu literatura iz finansijske analize. Dakle, opcije su hartije od vrednosti
-sa kojima se isto može trgovati kao i sa bilo kojim drugim hartijama od vrednosti. Opcija nam daje pravo da kupimo ili prodamo akciju po ceni koja je određena opciijom u zadatom terminu ili do zadatog termina. Dakle, one nas ne obavezuju da izvršimo transakciju već nam daju pravo da po fiksnoj ceni izvršimo transakciju. Tako, na primer, ako imamo opciju koja kaže da možemo kupiti akciju A po ceni od $500 u roku od mesec dana a cena akcije posle 15 bude $650 onda mi možemo iskoristiti opciju i kupiti po $500 a prodati po $650 i profitirati $150. Međutim, pošto ništa nije besplatno, u ovu računicu moramo uračunati i cenu oppcije C tako da bismo zapravo dobili $150 - C.&lt;/p&gt;
+&lt;p&gt;Ovde ću samo ukratko objasniti šta su opcije i kako rade, mislim da ova dva blogposta ne treba da budu literatura iz finansijske analize. Dakle, opcije su hartije od vrednosti
+sa kojima se isto može trgovati kao i sa bilo kojim drugim hartijama od vrednosti. Opcija nam daje pravo da kupimo ili prodamo akciju po ceni koja je određena opcijom u zadatom terminu ili do zadatog termina. Dakle, one nas ne obavezuju da izvršimo transakciju već nam daju pravo da po fiksnoj ceni izvršimo transakciju. Tako, na primer, ako imamo opciju koja kaže da možemo kupiti akciju A po ceni od $500 u roku od mesec dana a cena akcije posle 15 bude $650 onda mi možemo iskoristiti opciju i kupiti po $500 a prodati po $650 i profitirati $150. Međutim, pošto ništa nije besplatno, u ovu računicu moramo uračunati i cenu opcije C tako da bismo zapravo dobili $150 - C.&lt;/p&gt;
 
 &lt;h2 id=&quot;literatura&quot;&gt;Literatura&lt;/h2&gt;
 
@@ -603,7 +603,7 @@ sa kojima se isto može trgovati kao i sa bilo kojim drugim hartijama od vrednos
         <description>&lt;p&gt;Finansijska analiza je oblast koja spaja finansije, matematiku a od skoro i računarske nauke. 
 Ona ne samo da nam može značiti kada je reč o novcu nego i bilo čemu što iziskuje procenjivanje vrednosti nečega 
 u nekoj jedinici za koju smo se dogovorili da je jedinica vrednovanja. U praksi je najčešće to novac jer njime možemo 
-kupiti proizvode i usluge i ceo svet se njime koristi ali se neka grupa ljudi interno može dogovoriti o svooj internoj jedinici
+kupiti proizvode i usluge i ceo svet se njime koristi ali se neka grupa ljudi interno može dogovoriti o svoj internoj jedinici
 vrednosti ali je važno da se ona može prikazati brojem.&lt;/p&gt;
 
 &lt;p&gt;U ovom članku i u nastavcima će se za jedinicu uzimati novac.&lt;/p&gt;
@@ -623,7 +623,7 @@ kako bismo lakše mogli da koristimo matematičke modele za procenu njene vredno
 
 &lt;p&gt;Kao što vidimo, imovina može biti svašta a nama treba matematička definicija iste, zbog ovoga uvodimo sledeću definiciju (koja je opet apstraktna za sada):&lt;/p&gt;
 
-&lt;p&gt;Imovina u trenutk T je lista protoka novca u budućnosti.&lt;/p&gt;
+&lt;p&gt;Imovina u trenutak T je lista protoka novca u budućnosti.&lt;/p&gt;
 
 &lt;p&gt;Dakle, imovina je zapravo: (P(T), P(T + dt), P(t + 2dt), …)&lt;/p&gt;
 
@@ -648,14 +648,14 @@ kako bismo lakše mogli da koristimo matematičke modele za procenu njene vredno
 
 &lt;h2 id=&quot;procena-vrednosti&quot;&gt;Procena vrednosti&lt;/h2&gt;
 
-&lt;p&gt;Kao što se vidi iz gornje definiije imovine, imovina je definisana kao nešto što zavisi od vremena. Zbog ovoga, kaa računamo vrednost 
+&lt;p&gt;Kao što se vidi iz gornje definicije imovine, imovina je definisana kao nešto što zavisi od vremena. Zbog ovoga, kada računamo vrednost 
 imovine, jako je važno da tu vrednost računamo u zavisnosti od vremena. Trenutna vrednost neke imovine se može izraziti kao V = V(P(T), P(T + dt), ….) dakle kao funkcija svih budućih protoka novca (kojih može biti i beskonačno mnogo).&lt;/p&gt;
 
 &lt;p&gt;ada treba da odredimo funkciju V koja će nam dati vrednost imovine opisane sa listom protoka novca P.&lt;/p&gt;
 
 &lt;p&gt;Pre toga, uvedimo da je T vreme na godinu dana tako da dt = 1 znači vreme od jedne godine a dt = 2 znači vreme od dve godine itd.&lt;/p&gt;
 
-&lt;p&gt;Isto takk, uvedimo da se mi nalazimo u trenutku T=0 kako bismo lakše mogli zapisati naredne delove.&lt;/p&gt;
+&lt;p&gt;Isto tako, uvedimo da se mi nalazimo u trenutku T=0 kako bismo lakše mogli zapisati naredne delove.&lt;/p&gt;
 
 &lt;p&gt;Posle ovakvog dogovora (koji ne umanjuje opštost) imamo da je V = V(P(0), P(1), ….).&lt;/p&gt;
 
@@ -663,26 +663,26 @@ imovine, jako je važno da tu vrednost računamo u zavisnosti od vremena. Trenut
 
 &lt;h2 id=&quot;vremenska-vrednost-novca&quot;&gt;Vremenska vrednost novca&lt;/h2&gt;
 
-&lt;p&gt;Zamislite da vam ja dam ugovor koji kaže da ću vam dati 1000 dinara za godinu dana. Koliko biste platili sada za taj ugovor? Ako biste platili tačno 1000 dinara onda mi je velika čast da poslujem sa vama. :) Realnost je da nećete dati 1000 dinara kako bih vam ja vratio tih istih 1000 dinara za godinu dana. Zašto? Zato što su ljudi nestrpljivi, rekli smo da preferiraju novac sada a ne novac kasnije. Kako možete da kompenzujete tih godinu dana čekanja? Tako što možete da mi date manje para sada za godinu dana kasnije. Zamislimo sada situaciju da ja odem i ponudim ugovor na tržištu od 100 ljudi. Svako može da ponudi cenu i onaj ko ponudi najviše dobija ugovor. Dakle princip aukcije. Zamislimo sada da je poslednja cena 990 dinara. Dakle, neko će se strpiti godinu dana za 10 dinara dobitka. Kao što vidimo, danas dinar ne vredi kao dinar za godinu dana. Ovde nisam ni pomenuo inflaciju i slično, to dolazi kasnije. Ovde sam samo rekao da ljudi preferiraju pare sada a ne pare kasnije. Dakle i bez inflacije i bez rizika i slično, opet ću morati da platim kamatu na pozamljenih 990 dinara tako da ću za godinu dana morati da ratim 1000. Upravo smo, uz pomoć tržišta, odredili cenu ovog mog ugovora. Kako izgleda protok novca za vas koji dobijete taj ugovor:&lt;/p&gt;
+&lt;p&gt;Zamislite da vam ja dam ugovor koji kaže da ću vam dati 1000 dinara za godinu dana. Koliko biste platili sada za taj ugovor? Ako biste platili tačno 1000 dinara onda mi je velika čast da poslujem sa vama. :) Realnost je da nećete dati 1000 dinara kako bih vam ja vratio tih istih 1000 dinara za godinu dana. Zašto? Zato što su ljudi nestrpljivi, rekli smo da preferiraju novac sada a ne novac kasnije. Kako možete da kompenzujete tih godinu dana čekanja? Tako što možete da mi date manje para sada za godinu dana kasnije. Zamislimo sada situaciju da ja odem i ponudim ugovor na tržištu od 100 ljudi. Svako može da ponudi cenu i onaj ko ponudi najviše dobija ugovor. Dakle princip aukcije. Zamislimo sada da je poslednja cena 990 dinara. Dakle, neko će se strpeti godinu dana za 10 dinara dobitka. Kao što vidimo, danas dinar ne vredi kao dinar za godinu dana. Ovde nisam ni pomenuo inflaciju i slično, to dolazi kasnije. Ovde sam samo rekao da ljudi preferiraju pare sada a ne pare kasnije. Dakle i bez inflacije i bez rizika i slično, opet ću morati da platim kamatu na pozajmljenih 990 dinara tako da ću za godinu dana morati da vratim 1000. Upravo smo, uz pomoć tržišta, odredili cenu ovog mog ugovora. Kako izgleda protok novca za vas koji dobijete taj ugovor:&lt;/p&gt;
 
 &lt;p&gt;P = (0, 1000, 0, …., 0)&lt;/p&gt;
 
 &lt;p&gt;Dakle sada ne dobijate ništa a za godinu dana dobijate 1000 dinara. Cenu smo odredili isto i znamo da je V = 990.&lt;/p&gt;
 
-&lt;p&gt;Dakle znamo da je cena niža od protoka noca za godinu dana tako da je 990 = k * 1000.&lt;/p&gt;
+&lt;p&gt;Dakle znamo da je cena niža od protoka novca za godinu dana tako da je 990 = k * 1000.&lt;/p&gt;
 
-&lt;p&gt;Ovo je posedica nestrpljenja kod tržišta i tako zaključujemo da 1000 dinara danas nije iste vrednosti kao 1000 dinara sutra ili bilo kad u vremenu. Novac gubi vrednost saim tim što vreme protiče.&lt;/p&gt;
+&lt;p&gt;Ovo je posledica nestrpljenja kod tržišta i tako zaključujemo da 1000 dinara danas nije iste vrednosti kao 1000 dinara sutra ili bilo kad u vremenu. Novac gubi vrednost samim tim što vreme protiče.&lt;/p&gt;
 
 &lt;h2 id=&quot;a-sada-procena-vrednosti&quot;&gt;A sada, procena vrednosti&lt;/h2&gt;
 
-&lt;p&gt;Našu funkciju V možemo dedfinisati kao zbir svih protoka novca ALI moramo paziti da ne sabiramo babe i žabe. Protok novca u budućnosti moramo konvertovati u ekvivalentnu vrednost danas.&lt;/p&gt;
+&lt;p&gt;Našu funkciju V možemo definisati kao zbir svih protoka novca ALI moramo paziti da ne sabiramo babe i žabe. Protok novca u budućnosti moramo konvertovati u ekvivalentnu vrednost danas.&lt;/p&gt;
 
 &lt;p&gt;V = P(0) + k(1)P(1) + k(2)P(2) + …&lt;/p&gt;
 
-&lt;p&gt;k(T) je smanjenje u trenutku t. Nravno kako T raste, k(T) opada jer sve više moramo da čekamo i zato manje vrednujemo protoke novca koji su dalje u budućnosti.&lt;/p&gt;
+&lt;p&gt;k(T) je smanjenje u trenutku t. Naravno kako T raste, k(T) opada jer sve više moramo da čekamo i zato manje vrednujemo protoke novca koji su dalje u budućnosti.&lt;/p&gt;
 
 &lt;p&gt;Naravno, k može varirati tokom vremena ali zbog jednostavnosti uvedimo da je K(T) = 1 / (1+r)^T gde je r kamatna stopa uzrokovana
-vremenskom vrednošću novca. Iz ove jednakosti vidimo da je k uvek manje od 1 i da se sa porastom T, k smannjuje.&lt;/p&gt;
+vremenskom vrednošću novca. Iz ove jednakosti vidimo da je k uvek manje od 1 i da se sa porastom T, k smanjuje.&lt;/p&gt;
 
 &lt;p&gt;r se lako može utvrditi na tržištu kao što smo videli u primeru.&lt;/p&gt;
 
@@ -714,7 +714,7 @@ vremenskom vrednošću novca. Iz ove jednakosti vidimo da je k uvek manje od 1 i
 
 &lt;p&gt;V = C / (1 + r) + C / (1+r)^2 + …. C / (1 + r)^N = C((1 - 1/(1 + r)^N) / r)&lt;/p&gt;
 
-&lt;p&gt;U praksi ovakve obveznice su jao česte. Na primer, na sajtu za javni dugRepublike Srbije se mogu naći obveznice koje država nudi građanima. Građani daju pare državi sada kako bi ona finansirala svoje potrebe a onda država isplaćuje rate građanu na određeni vremenski period. Ovo je i najsigurniji finansijski instrument pogotovo ako vam obveznice izdaje država jer ona garantuje da će vam ih uvek isplatiti. Ako država nema para da vam ih isplati, može da ih odštampa u najgorem slučaju. Kod korporativnih obveznica postoji rizik da firma bankrotira ali to je već tema za neki naredni ćlanak.&lt;/p&gt;
+&lt;p&gt;U praksi ovakve obveznice su jao česte. Na primer, na sajtu za javni dug Republike Srbije se mogu naći obveznice koje država nudi građanima. Građani daju pare državi sada kako bi ona finansirala svoje potrebe a onda država isplaćuje rate građanu na određeni vremenski period. Ovo je i najsigurniji finansijski instrument pogotovo ako vam obveznice izdaje država jer ona garantuje da će vam ih uvek isplatiti. Ako država nema para da vam ih isplati, može da ih odštampa u najgorem slučaju. Kod korporativnih obveznica postoji rizik da firma bankrotira ali to je već tema za neki naredni ćlanak.&lt;/p&gt;
 </description>
         <pubDate>Mon, 03 Sep 2018 19:15:00 +0200</pubDate>
         <link>http://fantastic001.github.io/finance/2018/09/03/finansijska-analiza-1.html</link>
@@ -850,7 +850,7 @@ and to introduce few concepts needed to start programming on GPU.&lt;/p&gt;
 &lt;h1 id=&quot;what-is-cuda&quot;&gt;What is CUDA?&lt;/h1&gt;
 
 &lt;p&gt;CUDA is API developed by NVIDIA to enable communication with its GPUs to use capabilities of their graphics cards to do 
-parallel computation. This is essence of GPGPU (General Purpose Graphics Processing Unit). Throught CUDA API, it is possible to access 
+parallel computation. This is essence of GPGPU (General Purpose Graphics Processing Unit). Through CUDA API, it is possible to access 
 and send instructions to GPU and to access its memory.&lt;/p&gt;
 
 &lt;h1 id=&quot;motivation&quot;&gt;Motivation&lt;/h1&gt;
@@ -863,15 +863,15 @@ clear that we have a problem. Each simulation step has to be done in less than 1
 Average CPU core can do 100000000 computations per second which means that our computation will take roughly 100 seconds per simulation step on single core. 
 Even if we parallelize computation to 8 cores, we still have speed of one simulation step per 12.5 seconds which is far more than our 1/30 second goal.&lt;/p&gt;
 
-&lt;p&gt;How many cores do we need to make iit under 1/30 second? Well, we would need 100 / (1/30) = 3000 cores. We do not have such CPU with 3000 cores today (and probably we will never have). Device with such greeat parallel computing capabilities is GPU. It has at least 16000 cores that are capable of doing computation. 
-Now question arises, how can GPU have so many coores and CPU can’t? Well, answer lies in a fact that GPU core has much smaller size of instructions. For instance, it does not support everything which CPU supports and hence needs more instructions to do something which CPU does in only one. Good news are that CUDA-enabled GPU can 
-do everthing CPU can but some things can be slower and some things can be faster.&lt;/p&gt;
+&lt;p&gt;How many cores do we need to make it under 1/30 second? Well, we would need 100 / (1/30) = 3000 cores. We do not have such CPU with 3000 cores today (and probably we will never have). Device with such greet parallel computing capabilities is GPU. It has at least 16000 cores that are capable of doing computation. 
+Now question arises, how can GPU have so many cores and CPU can’t? Well, answer lies in a fact that GPU core has much smaller size of instructions. For instance, it does not support everything which CPU supports and hence needs more instructions to do something which CPU does in only one. Good news are that CUDA-enabled GPU can 
+do everything CPU can but some things can be slower and some things can be faster.&lt;/p&gt;
 
 &lt;p&gt;Back to our example, clearly GPU can solve our problem. We can parallelize our system such that every GPU core gets some set of 
 particles and does computation on them. This computation is done in so-called “kernel function” which is function without return value and is 
-responsible to do computation per core. It stores its result in GPU memory which can be transfered to CPU later (or never).&lt;/p&gt;
+responsible to do computation per core. It stores its result in GPU memory which can be transferred to CPU later (or never).&lt;/p&gt;
 
-&lt;p&gt;Additionaly, in our example, we do not need to transfer data to CPU because we can do visualization already in GPU (good news: we do not lose time on transfering data to do OpenGL drawing for instance).&lt;/p&gt;
+&lt;p&gt;Additionally, in our example, we do not need to transfer data to CPU because we can do visualization already in GPU (good news: we do not lose time on transferring data to do OpenGL drawing for instance).&lt;/p&gt;
 
 &lt;h1 id=&quot;cuda-gpu-architecture&quot;&gt;CUDA GPU architecture&lt;/h1&gt;
 
@@ -883,8 +883,8 @@ responsible to do computation per core. It stores its result in GPU memory which
 
 &lt;p&gt;For C++ bindings, you will need nvcc (NVIDIA’s C/C++ compiler) and CUDA framework installed. You can find all of these on NVIDIA’s website as well as documentation on how to install it.&lt;/p&gt;
 
-&lt;p&gt;I suggest to use CMake to build yoour programs because then you will not need to deal with nvcc directly and, trust me, your life will be easier, 
-On NVIDIA website you can find CMkaeLists.txt for CUDA &lt;a href=&quot;https://devblogs.nvidia.com/building-cuda-applications-cmake/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I suggest to use CMake to build your programs because then you will not need to deal with nvcc directly and, trust me, your life will be easier, 
+On NVIDIA website you can find CMakeLists.txt for CUDA &lt;a href=&quot;https://devblogs.nvidia.com/building-cuda-applications-cmake/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;So our first programs will begin as usual, with main function:&lt;/p&gt;
 
@@ -935,7 +935,7 @@ for (int i = 0; i&amp;lt;1000; ++i)
 
 &lt;h2 id=&quot;allocate-memory-on-gpu-for-arrays&quot;&gt;Allocate memory on GPU for arrays&lt;/h2&gt;
 
-&lt;p&gt;For this we will use cudaMalloc. It works in a way that we provide it a pointer tov pointer which will point to allocated memory on GPU.&lt;/p&gt;
+&lt;p&gt;For this we will use cudaMalloc. It works in a way that we provide it a pointer to pointer which will point to allocated memory on GPU.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int *cuda_a, *cuda_b;
 cudaMalloc(&amp;amp;cuda_a, sizeof(int) * 1000);
@@ -949,7 +949,7 @@ You will be able to access them in kernel function because it executes on GPU.&l
 
 &lt;h2 id=&quot;transfer-data-to-gpu&quot;&gt;Transfer data to GPU&lt;/h2&gt;
 
-&lt;p&gt;Transfering is done through cudaMemcpy function. It is used to transfer data from CPU to GPU and vice versa.&lt;/p&gt;
+&lt;p&gt;Transferring is done through cudaMemcpy function. It is used to transfer data from CPU to GPU and vice versa.&lt;/p&gt;
 
 &lt;p&gt;The first argument to cudaMemcpy is always destination, then source, then size of content and last argument is flag. Flag determines do we need to 
 transfer to GPU or from GPU and can be: cudaMemcpyHostToDevice or cudaMemcpyDeviceToHost.&lt;/p&gt;
@@ -960,7 +960,7 @@ transfer to GPU or from GPU and can be: cudaMemcpyHostToDevice or cudaMemcpyDevi
 cudaMemcpy(cuda_b, b, sizeof(int) * 1000, cudaMemcpyHostToDevice);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;allocating-memory-foor-result&quot;&gt;Allocating memory foor result&lt;/h2&gt;
+&lt;h2 id=&quot;allocating-memory-for-result&quot;&gt;Allocating memory for result&lt;/h2&gt;
 
 &lt;p&gt;Process is same ass before, we just use cudaMalloc:&lt;/p&gt;
 
@@ -969,9 +969,9 @@ int *cuda_res;
 cudaMalloc(&amp;amp;cuda_res, sizeof(int) * 1000);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;creating-and-calling-kernell-function&quot;&gt;Creating and calling kernell function&lt;/h2&gt;
+&lt;h2 id=&quot;creating-and-calling-kernel-function&quot;&gt;Creating and calling kernel function&lt;/h2&gt;
 
-&lt;p&gt;For our sum computation, we will need kernel function. Kernel function iis function which is called in parallel. Since we provide two arrays to it, this means that every core will compute small portion of result:&lt;/p&gt;
+&lt;p&gt;For our sum computation, we will need kernel function. Kernel function is function which is called in parallel. Since we provide two arrays to it, this means that every core will compute small portion of result:&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;__global__ void sum(int*a, int*b, int* res) 
 {
@@ -980,14 +980,14 @@ cudaMalloc(&amp;amp;cuda_res, sizeof(int) * 1000);
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;you can nootice that we have used &lt;code class=&quot;highlighter-rouge&quot;&gt;__globall__&lt;/code&gt; macro which tells nvcc that this function is kernel function which means is executed on GPU but called from CPU. We also can use &lt;code class=&quot;highlighter-rouge&quot;&gt;__device__&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;__host__&lt;/code&gt; macros to represent functions on GPU and CPU-only.&lt;/p&gt;
+&lt;p&gt;you can notice that we have used &lt;code class=&quot;highlighter-rouge&quot;&gt;__globall__&lt;/code&gt; macro which tells nvcc that this function is kernel function which means is executed on GPU but called from CPU. We also can use &lt;code class=&quot;highlighter-rouge&quot;&gt;__device__&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;__host__&lt;/code&gt; macros to represent functions on GPU and CPU-only.&lt;/p&gt;
 
 &lt;p&gt;Now we can call this function from main:&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sum&amp;lt;&amp;lt;&amp;lt;4,250&amp;gt;&amp;gt;&amp;gt;(cuda_a, cuda_b, cuda_res);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;First number in this «&amp;lt; … »&amp;gt; block is number of blocks used and second is number of threads used. Problem with this kernel function is that, if we change number of blocks or threads per block, it won’t be coorrect anymore, for instance 1,256 won’t work because it will populate only first 256 elements. To solve this, we can use block-stride loop like this:&lt;/p&gt;
+&lt;p&gt;First number in this «&amp;lt; … »&amp;gt; block is number of blocks used and second is number of threads used. Problem with this kernel function is that, if we change number of blocks or threads per block, it won’t be correct anymore, for instance 1,256 won’t work because it will populate only first 256 elements. To solve this, we can use block-stride loop like this:&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for (int i = blockDim.x * blockIdx.x + threadIdx.x; i&amp;lt;1000; i += gridDim.x * blockDim.x) 
 {
@@ -1006,7 +1006,7 @@ cudaMalloc(&amp;amp;cuda_res, sizeof(int) * 1000);
 
 &lt;p&gt;and this function will block until kernel finishes.&lt;/p&gt;
 
-&lt;h2 id=&quot;transfering-result-back-to-cpu&quot;&gt;Transfering result back to CPU&lt;/h2&gt;
+&lt;h2 id=&quot;transferring-result-back-to-cpu&quot;&gt;Transferring result back to CPU&lt;/h2&gt;
 
 &lt;p&gt;To transfer result back to CPU we use cudaMemcpy and cudaMemcpyDeviceToHost like this:&lt;/p&gt;
 
@@ -1058,8 +1058,8 @@ inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=t
 &lt;p&gt;Well, I found that one of the best estimates is how many data transfers you do compared to computation. If ratio of these two is constant, then you are better of using CPU. 
 For instance, in our example we do computation of O(n) and do O(n) data transfers so we end up in O(1) ratio. In our previous example with particles, we do O(n^2) computation and O(n) data transfers so we end up in O(n) ratio.&lt;/p&gt;
 
-&lt;p&gt;Sometimes it makes sense to parallelize even when you have constant ratio if that constant is big enough. Try to make code maintainable such that it dooes not need to 
-be big effort to paralellize code.&lt;/p&gt;
+&lt;p&gt;Sometimes it makes sense to parallelize even when you have constant ratio if that constant is big enough. Try to make code maintainable such that it does not need to 
+be big effort to parallelize code.&lt;/p&gt;
 
 </description>
         <pubDate>Mon, 06 Aug 2018 00:15:00 +0200</pubDate>

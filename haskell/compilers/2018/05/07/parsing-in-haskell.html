@@ -40,7 +40,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-05-07T23:15:00+02:00" />
 <script type="application/ld+json">
-{"description":"This article is going to explain some basic concepts in compiler design and to give practical implementation of lexical analysis and parsing in Haskell.","headline":"Parsing in Haskell","dateModified":"2018-05-07T23:15:00+02:00","datePublished":"2018-05-07T23:15:00+02:00","@type":"BlogPosting","url":"http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html"},"@context":"https://schema.org"}</script>
+{"headline":"Parsing in Haskell","dateModified":"2018-05-07T23:15:00+02:00","description":"This article is going to explain some basic concepts in compiler design and to give practical implementation of lexical analysis and parsing in Haskell.","datePublished":"2018-05-07T23:15:00+02:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html"},"url":"http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -131,14 +131,14 @@ of lexical analysis and parsing in Haskell.</p>
 
 <p>Let’s take a look into simple definition of tree nodes for “+”, “*”, “-“ and “/” operations. First of all, let’s define them. We know that multiplication and division has priority over addition and subtraction. This means that multiplication and division is always subtree of addition and subtraction. Also, we know that brackets have priority over multiplication and division, so brackets (and expression in them) is always subtree of multiplication and division. For this reason, we will have three types of nodes because we have three levels of priority.</p>
 
-<p>When we are talking about addition and subtraction, we are talking about expression which has operantor (+ or -) and two operands. One of them is multiplication and another is expression (because we want to have a+b+c). But what if we have only a*b? Then we need to enable that expression can be just one tiny multiplication.
+<p>When we are talking about addition and subtraction, we are talking about expression which has operator (+ or -) and two operands. One of them is multiplication and another is expression (because we want to have a+b+c). But what if we have only a*b? Then we need to enable that expression can be just one tiny multiplication.
 We also have to enable something like “-a” so we will have special kind of negative expression.</p>
 
-<p>Similar thing for term, term is either multiplication, divisio or just factor.</p>
+<p>Similar thing for term, term is either multiplication, division or just factor.</p>
 
 <p>Factor is just identifier, just number or expression inside brackets.</p>
 
-<p>To summmarize, our definitions look liker this:</p>
+<p>To summarize, our definitions look liker this:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expression = term "+" expression | term "-" expression | term | "-" term
 term = factor "*" term | factor "/" term | factor 
@@ -199,7 +199,7 @@ getToken = Parse $ \tokens -&gt; case tokens of
 	t:ts -&gt; ParseResult (t:ts) t 
 </code></pre></div></div>
 
-<p>This function represents computation which returns current tooken as result and does not change state of tokens (this token remains in list of tokens).</p>
+<p>This function represents computation which returns current token as result and does not change state of tokens (this token remains in list of tokens).</p>
 
 <p>Another function is expect which will return parsing error if given token does not exist in list. If it exists, it will remove that token from list of tokens. You can see this function by other names in other articles or literature, for example they call it “eat” somewhere because it “eats” token if it exists.</p>
 
@@ -209,7 +209,7 @@ expect token = Parse $ \tokens -&gt; case tokens of
 	t:ts -&gt; if t == token then ParseResult ts t else ParseError 0 $ "Expected token " ++ (show token) ++ " but " ++ (show t) ++ "found"
 </code></pre></div></div>
 
-<p>Alsoo, for outputing errors during parsing, we will have some simple function which always returns error with given message:</p>
+<p>Also, for outputting errors during parsing, we will have some simple function which always returns error with given message:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cerror :: String -&gt; Parse a
 cerror msg = Parse $ \token -&gt; ParseError 0 msg
@@ -281,7 +281,7 @@ You can see how we use expression method (which we will implement later) to easi
 
 <h1 id="conclusion">Conclusion</h1>
 
-<p>So, as you can see, parsing can be very easily implemented in Haskell Extensions to additional syntax and grammmar can be easily done through adding more methods and tree nodes.</p>
+<p>So, as you can see, parsing can be very easily implemented in Haskell Extensions to additional syntax and grammar can be easily done through adding more methods and tree nodes.</p>
 
   </div>
 
