@@ -6,9 +6,128 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 23 Sep 2019 02:46:46 +0200</pubDate>
-    <lastBuildDate>Mon, 23 Sep 2019 02:46:46 +0200</lastBuildDate>
+    <pubDate>Sat, 05 Oct 2019 14:20:36 +0200</pubDate>
+    <lastBuildDate>Sat, 05 Oct 2019 14:20:36 +0200</lastBuildDate>
     <generator>Jekyll v4.0.0</generator>
+    
+      <item>
+        <title>Instant API</title>
+        <description>&lt;p&gt;Today, we live in world of micro services. Now, it is important to make your application accessible to other applications more than ever. The problem is that this task is 
+very often easier said than done. We often want to expose some kind of interface to our application. This is usually done using HTTP protocol because there are lot of libraries 
+for making HTTP communication easy. This article is about Python library I’ve made to ease this process. The library is called Instant API and you can find it &lt;a href=&quot;https://gitlab.com/fantastic001/InstantAPI&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The idea is to build your API by adding handlers. A handler is some endpoint (actually, it is subset of endpoints in your API) which handles specific type of request. For instance, you can have handler which will handle all endpoints on &lt;code class=&quot;highlighter-rouge&quot;&gt;/myhandler/&lt;/code&gt; path like &lt;code class=&quot;highlighter-rouge&quot;&gt;/myhandler/A&lt;/code&gt; , &lt;code class=&quot;highlighter-rouge&quot;&gt;/myhandler/B/123&lt;/code&gt; etc…&lt;/p&gt;
+
+&lt;p&gt;Your API has to have at least one, default handler. Default handler will handle all subpaths that are not handled by some other handler.&lt;/p&gt;
+
+&lt;p&gt;Another thing is type of objects which Instant API uses. These objects are called CloudObjects and you can construct them in Python very easily:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;myobject = CloudObject(name=&quot;somename&quot;, age=25)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As you can see, these objects are like dicts. You can specify whatever fields to them. You can get particular field by accessing its attributes:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;print(myobject.name)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;example-with-simple-server-with-simple-file-system-handler&quot;&gt;Example with simple server with simple file system handler&lt;/h1&gt;
+
+&lt;p&gt;Here is an example of API creation in Python with one default handler: FSHandler. This handler will handle GET requests which will get content of a file and POST request which will handle writing to file. Since we are working with CloudObject objects, file created will be JSON serialized representation of object.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from InstantAPI.http import HTTPServer
+from InsttantAPI.handlers import *
+from InstantAPI import CloudServer
+import sys
+
+cloud = CloudServer(FSHandler(sys.argv[1]), handlers=[])
+
+print(&quot;Running server on port 8080&quot;)
+HTTPServer(cloud, port=8080).serve()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As simple as that. Endpoint for FSHandler is &lt;code class=&quot;highlighter-rouge&quot;&gt;/data/&lt;/code&gt; so you can try it out with curl:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST -d '{&quot;name&quot;: &quot;John&quot;}' &quot;localhost:8080/data/john&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and you will see file created in directory you specified as first argument to your server (root path where files are served).&lt;/p&gt;
+
+&lt;p&gt;Another application can watch for file changes and you will have communication between apps.&lt;/p&gt;
+
+&lt;h1 id=&quot;another-example-with-two-handlers&quot;&gt;Another example with two handlers&lt;/h1&gt;
+
+&lt;p&gt;This is example where we have default handler FSHandler and TimeHandler on endpoint &lt;code class=&quot;highlighter-rouge&quot;&gt;/time&lt;/code&gt; which will return current time.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from InstantAPI.http import HTTPServer
+from InsttantAPI.handlers import *
+from InstantAPI import CloudServer
+import sys
+
+cloud = CloudServer(FSHandler(sys.argv[1]), handlers=[TimeHandler()])
+
+print(&quot;Running server on port 8080&quot;)
+HTTPServer(cloud, port=8080).serve()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;you can try it out with curl:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X GET localhost:8080/time
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and you will get something like:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{&quot;time&quot;: &quot;2019-10-05 13:22:03.206878&quot;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;current-state-and-extensions&quot;&gt;Current state and extensions&lt;/h1&gt;
+
+&lt;p&gt;Right now, there are only 4 implemented handlers: FSHandler, TimeHandler, ObjectHandler (handles objects in SQLite db) and JWTHandler (handles authorization).&lt;/p&gt;
+
+&lt;p&gt;You can implement your own handler by inheriting CloudHandler class and implementing handle and handlePut functions.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def handlle(self, path, state={})
+def handlePut(self, path, state={}, obj=CloudObject())
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;These functions will be called on POST and GET requests. You will also need to set &lt;code class=&quot;highlighter-rouge&quot;&gt;HANDLES&lt;/code&gt; field in your class and put there string with which your handler is 
+identified when parsing endpoint path. For instance:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyHandler(ClooudHandler):
+	
+	HANDLES = &quot;myhandler&quot;
+	def handlle(self, path, state={}):
+		return CloudObject()
+	def handlePut(self, path, state={}, obj=CloudObject()):
+		pass
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;will be called on all paths starting with &lt;code class=&quot;highlighter-rouge&quot;&gt;/myhandler/&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can see source code of existing handlers how are they implemented.&lt;/p&gt;
+
+&lt;h1 id=&quot;what-is-state-parameter&quot;&gt;What is state parameter?&lt;/h1&gt;
+
+&lt;p&gt;When you are initializing CloudServer, in its constructor, you are able to pass state parameter which will be passed to all handlers. This way, handlers can communicate 
+with each other using this state mechanism. State can be CloudObject too.&lt;/p&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;In the future, more handlers will be implemented to minimize need to implementing extended handlers. Also, some kind of composition will be available such that it will be possible to combine small handlers into one complex handler.&lt;/p&gt;
+</description>
+        <pubDate>Sat, 05 Oct 2019 13:15:00 +0200</pubDate>
+        <link>http://fantastic001.github.io/python/instant-api/web/rest/2019/10/05/instant-api.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/python/instant-api/web/rest/2019/10/05/instant-api.html</guid>
+        
+        
+        <category>python</category>
+        
+        <category>instant-api</category>
+        
+        <category>web</category>
+        
+        <category>rest</category>
+        
+      </item>
     
       <item>
         <title>Docker explained for getting things done</title>
@@ -839,235 +958,6 @@ coding becomes just implementing functions inside components. You probably won�
         <category>management</category>
         
         <category>opinion</category>
-        
-      </item>
-    
-      <item>
-        <title>Introduction to computing with CUDA</title>
-        <description>&lt;p&gt;Recently I have worked on fluid simulation project developed for CUDA-enabled GPU. Here I am going to explain what is CUDA 
-and to introduce few concepts needed to start programming on GPU.&lt;/p&gt;
-
-&lt;h1 id=&quot;what-is-cuda&quot;&gt;What is CUDA?&lt;/h1&gt;
-
-&lt;p&gt;CUDA is API developed by NVIDIA to enable communication with its GPUs to use capabilities of their graphics cards to do 
-parallel computation. This is essence of GPGPU (General Purpose Graphics Processing Unit). Through CUDA API, it is possible to access 
-and send instructions to GPU and to access its memory.&lt;/p&gt;
-
-&lt;h1 id=&quot;motivation&quot;&gt;Motivation&lt;/h1&gt;
-
-&lt;p&gt;First of all, let’s explain why we even need to use parallel computing to do something. For illustration, let’s take 
-example of particle simulation. We need to simulate movements of huge number of particles in a physical system. Each particle 
-has to apply Newton’s laws to itself and also to handle collisions with other particles in a system. For each particle to handle 
-collisions we need to do O(n) computations which gives as O(n^2) computations for whole simulation step. If we have 100000 particles, it becomes
-clear that we have a problem. Each simulation step has to be done in less than 1/30 of second such that we don’t have lags in visualization. 
-Average CPU core can do 100000000 computations per second which means that our computation will take roughly 100 seconds per simulation step on single core. 
-Even if we parallelize computation to 8 cores, we still have speed of one simulation step per 12.5 seconds which is far more than our 1/30 second goal.&lt;/p&gt;
-
-&lt;p&gt;How many cores do we need to make it under 1/30 second? Well, we would need 100 / (1/30) = 3000 cores. We do not have such CPU with 3000 cores today (and probably we will never have). Device with such greet parallel computing capabilities is GPU. It has at least 16000 cores that are capable of doing computation. 
-Now question arises, how can GPU have so many cores and CPU can’t? Well, answer lies in a fact that GPU core has much smaller size of instructions. For instance, it does not support everything which CPU supports and hence needs more instructions to do something which CPU does in only one. Good news are that CUDA-enabled GPU can 
-do everything CPU can but some things can be slower and some things can be faster.&lt;/p&gt;
-
-&lt;p&gt;Back to our example, clearly GPU can solve our problem. We can parallelize our system such that every GPU core gets some set of 
-particles and does computation on them. This computation is done in so-called “kernel function” which is function without return value and is 
-responsible to do computation per core. It stores its result in GPU memory which can be transferred to CPU later (or never).&lt;/p&gt;
-
-&lt;p&gt;Additionally, in our example, we do not need to transfer data to CPU because we can do visualization already in GPU (good news: we do not lose time on transferring data to do OpenGL drawing for instance).&lt;/p&gt;
-
-&lt;h1 id=&quot;cuda-gpu-architecture&quot;&gt;CUDA GPU architecture&lt;/h1&gt;
-
-&lt;p&gt;GPU is divided into blocks where every block contains fixed number of cores. Set of blocks are contained in grid which is used by application. You can learn more about architecture &lt;a href=&quot;http://www.nvidia.com/content/PDF/fermi_white_papers/NVIDIA_Fermi_Compute_Architecture_Whitepaper.pdf&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;programming-for-cuda-enabled-devices&quot;&gt;Programming for CUDA-enabled devices&lt;/h1&gt;
-
-&lt;p&gt;In this article, it will be presented how to program for CUDA in C++ but you can use other languages too, for instance &lt;a href=&quot;http://hackage.haskell.org/package/accelerate&quot;&gt;Haskell&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;For C++ bindings, you will need nvcc (NVIDIA’s C/C++ compiler) and CUDA framework installed. You can find all of these on NVIDIA’s website as well as documentation on how to install it.&lt;/p&gt;
-
-&lt;p&gt;I suggest to use CMake to build your programs because then you will not need to deal with nvcc directly and, trust me, your life will be easier, 
-On NVIDIA website you can find CMakeLists.txt for CUDA &lt;a href=&quot;https://devblogs.nvidia.com/building-cuda-applications-cmake/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;So our first programs will begin as usual, with main function:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int main() 
-{
-	
-	return 0;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;And now we will need to compile it:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cmake . 
-make 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and we will get our result as normal. As you can see, nvcc compiles your programs as gcc does (oh well, nvcc calls gcc).&lt;/p&gt;
-
-&lt;p&gt;Now let’s add kernel function and see what new language features nvcc introduces.&lt;/p&gt;
-
-&lt;p&gt;Let’s make program for summing arrays, we will need to:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;make both arrays on CPU&lt;/li&gt;
-  &lt;li&gt;allocate memory on GPU for arrays&lt;/li&gt;
-  &lt;li&gt;transfer arrays to GPU&lt;/li&gt;
-  &lt;li&gt;allocate memory for result&lt;/li&gt;
-  &lt;li&gt;call computation&lt;/li&gt;
-  &lt;li&gt;transfer result back to CPU&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;so let’s start:&lt;/p&gt;
-
-&lt;h2 id=&quot;make-both-arrays-on-cpu&quot;&gt;Make both arrays on CPU&lt;/h2&gt;
-
-&lt;p&gt;Well, this is easy, we did that billion of times:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int a[1000];
-int b[1000];
-for (int i = 0; i&amp;lt;1000; ++i) 
-{
-	a[i] = i;
-	b[i] = 2*i;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and we are done, next:&lt;/p&gt;
-
-&lt;h2 id=&quot;allocate-memory-on-gpu-for-arrays&quot;&gt;Allocate memory on GPU for arrays&lt;/h2&gt;
-
-&lt;p&gt;For this we will use cudaMalloc. It works in a way that we provide it a pointer to pointer which will point to allocated memory on GPU.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int *cuda_a, *cuda_b;
-cudaMalloc(&amp;amp;cuda_a, sizeof(int) * 1000);
-cudaMalloc(&amp;amp;cuda_b, sizeof(int) * 1000);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;After this, these pointers will point to data in GPU memory so do not try to dereference them on CPU (for instance, you cannot print their content in main function).
-You will be able to access them in kernel function because it executes on GPU.&lt;/p&gt;
-
-&lt;p&gt;Well, how can we transfer data to them if we cannot access them?&lt;/p&gt;
-
-&lt;h2 id=&quot;transfer-data-to-gpu&quot;&gt;Transfer data to GPU&lt;/h2&gt;
-
-&lt;p&gt;Transferring is done through cudaMemcpy function. It is used to transfer data from CPU to GPU and vice versa.&lt;/p&gt;
-
-&lt;p&gt;The first argument to cudaMemcpy is always destination, then source, then size of content and last argument is flag. Flag determines do we need to 
-transfer to GPU or from GPU and can be: cudaMemcpyHostToDevice or cudaMemcpyDeviceToHost.&lt;/p&gt;
-
-&lt;p&gt;Here we want to transfer from CPU too GPU so we will do:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cudaMemcpy(cuda_a, a, sizeof(int) * 1000, cudaMemcpyHostToDevice);
-cudaMemcpy(cuda_b, b, sizeof(int) * 1000, cudaMemcpyHostToDevice);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;allocating-memory-for-result&quot;&gt;Allocating memory for result&lt;/h2&gt;
-
-&lt;p&gt;Process is same ass before, we just use cudaMalloc:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int res[1000]; 
-int *cuda_res;
-cudaMalloc(&amp;amp;cuda_res, sizeof(int) * 1000);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;creating-and-calling-kernel-function&quot;&gt;Creating and calling kernel function&lt;/h2&gt;
-
-&lt;p&gt;For our sum computation, we will need kernel function. Kernel function is function which is called in parallel. Since we provide two arrays to it, this means that every core will compute small portion of result:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;__global__ void sum(int*a, int*b, int* res) 
-{
-	int i = blockIdx.x * blockDim.x + threadIdx.x;
-	res[i] = a[i] + b[i];
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;you can notice that we have used &lt;code class=&quot;highlighter-rouge&quot;&gt;__globall__&lt;/code&gt; macro which tells nvcc that this function is kernel function which means is executed on GPU but called from CPU. We also can use &lt;code class=&quot;highlighter-rouge&quot;&gt;__device__&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;__host__&lt;/code&gt; macros to represent functions on GPU and CPU-only.&lt;/p&gt;
-
-&lt;p&gt;Now we can call this function from main:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sum&amp;lt;&amp;lt;&amp;lt;4,250&amp;gt;&amp;gt;&amp;gt;(cuda_a, cuda_b, cuda_res);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;First number in this «&amp;lt; … »&amp;gt; block is number of blocks used and second is number of threads used. Problem with this kernel function is that, if we change number of blocks or threads per block, it won’t be correct anymore, for instance 1,256 won’t work because it will populate only first 256 elements. To solve this, we can use block-stride loop like this:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for (int i = blockDim.x * blockIdx.x + threadIdx.x; i&amp;lt;1000; i += gridDim.x * blockDim.x) 
-{
-	res[i] = a[i] + b[i];
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and this is very common pattern to use.&lt;/p&gt;
-
-&lt;h2 id=&quot;synchronization&quot;&gt;Synchronization&lt;/h2&gt;
-
-&lt;p&gt;After we call kernel function, CPU will continue its execution because kernel is executing on GPU, so we need to wait until kernel function finishes because our next steps depend on result of GPU computation. We can use synchronization for that, after kernel function call:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cudaDeviceSynchronize();
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and this function will block until kernel finishes.&lt;/p&gt;
-
-&lt;h2 id=&quot;transferring-result-back-to-cpu&quot;&gt;Transferring result back to CPU&lt;/h2&gt;
-
-&lt;p&gt;To transfer result back to CPU we use cudaMemcpy and cudaMemcpyDeviceToHost like this:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cudaMemcpy(res, cuda_res, sizeof(int) * 1000, cudaMemcpyDeviceToHost);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now we can print result or do whatever we want with it.&lt;/p&gt;
-
-&lt;h1 id=&quot;best-practices&quot;&gt;Best practices&lt;/h1&gt;
-
-&lt;p&gt;Now when we know how CUDA works, let’s list some best practices for it. First of all, if possible, try to maintain data on GPU as long as possible and do data transfers as few as possible because data transfers are costly. Also, if-branching in GPU is very costly so try to avoid it as much as possible.&lt;/p&gt;
-
-&lt;p&gt;If you want to have function which executes on CPU and GPU (&lt;code class=&quot;highlighter-rouge&quot;&gt;__host__ __device__&lt;/code&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;) then you can change its code if needed by investigating &lt;/code&gt;&lt;strong&gt;CUDA_ARCH&lt;/strong&gt;` macro is defined. For instance:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#ifdef __CUDA_ARCH__
-	for (int i = 0; i&amp;lt;n; i++) 
-#else 
-	for (int i = blockDim.x * blockIdx.x + threadIdx.x; i&amp;lt;n; i += gridDim.x * blockDim.x)
-#endif 
-	{
-		// code
-	}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Every CUDA call exposes some error info as its return value so here is the way how to catch it and print it:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#define cudaCatch(ans) { gpuAssert((ans), __FILE__, __LINE__); }
-inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=true)
-{
-        if (code != cudaSuccess)
-        {
-                fprintf(stderr,&quot;GPUassert: %s %s %d\n&quot;, cudaGetErrorString(code), file, line);
-                if (abort) exit(code);
-        }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;so you need to call cuda functions like this:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cudaCatch(cudaDeviceSynchronize());
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and it will catch some errors if they exist and you will be notified on standard output.&lt;/p&gt;
-
-&lt;h1 id=&quot;when&quot;&gt;When?&lt;/h1&gt;
-
-&lt;p&gt;Now main question is when to use GPU paralelllization and when to stick to CPU?&lt;/p&gt;
-
-&lt;p&gt;Well, I found that one of the best estimates is how many data transfers you do compared to computation. If ratio of these two is constant, then you are better of using CPU. 
-For instance, in our example we do computation of O(n) and do O(n) data transfers so we end up in O(1) ratio. In our previous example with particles, we do O(n^2) computation and O(n) data transfers so we end up in O(n) ratio.&lt;/p&gt;
-
-&lt;p&gt;Sometimes it makes sense to parallelize even when you have constant ratio if that constant is big enough. Try to make code maintainable such that it does not need to 
-be big effort to parallelize code.&lt;/p&gt;
-
-</description>
-        <pubDate>Mon, 06 Aug 2018 00:15:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/cuda/2018/08/06/cuda-intro.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/cuda/2018/08/06/cuda-intro.html</guid>
-        
-        
-        <category>cuda</category>
         
       </item>
     
