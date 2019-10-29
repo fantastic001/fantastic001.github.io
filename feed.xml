@@ -6,8 +6,8 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 29 Oct 2019 21:51:20 +0100</pubDate>
-    <lastBuildDate>Tue, 29 Oct 2019 21:51:20 +0100</lastBuildDate>
+    <pubDate>Tue, 29 Oct 2019 21:55:34 +0100</pubDate>
+    <lastBuildDate>Tue, 29 Oct 2019 21:55:34 +0100</lastBuildDate>
     <generator>Jekyll v4.0.0</generator>
     
       <item>
@@ -17,7 +17,7 @@
 &lt;p&gt;The main purpose of this web application is to enable people not familiar with Jekyll and command line tools to manage Jekyll sites. Right now, this includes only post management
 but in  the future it is planned to have automatic build for building and deploying site as well as management of other things like style, page layout and pages.&lt;/p&gt;
 
-&lt;h1 id=&quot;installation-and-setup&quot;&gt;Installation and setup&lt;/h1&gt;
+&lt;h2 id=&quot;installation-and-setup&quot;&gt;Installation and setup&lt;/h2&gt;
 
 &lt;p&gt;Installation is simple, you can download source and host it with any web server you want: https://github.com/fantastic001/jekyll-web&lt;/p&gt;
 
@@ -28,7 +28,7 @@ but in  the future it is planned to have automatic build for building and deploy
   &lt;li&gt;Specify path to directory where Jekyll static site is located.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&quot;set-up-users&quot;&gt;Set up users&lt;/h2&gt;
+&lt;h1 id=&quot;set-up-users&quot;&gt;Set up users&lt;/h1&gt;
 
 &lt;p&gt;you can do this by using manage.py provided by Django. Go to source and execute:&lt;/p&gt;
 
@@ -38,7 +38,7 @@ python manage.py createsuperuser
 
 &lt;p&gt;and you will be prompted with options to create administrator. From there, you will be able to access admin panel to add new users. If you are the only one managing web site, you are okay with just admin user.&lt;/p&gt;
 
-&lt;h2 id=&quot;set-up-jekyll-static-site-path&quot;&gt;Set up Jekyll static site path&lt;/h2&gt;
+&lt;h1 id=&quot;set-up-jekyll-static-site-path&quot;&gt;Set up Jekyll static site path&lt;/h1&gt;
 
 &lt;p&gt;In &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll_web/jekyll_web/settings.py&lt;/code&gt; you will be able to set up path to directory where contents of jekyll static page sources are located. The variable name you will have to set up is: &lt;code class=&quot;highlighter-rouge&quot;&gt;JEKYLL_PATH&lt;/code&gt;.&lt;/p&gt;
 
@@ -47,7 +47,7 @@ python manage.py createsuperuser
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;JEKYLL_PATH = &quot;/home/me/myjekyllsite/&quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h1 id=&quot;running-and-usage&quot;&gt;Running and usage&lt;/h1&gt;
+&lt;h2 id=&quot;running-and-usage&quot;&gt;Running and usage&lt;/h2&gt;
 
 &lt;p&gt;Too test if everything works, run:&lt;/p&gt;
 
@@ -56,7 +56,7 @@ python manage.py createsuperuser
 
 &lt;p&gt;and go too URL which you will get in console. You will be redirected to browser and will see welcome message. You can log in by clicking “Log In” in upper-left corner and entering your user credentials which you set up previously. Then, you will be able to access article list and create new article features on upper-left corner.&lt;/p&gt;
 
-&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
 
 &lt;p&gt;Right now, it is still poor with features but in the future it is planned to have more supported features. Even though, you will be able to add posts, edit and remove them. Please submit any bugs in Issues tab on GitHub page of project linked above.&lt;/p&gt;
 
