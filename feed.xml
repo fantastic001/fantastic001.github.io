@@ -6,15 +6,13 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 02 Jan 2020 23:06:12 +0100</pubDate>
-    <lastBuildDate>Thu, 02 Jan 2020 23:06:12 +0100</lastBuildDate>
+    <pubDate>Thu, 02 Jan 2020 23:08:29 +0100</pubDate>
+    <lastBuildDate>Thu, 02 Jan 2020 23:08:29 +0100</lastBuildDate>
     <generator>Jekyll v4.0.0</generator>
     
       <item>
         <title>Introduction to TSS - small tool for generating source code from templates</title>
-        <description>&lt;h1 id=&quot;motivation&quot;&gt;Motivation&lt;/h1&gt;
-
-&lt;p&gt;Sometimes, working with the code involves a lot of boilerplate snippets and source files. This often reduces creativity in development 
+        <description>&lt;p&gt;Sometimes, working with the code involves a lot of boilerplate snippets and source files. This often reduces creativity in development 
 and causes developer to think more about framework API or language syntax rather than to think more about the problem they are trying to solve.&lt;/p&gt;
 
 &lt;p&gt;TSS is tool which enables creation and usage of various templates for the code. It enables parametrized types which means a greater scope of possible boilerplate snippets
