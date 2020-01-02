@@ -6,8 +6,8 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 02 Jan 2020 23:01:00 +0100</pubDate>
-    <lastBuildDate>Thu, 02 Jan 2020 23:01:00 +0100</lastBuildDate>
+    <pubDate>Thu, 02 Jan 2020 23:06:12 +0100</pubDate>
+    <lastBuildDate>Thu, 02 Jan 2020 23:06:12 +0100</lastBuildDate>
     <generator>Jekyll v4.0.0</generator>
     
       <item>
@@ -81,28 +81,7 @@ which we can set.&lt;/p&gt;
 
 &lt;p&gt;Template has to contain file named &lt;code class=&quot;highlighter-rouge&quot;&gt;params.tps&lt;/code&gt;. This file has syntax you already saw while creating code from template using &lt;code class=&quot;highlighter-rouge&quot;&gt;tss create&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;All other files are part of template content and will be used to generate code. You can reference  variables using jinja2 syntax. For instance, this is example of java class
-&lt;code&gt;
-	package ;&lt;/code&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import java.util.Date;
-
-public class  {
-	
-	
-	public () 
-	{
-	}
-	public () {
-		super();
-		
-	}
-	
-	
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&amp;lt;/code&amp;gt;&lt;/p&gt;
+&lt;p&gt;All other files are part of template content and will be used to generate code. You can reference  variables using jinja2 syntax. For instance, you can see how java/class template looks like in templates directory.&lt;/p&gt;
 
 &lt;p&gt;As you can see, we can use all jinja2 capabilities including loops and branching as well.&lt;/p&gt;
 
