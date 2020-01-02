@@ -6,9 +6,127 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 24 Nov 2019 15:53:32 +0100</pubDate>
-    <lastBuildDate>Sun, 24 Nov 2019 15:53:32 +0100</lastBuildDate>
+    <pubDate>Thu, 02 Jan 2020 23:01:00 +0100</pubDate>
+    <lastBuildDate>Thu, 02 Jan 2020 23:01:00 +0100</lastBuildDate>
     <generator>Jekyll v4.0.0</generator>
+    
+      <item>
+        <title>Introduction to TSS - small tool for generating source code from templates</title>
+        <description>&lt;h1 id=&quot;motivation&quot;&gt;Motivation&lt;/h1&gt;
+
+&lt;p&gt;Sometimes, working with the code involves a lot of boilerplate snippets and source files. This often reduces creativity in development 
+and causes developer to think more about framework API or language syntax rather than to think more about the problem they are trying to solve.&lt;/p&gt;
+
+&lt;p&gt;TSS is tool which enables creation and usage of various templates for the code. It enables parametrized types which means a greater scope of possible boilerplate snippets
+can be reused. For instance, you can create template class and parametrize its name and fields in template.&lt;/p&gt;
+
+&lt;h1 id=&quot;installation&quot;&gt;Installation&lt;/h1&gt;
+
+&lt;p&gt;TSS can be installed by cloning this repository or via pip:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install tss 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;or, if you have downloaded source code from repository:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python setup.py install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;basic-usage&quot;&gt;basic usage&lt;/h1&gt;
+
+&lt;p&gt;So, let’s take a look how to reuse existing templates. TSS supports system of multiple template sources. In such a way, you can 
+download multiple set of existing templates from third parties and always keep track of where they come from.&lt;/p&gt;
+
+&lt;p&gt;There is default set of templates provided by this source code in templates directory, to add it to TSS use:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tss remote add default ./templates
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;first parameter after “remote add” command is name of source which can be whatever you want and second one is path to template collection.&lt;/p&gt;
+
+&lt;p&gt;Now, we can create simple java class from our template collection:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tss create java/class
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You should get editor opened with special settings file for you to fill in. When you set all parameters, you can save the file and close the editor and you will get new java class file created in directory in which you invoked tss command.&lt;/p&gt;
+
+&lt;p&gt;Now, let’s investigate further file which is opened in your editor. First of all, there are variables which you can set and every variable has its type. For instance, 
+you can see &lt;code class=&quot;highlighter-rouge&quot;&gt;name : string = &quot;MyClass&quot;&lt;/code&gt; which means variable name is set to value “MyClass” and is of type string. As user of template, you should never change variable names and their types, only their values. In this manner, you are able to set parameters used in template. For instance, in our case, we have name of the class
+which we can set.&lt;/p&gt;
+
+&lt;p&gt;There are 3 fundamental types: string, integer and boolean.&lt;/p&gt;
+
+&lt;p&gt;There are also complex types like dictionaries and lists. If you see type like &lt;code class=&quot;highlighter-rouge&quot;&gt;[string]&lt;/code&gt; it means this variable is list of strings. You should set it like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SomeParameter : [string] = [&quot;StringA&quot;, &quot;StringB&quot;, &quot;StringC&quot;]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;also, we you see &lt;code class=&quot;highlighter-rouge&quot;&gt;{a : string, b : string}&lt;/code&gt; it means it is dictionary with variables a and b and both of them are strings.&lt;/p&gt;
+
+&lt;p&gt;Common thing to see is list of dictionaries. You can also see in our java/class example where we can define fields of the class. For defining dictionary values, you can use syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;(a=&quot;StringA&quot;, b=&quot;StringB&quot;)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In our java class example, we can define fields by specifying field name and type.&lt;/p&gt;
+
+&lt;h1 id=&quot;creating-your-own-templates&quot;&gt;Creating your own templates&lt;/h1&gt;
+
+&lt;p&gt;All source files are written in Jinja2 template system. You can read more about Jinja2 &lt;a href=&quot;https://jinja.palletsprojects.com/en/2.10.x/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;First of all, you will need to make your template collection. This is normal directory on your file system. Then, you should create directory which is name of language used and then inside it directory with name of your template. Example would be:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- mytemplates 
+|- java
+|-|- mytemplate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Template has to contain file named &lt;code class=&quot;highlighter-rouge&quot;&gt;params.tps&lt;/code&gt;. This file has syntax you already saw while creating code from template using &lt;code class=&quot;highlighter-rouge&quot;&gt;tss create&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;All other files are part of template content and will be used to generate code. You can reference  variables using jinja2 syntax. For instance, this is example of java class
+&lt;code&gt;
+	package ;&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import java.util.Date;
+
+public class  {
+	
+	
+	public () 
+	{
+	}
+	public () {
+		super();
+		
+	}
+	
+	
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&amp;lt;/code&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see, we can use all jinja2 capabilities including loops and branching as well.&lt;/p&gt;
+
+&lt;p&gt;You can also parametrize names of files and directories inside the template. Just insert triple underscores before and after variable name. For instance, file containing above content can be named &lt;code class=&quot;highlighter-rouge&quot;&gt;___name___.java&lt;/code&gt; and TSS will rename it to name specified in &lt;code class=&quot;highlighter-rouge&quot;&gt;name&lt;/code&gt; variable during code generation.&lt;/p&gt;
+
+&lt;p&gt;If at least one variable in file name is unspecified or empty, file won’t be created.&lt;/p&gt;
+
+&lt;p&gt;NOTE: do not forget to add your template collection to TSS using &lt;code class=&quot;highlighter-rouge&quot;&gt;tss remote add &amp;lt;NAME&amp;gt; &amp;lt;PATH&amp;gt;&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;TSS can be used to generate code boilerplate for projects as well as for generating starting point for various documents (LaTeX, markdown etc…).&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 02 Jan 2020 15:15:00 +0100</pubDate>
+        <link>http://fantastic001.github.io/code/dev/2020/01/02/TSS.html</link>
+        <guid isPermaLink="true">http://fantastic001.github.io/code/dev/2020/01/02/TSS.html</guid>
+        
+        
+        <category>code</category>
+        
+        <category>dev</category>
+        
+      </item>
     
       <item>
         <title>C++ Value categories - making your constructors time and memory optimal</title>
@@ -870,73 +988,6 @@ which are C# libraries built to be used as powershell commandlets. This enabled 
         <category>tools</category>
         
         <category>dev</category>
-        
-      </item>
-    
-      <item>
-        <title>Uvod u finansijsku analizu - 2. deo</title>
-        <description>&lt;p&gt;U prethodnom delu sam uveo neke osnovne termine i koncepte u finansijskoj analizi. Ovde ću nastaviti sa analizom još nekih finansijskih instrumenata
-koje možemo upotrebiti bilo direktno bilo u modelovanju.&lt;/p&gt;
-
-&lt;h2 id=&quot;akcije&quot;&gt;Akcije&lt;/h2&gt;
-
-&lt;p&gt;Akcija je udeo u kompaniji. Ona investitoru omogućava glasačko pravo za biranje upravnog odbora kao i pravo na dividendu. Dividenda je deo profita koji, na odluku upravnog
-odbora, idu investitorima. Najčešće u intervalima od 3 meseca ili godinu dana ali to opet zavisi od odluke upravnog odbora.&lt;/p&gt;
-
-&lt;p&gt;Investitoor svoju zarad može da dobije na 2 načina: od dividendi ili od prodaje akcije (kapitalna dobit). U analizi koja sledi pretpostavićemo da investitor ne prodaje akciju i da zarađuje samo od dividendi.&lt;/p&gt;
-
-&lt;p&gt;Dakle, jedini protok novca koji postoji u tom slučaju jeste zarada od dividendi:&lt;/p&gt;
-
-&lt;p&gt;Akcija = {D1, D2, ….}&lt;/p&gt;
-
-&lt;p&gt;ako uzmemo model procene vrednosti po kom smo procenjivali i obveznice, dobijamo da je cena akcija: &lt;script type=&quot;math/tex&quot;&gt;V = \sum_{i=1}^\infty \frac{D_i}{(1 + r)^i}&lt;/script&gt;&lt;/p&gt;
-
-&lt;p&gt;Ovde r izražava rizik kao i kamatnu stopu.&lt;/p&gt;
-
-&lt;p&gt;Sada možemo analizirati neke trivijalne slučajeve koji nam mogu pomoći da lakše razumemo prirodu cene akcije.&lt;/p&gt;
-
-&lt;h2 id=&quot;akcije-koje-imaju-konstantnu-dividendu&quot;&gt;Akcije koje imaju konstantnu dividendu&lt;/h2&gt;
-
-&lt;p&gt;Iako većina kompanija nema fiksnu dividendu (težnja za rastom), analiza ovog slučaja daje rezultat koji nam može pomoći da analiziramo kompleksnije slučajeve:&lt;/p&gt;
-
-&lt;p&gt;U ovom slučaju je akcija = {D, D, D, …} i onda dobijamo model kao kod fiksnih večnih obveznica da je &lt;script type=&quot;math/tex&quot;&gt;v = D / r&lt;/script&gt;&lt;/p&gt;
-
-&lt;p&gt;Dakle, sa povećanjem rizika se cena smanjuje a sa povećanjem dividende se cena povećava.&lt;/p&gt;
-
-&lt;h2 id=&quot;akcije-sa-konstantnim-rastom&quot;&gt;Akcije sa konstantnim rastom&lt;/h2&gt;
-
-&lt;p&gt;Naravno, gornji model nije realan jer ne uzima u obzir da profit kompanije može da raste. Zbog ovoga uvodimo malo kompleksniji model koji kaže da se dividenda u svakoj iteraciji povećava 
-za g procenata i time dobijamo da je akcija = {D, D(1+g), D(1+g)^2, …}. Iz ovoga se dobija da je &lt;script type=&quot;math/tex&quot;&gt;V = \frac{D}{r - g}&lt;/script&gt;&lt;/p&gt;
-
-&lt;p&gt;Odavde se može zaključiti da što je rast veći (manji od r) i što je početna dividenda veća, to je cena akcije veća. Ako je rast mali u poređenju sa rizikom, onda to utiče na smanjenje
-vrednosti akcije. iz ovog modela se može i izraziti rizik koji kaže da je: &lt;script type=&quot;math/tex&quot;&gt;r = \frac{D}{P} + g&lt;/script&gt; . Izraz D/P se može videti sa listinga akcije na berzi i on
-predstavlja odnos poslednje isplaćene dividende i trenutne cene akcije. Ako znamo koliki je potencijalni rast ove kompanije, znamo i koliki je rizik.&lt;/p&gt;
-
-&lt;h2 id=&quot;berza&quot;&gt;Berza&lt;/h2&gt;
-
-&lt;p&gt;Berza je mesto za trgovanje akcijama i drugim hartijama od vrednosti. Što se akcije tiče, bitno je napomenuti da tu imamo dva tržišta: primarno i sekundarno. Na primarnom tržištu je prodavac uvek kompanija koja svoje akcije prodaje po prvi put (Initial Public Offering - IPO) koja ima potrebu za investiranjem u svoju tehnologiju i time traži finansijsku pomoć javnosti 
-kako bi finansirala svoje operacije. Na sekundarnom tržištu investitori trguju akcijama i tu se cene određuju principom ponude i potražnje a koje smo modelovali gore sa dva jednostavna modela.&lt;/p&gt;
-
-&lt;p&gt;Trgovanje izgleda tako što investitori koji žele akciju da kupe kažu koliko su spremni da plate za nju dok investitori koji prodaju akciju kažu koliko su spremni da dobiju za akciju (koliko je cene). Kada se izjednači minimalna cena prodavca (ona najmanja) i maksimalna cena koju je ponudio neki kupac, onda se desi transakcija između ta dva investitora. Ovo se danas uglavnom radi elektronski preko Interneta.&lt;/p&gt;
-
-&lt;h2 id=&quot;opcije&quot;&gt;Opcije&lt;/h2&gt;
-
-&lt;p&gt;Ovde ću samo ukratko objasniti šta su opcije i kako rade, mislim da ova dva blogposta ne treba da budu literatura iz finansijske analize. Dakle, opcije su hartije od vrednosti
-sa kojima se isto može trgovati kao i sa bilo kojim drugim hartijama od vrednosti. Opcija nam daje pravo da kupimo ili prodamo akciju po ceni koja je određena opcijom u zadatom terminu ili do zadatog termina. Dakle, one nas ne obavezuju da izvršimo transakciju već nam daju pravo da po fiksnoj ceni izvršimo transakciju. Tako, na primer, ako imamo opciju koja kaže da možemo kupiti akciju A po ceni od $500 u roku od mesec dana a cena akcije posle 15 bude $650 onda mi možemo iskoristiti opciju i kupiti po $500 a prodati po $650 i profitirati $150. Međutim, pošto ništa nije besplatno, u ovu računicu moramo uračunati i cenu opcije C tako da bismo zapravo dobili $150 - C.&lt;/p&gt;
-
-&lt;h2 id=&quot;literatura&quot;&gt;Literatura&lt;/h2&gt;
-
-&lt;p&gt;MIT ima dobar kurs na ovu temu: https://ocw.mit.edu/courses/sloan-school-of-management/15-401-finance-theory-i-fall-2008/video-lectures-and-slides/&lt;/p&gt;
-
-&lt;p&gt;Dobra knjiga: M. Capihski T. Zastawniak - Mathematics for finance&lt;/p&gt;
-
-</description>
-        <pubDate>Thu, 18 Oct 2018 11:15:00 +0200</pubDate>
-        <link>http://fantastic001.github.io/finance/2018/10/18/finansijska-analiza-2.html</link>
-        <guid isPermaLink="true">http://fantastic001.github.io/finance/2018/10/18/finansijska-analiza-2.html</guid>
-        
-        
-        <category>finance</category>
         
       </item>
     
