@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Introduction to TSS - small tool for generating source code from templates | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Introduction to TSS - small tool for generating source code from templates" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Sometimes, working with the code involves a lot of boilerplate snippets and source files. This often reduces creativity in development and causes developer to think more about framework API or language syntax rather than to think more about the problem they are trying to solve." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-01-02T15:15:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Introduction to TSS - small tool for generating source code from templates" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Introduction to TSS - small tool for generating source code from templates","dateModified":"2020-01-02T15:15:00+01:00","datePublished":"2020-01-02T15:15:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/code/dev/2020/01/02/TSS.html"},"description":"Sometimes, working with the code involves a lot of boilerplate snippets and source files. This often reduces creativity in development and causes developer to think more about framework API or language syntax rather than to think more about the problem they are trying to solve.","url":"http://fantastic001.github.io/code/dev/2020/01/02/TSS.html","@context":"https://schema.org"}</script>
+{"description":"Sometimes, working with the code involves a lot of boilerplate snippets and source files. This often reduces creativity in development and causes developer to think more about framework API or language syntax rather than to think more about the problem they are trying to solve.","headline":"Introduction to TSS - small tool for generating source code from templates","url":"http://fantastic001.github.io/code/dev/2020/01/02/TSS.html","dateModified":"2020-01-02T15:15:00+01:00","datePublished":"2020-01-02T15:15:00+01:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/code/dev/2020/01/02/TSS.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -110,12 +112,12 @@ can be reused. For instance, you can create template class and parametrize its n
 
 <p>TSS can be installed by cloning this repository or via pip:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install tss 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install tss 
 </code></pre></div></div>
 
 <p>or, if you have downloaded source code from repository:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python setup.py install
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python setup.py install
 </code></pre></div></div>
 
 <h1 id="basic-usage">basic usage</h1>
@@ -125,32 +127,32 @@ download multiple set of existing templates from third parties and always keep t
 
 <p>There is default set of templates provided by this source code in templates directory, to add it to TSS use:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tss remote add default ./templates
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tss remote add default ./templates
 </code></pre></div></div>
 
 <p>first parameter after “remote add” command is name of source which can be whatever you want and second one is path to template collection.</p>
 
 <p>Now, we can create simple java class from our template collection:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tss create java/class
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tss create java/class
 </code></pre></div></div>
 
 <p>You should get editor opened with special settings file for you to fill in. When you set all parameters, you can save the file and close the editor and you will get new java class file created in directory in which you invoked tss command.</p>
 
 <p>Now, let’s investigate further file which is opened in your editor. First of all, there are variables which you can set and every variable has its type. For instance, 
-you can see <code class="highlighter-rouge">name : string = "MyClass"</code> which means variable name is set to value “MyClass” and is of type string. As user of template, you should never change variable names and their types, only their values. In this manner, you are able to set parameters used in template. For instance, in our case, we have name of the class
+you can see <code class="language-plaintext highlighter-rouge">name : string = "MyClass"</code> which means variable name is set to value “MyClass” and is of type string. As user of template, you should never change variable names and their types, only their values. In this manner, you are able to set parameters used in template. For instance, in our case, we have name of the class
 which we can set.</p>
 
 <p>There are 3 fundamental types: string, integer and boolean.</p>
 
-<p>There are also complex types like dictionaries and lists. If you see type like <code class="highlighter-rouge">[string]</code> it means this variable is list of strings. You should set it like this:</p>
+<p>There are also complex types like dictionaries and lists. If you see type like <code class="language-plaintext highlighter-rouge">[string]</code> it means this variable is list of strings. You should set it like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SomeParameter : [string] = ["StringA", "StringB", "StringC"]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SomeParameter : [string] = ["StringA", "StringB", "StringC"]
 </code></pre></div></div>
 
-<p>also, we you see <code class="highlighter-rouge">{a : string, b : string}</code> it means it is dictionary with variables a and b and both of them are strings.</p>
+<p>also, we you see <code class="language-plaintext highlighter-rouge">{a : string, b : string}</code> it means it is dictionary with variables a and b and both of them are strings.</p>
 
-<p>Common thing to see is list of dictionaries. You can also see in our java/class example where we can define fields of the class. For defining dictionary values, you can use syntax: <code class="highlighter-rouge">(a="StringA", b="StringB")</code>.</p>
+<p>Common thing to see is list of dictionaries. You can also see in our java/class example where we can define fields of the class. For defining dictionary values, you can use syntax: <code class="language-plaintext highlighter-rouge">(a="StringA", b="StringB")</code>.</p>
 
 <p>In our java class example, we can define fields by specifying field name and type.</p>
 
@@ -160,22 +162,22 @@ which we can set.</p>
 
 <p>First of all, you will need to make your template collection. This is normal directory on your file system. Then, you should create directory which is name of language used and then inside it directory with name of your template. Example would be:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- mytemplates 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- mytemplates 
 |- java
 |-|- mytemplate
 </code></pre></div></div>
 
-<p>Template has to contain file named <code class="highlighter-rouge">params.tps</code>. This file has syntax you already saw while creating code from template using <code class="highlighter-rouge">tss create</code>.</p>
+<p>Template has to contain file named <code class="language-plaintext highlighter-rouge">params.tps</code>. This file has syntax you already saw while creating code from template using <code class="language-plaintext highlighter-rouge">tss create</code>.</p>
 
 <p>All other files are part of template content and will be used to generate code. You can reference  variables using jinja2 syntax. For instance, you can see how java/class template looks like in templates directory.</p>
 
 <p>As you can see, we can use all jinja2 capabilities including loops and branching as well.</p>
 
-<p>You can also parametrize names of files and directories inside the template. Just insert triple underscores before and after variable name. For instance, file containing above content can be named <code class="highlighter-rouge">___name___.java</code> and TSS will rename it to name specified in <code class="highlighter-rouge">name</code> variable during code generation.</p>
+<p>You can also parametrize names of files and directories inside the template. Just insert triple underscores before and after variable name. For instance, file containing above content can be named <code class="language-plaintext highlighter-rouge">___name___.java</code> and TSS will rename it to name specified in <code class="language-plaintext highlighter-rouge">name</code> variable during code generation.</p>
 
 <p>If at least one variable in file name is unspecified or empty, file won’t be created.</p>
 
-<p>NOTE: do not forget to add your template collection to TSS using <code class="highlighter-rouge">tss remote add &lt;NAME&gt; &lt;PATH&gt;</code> command.</p>
+<p>NOTE: do not forget to add your template collection to TSS using <code class="language-plaintext highlighter-rouge">tss remote add &lt;NAME&gt; &lt;PATH&gt;</code> command.</p>
 
 <h1 id="conclusion">Conclusion</h1>
 

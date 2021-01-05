@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Instant API | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Instant API" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Today, we live in world of micro services. Now, it is important to make your application accessible to other applications more than ever. The problem is that this task is very often easier said than done. We often want to expose some kind of interface to our application. This is usually done using HTTP protocol because there are lot of libraries for making HTTP communication easy. This article is about Python library I’ve made to ease this process. The library is called Instant API and you can find it here." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-10-05T13:15:00+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Instant API" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Instant API","dateModified":"2019-10-05T13:15:00+02:00","datePublished":"2019-10-05T13:15:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/python/instant-api/web/rest/2019/10/05/instant-api.html"},"description":"Today, we live in world of micro services. Now, it is important to make your application accessible to other applications more than ever. The problem is that this task is very often easier said than done. We often want to expose some kind of interface to our application. This is usually done using HTTP protocol because there are lot of libraries for making HTTP communication easy. This article is about Python library I’ve made to ease this process. The library is called Instant API and you can find it here.","url":"http://fantastic001.github.io/python/instant-api/web/rest/2019/10/05/instant-api.html","@context":"https://schema.org"}</script>
+{"description":"Today, we live in world of micro services. Now, it is important to make your application accessible to other applications more than ever. The problem is that this task is very often easier said than done. We often want to expose some kind of interface to our application. This is usually done using HTTP protocol because there are lot of libraries for making HTTP communication easy. This article is about Python library I’ve made to ease this process. The library is called Instant API and you can find it here.","headline":"Instant API","url":"http://fantastic001.github.io/python/instant-api/web/rest/2019/10/05/instant-api.html","dateModified":"2019-10-05T13:15:00+02:00","datePublished":"2019-10-05T13:15:00+02:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/python/instant-api/web/rest/2019/10/05/instant-api.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -104,25 +106,25 @@
 very often easier said than done. We often want to expose some kind of interface to our application. This is usually done using HTTP protocol because there are lot of libraries 
 for making HTTP communication easy. This article is about Python library I’ve made to ease this process. The library is called Instant API and you can find it <a href="https://gitlab.com/fantastic001/InstantAPI">here</a>.</p>
 
-<p>The idea is to build your API by adding handlers. A handler is some endpoint (actually, it is subset of endpoints in your API) which handles specific type of request. For instance, you can have handler which will handle all endpoints on <code class="highlighter-rouge">/myhandler/</code> path like <code class="highlighter-rouge">/myhandler/A</code> , <code class="highlighter-rouge">/myhandler/B/123</code> etc…</p>
+<p>The idea is to build your API by adding handlers. A handler is some endpoint (actually, it is subset of endpoints in your API) which handles specific type of request. For instance, you can have handler which will handle all endpoints on <code class="language-plaintext highlighter-rouge">/myhandler/</code> path like <code class="language-plaintext highlighter-rouge">/myhandler/A</code> , <code class="language-plaintext highlighter-rouge">/myhandler/B/123</code> etc…</p>
 
 <p>Your API has to have at least one, default handler. Default handler will handle all subpaths that are not handled by some other handler.</p>
 
 <p>Another thing is type of objects which Instant API uses. These objects are called CloudObjects and you can construct them in Python very easily:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>myobject = CloudObject(name="somename", age=25)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>myobject = CloudObject(name="somename", age=25)
 </code></pre></div></div>
 
 <p>As you can see, these objects are like dicts. You can specify whatever fields to them. You can get particular field by accessing its attributes:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>print(myobject.name)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>print(myobject.name)
 </code></pre></div></div>
 
 <h1 id="example-with-simple-server-with-simple-file-system-handler">Example with simple server with simple file system handler</h1>
 
 <p>Here is an example of API creation in Python with one default handler: FSHandler. This handler will handle GET requests which will get content of a file and POST request which will handle writing to file. Since we are working with CloudObject objects, file created will be JSON serialized representation of object.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from InstantAPI.http import HTTPServer
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from InstantAPI.http import HTTPServer
 from InsttantAPI.handlers import *
 from InstantAPI import CloudServer
 import sys
@@ -133,9 +135,9 @@ print("Running server on port 8080")
 HTTPServer(cloud, port=8080).serve()
 </code></pre></div></div>
 
-<p>As simple as that. Endpoint for FSHandler is <code class="highlighter-rouge">/data/</code> so you can try it out with curl:</p>
+<p>As simple as that. Endpoint for FSHandler is <code class="language-plaintext highlighter-rouge">/data/</code> so you can try it out with curl:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X POST -d '{"name": "John"}' "localhost:8080/data/john"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X POST -d '{"name": "John"}' "localhost:8080/data/john"
 </code></pre></div></div>
 
 <p>and you will see file created in directory you specified as first argument to your server (root path where files are served).</p>
@@ -144,9 +146,9 @@ HTTPServer(cloud, port=8080).serve()
 
 <h1 id="another-example-with-two-handlers">Another example with two handlers</h1>
 
-<p>This is example where we have default handler FSHandler and TimeHandler on endpoint <code class="highlighter-rouge">/time</code> which will return current time.</p>
+<p>This is example where we have default handler FSHandler and TimeHandler on endpoint <code class="language-plaintext highlighter-rouge">/time</code> which will return current time.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from InstantAPI.http import HTTPServer
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from InstantAPI.http import HTTPServer
 from InsttantAPI.handlers import *
 from InstantAPI import CloudServer
 import sys
@@ -159,12 +161,12 @@ HTTPServer(cloud, port=8080).serve()
 
 <p>you can try it out with curl:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X GET localhost:8080/time
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X GET localhost:8080/time
 </code></pre></div></div>
 
 <p>and you will get something like:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"time": "2019-10-05 13:22:03.206878"}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"time": "2019-10-05 13:22:03.206878"}
 </code></pre></div></div>
 
 <h1 id="current-state-and-extensions">Current state and extensions</h1>
@@ -173,14 +175,14 @@ HTTPServer(cloud, port=8080).serve()
 
 <p>You can implement your own handler by inheriting CloudHandler class and implementing handle and handlePut functions.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def handlle(self, path, state={})
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def handlle(self, path, state={})
 def handlePut(self, path, state={}, obj=CloudObject())
 </code></pre></div></div>
 
-<p>These functions will be called on POST and GET requests. You will also need to set <code class="highlighter-rouge">HANDLES</code> field in your class and put there string with which your handler is 
+<p>These functions will be called on POST and GET requests. You will also need to set <code class="language-plaintext highlighter-rouge">HANDLES</code> field in your class and put there string with which your handler is 
 identified when parsing endpoint path. For instance:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyHandler(ClooudHandler):
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyHandler(ClooudHandler):
 	
 	HANDLES = "myhandler"
 	def handlle(self, path, state={}):
@@ -189,7 +191,7 @@ identified when parsing endpoint path. For instance:</p>
 		pass
 </code></pre></div></div>
 
-<p>will be called on all paths starting with <code class="highlighter-rouge">/myhandler/</code>.</p>
+<p>will be called on all paths starting with <code class="language-plaintext highlighter-rouge">/myhandler/</code>.</p>
 
 <p>You can see source code of existing handlers how are they implemented.</p>
 

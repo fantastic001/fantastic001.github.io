@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Introduction to computing with CUDA | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Introduction to computing with CUDA" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Recently I have worked on fluid simulation project developed for CUDA-enabled GPU. Here I am going to explain what is CUDA and to introduce few concepts needed to start programming on GPU." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-08-06T00:15:00+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Introduction to computing with CUDA" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Introduction to computing with CUDA","dateModified":"2018-08-06T00:15:00+02:00","datePublished":"2018-08-06T00:15:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/cuda/2018/08/06/cuda-intro.html"},"description":"Recently I have worked on fluid simulation project developed for CUDA-enabled GPU. Here I am going to explain what is CUDA and to introduce few concepts needed to start programming on GPU.","url":"http://fantastic001.github.io/cuda/2018/08/06/cuda-intro.html","@context":"https://schema.org"}</script>
+{"description":"Recently I have worked on fluid simulation project developed for CUDA-enabled GPU. Here I am going to explain what is CUDA and to introduce few concepts needed to start programming on GPU.","headline":"Introduction to computing with CUDA","url":"http://fantastic001.github.io/cuda/2018/08/06/cuda-intro.html","dateModified":"2018-08-06T00:15:00+02:00","datePublished":"2018-08-06T00:15:00+02:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/cuda/2018/08/06/cuda-intro.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -144,7 +146,7 @@ On NVIDIA website you can find CMakeLists.txt for CUDA <a href="https://devblogs
 
 <p>So our first programs will begin as usual, with main function:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int main() 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int main() 
 {
 	
 	return 0;
@@ -153,7 +155,7 @@ On NVIDIA website you can find CMakeLists.txt for CUDA <a href="https://devblogs
 
 <p>And now we will need to compile it:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake . 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake . 
 make 
 </code></pre></div></div>
 
@@ -178,7 +180,7 @@ make
 
 <p>Well, this is easy, we did that billion of times:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int a[1000];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int a[1000];
 int b[1000];
 for (int i = 0; i&lt;1000; ++i) 
 {
@@ -193,7 +195,7 @@ for (int i = 0; i&lt;1000; ++i)
 
 <p>For this we will use cudaMalloc. It works in a way that we provide it a pointer to pointer which will point to allocated memory on GPU.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int *cuda_a, *cuda_b;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int *cuda_a, *cuda_b;
 cudaMalloc(&amp;cuda_a, sizeof(int) * 1000);
 cudaMalloc(&amp;cuda_b, sizeof(int) * 1000);
 </code></pre></div></div>
@@ -212,7 +214,7 @@ transfer to GPU or from GPU and can be: cudaMemcpyHostToDevice or cudaMemcpyDevi
 
 <p>Here we want to transfer from CPU too GPU so we will do:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cudaMemcpy(cuda_a, a, sizeof(int) * 1000, cudaMemcpyHostToDevice);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cudaMemcpy(cuda_a, a, sizeof(int) * 1000, cudaMemcpyHostToDevice);
 cudaMemcpy(cuda_b, b, sizeof(int) * 1000, cudaMemcpyHostToDevice);
 </code></pre></div></div>
 
@@ -220,7 +222,7 @@ cudaMemcpy(cuda_b, b, sizeof(int) * 1000, cudaMemcpyHostToDevice);
 
 <p>Process is same ass before, we just use cudaMalloc:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int res[1000]; 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int res[1000]; 
 int *cuda_res;
 cudaMalloc(&amp;cuda_res, sizeof(int) * 1000);
 </code></pre></div></div>
@@ -229,23 +231,23 @@ cudaMalloc(&amp;cuda_res, sizeof(int) * 1000);
 
 <p>For our sum computation, we will need kernel function. Kernel function is function which is called in parallel. Since we provide two arrays to it, this means that every core will compute small portion of result:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>__global__ void sum(int*a, int*b, int* res) 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>__global__ void sum(int*a, int*b, int* res) 
 {
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 	res[i] = a[i] + b[i];
 }
 </code></pre></div></div>
 
-<p>you can notice that we have used <code class="highlighter-rouge">__globall__</code> macro which tells nvcc that this function is kernel function which means is executed on GPU but called from CPU. We also can use <code class="highlighter-rouge">__device__</code> and <code class="highlighter-rouge">__host__</code> macros to represent functions on GPU and CPU-only.</p>
+<p>you can notice that we have used <code class="language-plaintext highlighter-rouge">__globall__</code> macro which tells nvcc that this function is kernel function which means is executed on GPU but called from CPU. We also can use <code class="language-plaintext highlighter-rouge">__device__</code> and <code class="language-plaintext highlighter-rouge">__host__</code> macros to represent functions on GPU and CPU-only.</p>
 
 <p>Now we can call this function from main:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sum&lt;&lt;&lt;4,250&gt;&gt;&gt;(cuda_a, cuda_b, cuda_res);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sum&lt;&lt;&lt;4,250&gt;&gt;&gt;(cuda_a, cuda_b, cuda_res);
 </code></pre></div></div>
 
 <p>First number in this «&lt; … »&gt; block is number of blocks used and second is number of threads used. Problem with this kernel function is that, if we change number of blocks or threads per block, it won’t be correct anymore, for instance 1,256 won’t work because it will populate only first 256 elements. To solve this, we can use block-stride loop like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (int i = blockDim.x * blockIdx.x + threadIdx.x; i&lt;1000; i += gridDim.x * blockDim.x) 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (int i = blockDim.x * blockIdx.x + threadIdx.x; i&lt;1000; i += gridDim.x * blockDim.x) 
 {
 	res[i] = a[i] + b[i];
 }
@@ -257,7 +259,7 @@ cudaMalloc(&amp;cuda_res, sizeof(int) * 1000);
 
 <p>After we call kernel function, CPU will continue its execution because kernel is executing on GPU, so we need to wait until kernel function finishes because our next steps depend on result of GPU computation. We can use synchronization for that, after kernel function call:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cudaDeviceSynchronize();
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cudaDeviceSynchronize();
 </code></pre></div></div>
 
 <p>and this function will block until kernel finishes.</p>
@@ -266,7 +268,7 @@ cudaMalloc(&amp;cuda_res, sizeof(int) * 1000);
 
 <p>To transfer result back to CPU we use cudaMemcpy and cudaMemcpyDeviceToHost like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cudaMemcpy(res, cuda_res, sizeof(int) * 1000, cudaMemcpyDeviceToHost);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cudaMemcpy(res, cuda_res, sizeof(int) * 1000, cudaMemcpyDeviceToHost);
 </code></pre></div></div>
 
 <p>Now we can print result or do whatever we want with it.</p>
@@ -275,9 +277,9 @@ cudaMalloc(&amp;cuda_res, sizeof(int) * 1000);
 
 <p>Now when we know how CUDA works, let’s list some best practices for it. First of all, if possible, try to maintain data on GPU as long as possible and do data transfers as few as possible because data transfers are costly. Also, if-branching in GPU is very costly so try to avoid it as much as possible.</p>
 
-<p>If you want to have function which executes on CPU and GPU (<code class="highlighter-rouge">__host__ __device__</code><code class="highlighter-rouge">) then you can change its code if needed by investigating </code><strong>CUDA_ARCH</strong>` macro is defined. For instance:</p>
+<p>If you want to have function which executes on CPU and GPU (<code class="language-plaintext highlighter-rouge">__host__ __device__</code><code class="language-plaintext highlighter-rouge">) then you can change its code if needed by investigating </code><strong>CUDA_ARCH</strong>` macro is defined. For instance:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef __CUDA_ARCH__
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef __CUDA_ARCH__
 	for (int i = 0; i&lt;n; i++) 
 #else 
 	for (int i = blockDim.x * blockIdx.x + threadIdx.x; i&lt;n; i += gridDim.x * blockDim.x)
@@ -289,7 +291,7 @@ cudaMalloc(&amp;cuda_res, sizeof(int) * 1000);
 
 <p>Every CUDA call exposes some error info as its return value so here is the way how to catch it and print it:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#define cudaCatch(ans) { gpuAssert((ans), __FILE__, __LINE__); }
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#define cudaCatch(ans) { gpuAssert((ans), __FILE__, __LINE__); }
 inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=true)
 {
         if (code != cudaSuccess)
@@ -302,7 +304,7 @@ inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=t
 
 <p>so you need to call cuda functions like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cudaCatch(cudaDeviceSynchronize());
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cudaCatch(cudaDeviceSynchronize());
 </code></pre></div></div>
 
 <p>and it will catch some errors if they exist and you will be notified on standard output.</p>

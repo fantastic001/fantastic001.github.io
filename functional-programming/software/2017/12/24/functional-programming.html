@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>A bit of functional programming by example in Haskell | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="A bit of functional programming by example in Haskell" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventually be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straightforward and I will give explanation for things which may seem strange." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-12-24T12:15:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="A bit of functional programming by example in Haskell" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"A bit of functional programming by example in Haskell","dateModified":"2017-12-24T12:15:00+01:00","datePublished":"2017-12-24T12:15:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html"},"description":"Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventually be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straightforward and I will give explanation for things which may seem strange.","url":"http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html","@context":"https://schema.org"}</script>
+{"description":"Recently I’ve started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain. In this article I will try to make some clarifications about this approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking so I am willing to make this process easier for you. I know you’ve been doing Java or c# for a long time. I know you know the bad things in these languages. I know you are sick of OOP or you will eventually be sick of OOP. I will try to explain some pitfalls of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell but you don’t need to be familiar with Haskell to understand examples since they’re pretty straightforward and I will give explanation for things which may seem strange.","headline":"A bit of functional programming by example in Haskell","url":"http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html","dateModified":"2017-12-24T12:15:00+01:00","datePublished":"2017-12-24T12:15:00+01:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/functional-programming/software/2017/12/24/functional-programming.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -119,7 +121,7 @@ imperative approach, we say how to compute factorial of n: “start with 1 and s
 
 <p>In above example you can see one important difference between these approaches. In declarative programming we define value only once. Translated in language you already know, think of this as using only constant variables instead of common variables which can change state later. This is called immutability which means “when defined once, cannot be changed later”. Take a look at the following example of C code:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
 
 int f( int* x ) 
 {
@@ -176,7 +178,7 @@ use:</p>
 
 <p>First we will define our list element structure:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef struct ListElem_t
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef struct ListElem_t
 {
         int value;
         struct ListElem_t* next;
@@ -188,7 +190,7 @@ nothing after this element.</p>
 
 <p>Now let’s create method that will reserve memory for our element and return instance of this element:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ListElem* create_element(int value, ListElem* next)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ListElem* create_element(int value, ListElem* next)
 {
         ListElem* elem = (ListElem*) malloc(sizeof(ListElem));
         elem-&gt;value = value;
@@ -202,7 +204,7 @@ from parameters and assigns next element to the element given as argument. At th
 
 <p>Now we can create our List structure which basically has only pointer to the head of list:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef struct
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef struct
 {
         ListElem* head;
 } List;
@@ -210,7 +212,7 @@ from parameters and assigns next element to the element given as argument. At th
 
 <p>Now we will create function that, for a given list element, creates list with head assigned to the given list element:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>List* create_list(ListElem* head)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>List* create_list(ListElem* head)
 {
         List* l = (List*) malloc(sizeof(List));
         l-&gt;head = head;
@@ -227,7 +229,7 @@ approach is inefficient. The good news are that we do not have to do that. We wi
 which has head pointing to the new element. Next pointer of new element will be just head of our list in arguments so we basically 
 do not copy anything. We can do this trick because immutability guarantees that elements of the list won’t be changed in any time.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>List* push(List* l, int value)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>List* push(List* l, int value)
 {
         return create_list(create_element(value, l-&gt;head));
 }
@@ -235,7 +237,7 @@ do not copy anything. We can do this trick because immutability guarantees that 
 
 <p>Now let’s make function that will return new list but without head of a given list (i.e. tail of list):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>List* tail(List* l)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>List* tail(List* l)
 {
         return create_list(l-&gt;head-&gt;next);
 }
@@ -246,7 +248,7 @@ If list is empty, behaviour of tail is not defined so we will end up with segmen
 
 <p>For debugging purposes we will make print function.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void print(List* l)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void print(List* l)
 {
         if (l-&gt;head == NULL) printf("\n");
         else
@@ -259,7 +261,7 @@ If list is empty, behaviour of tail is not defined so we will end up with segmen
 
 <p>So now we can test our list in main:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int main() {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int main() {
         List *l = create_list(NULL);
         push(l, 5);
         print(l);
@@ -289,13 +291,13 @@ Types in Haskell must begin with upper case letter. To test examples, you can ru
 
 <p>Let’s make our first function which takes a number and return square of that number.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sq :: Int -&gt; Int
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sq :: Int -&gt; Int
 sq x = x*x
 </code></pre></div></div>
 
 <p>So we can run this in ghci like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ghci example.hs 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ghci example.hs 
 &gt;&gt;&gt; sq 5 
 25
 &gt;&gt;&gt;
@@ -305,7 +307,7 @@ sq x = x*x
 
 <p>Now let’s define function that computes sum of two integers:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add :: Int -&gt; Int -&gt; Int 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add :: Int -&gt; Int -&gt; Int 
 add a b = a+b
 </code></pre></div></div>
 
@@ -315,12 +317,12 @@ which takes one integer and returns function which takes another integer which t
 
 <p>This can be easily proven by passing only one parameter to the function:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inc = add 1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inc = add 1
 </code></pre></div></div>
 
 <p>Now inc is function which takes one parameter and returns that parameter increased by one. For instance</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inc 5 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inc 5 
 </code></pre></div></div>
 
 <p>will return 6.</p>
@@ -331,49 +333,49 @@ which takes one integer and returns function which takes another integer which t
 
 <p>To define list:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>l = [1,2,3]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>l = [1,2,3]
 </code></pre></div></div>
 
 <p>to get head of the list you can simply do:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head l 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head l 
 </code></pre></div></div>
 
 <p>to get tail of list:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tail l
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tail l
 </code></pre></div></div>
 
 <p>you can do list concatenation which will merge two lists in a new list:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>l = l1 ++ l2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>l = l1 ++ l2
 </code></pre></div></div>
 
 <p>to get list with new element added to the head (our push function):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>l2 = 5 : l
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>l2 = 5 : l
 </code></pre></div></div>
 
 <p>To get list as range of numbers:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>range = [1..10] 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>range = [1..10] 
 </code></pre></div></div>
 
 <p>Now we get to interesting stuff: list comprehension!</p>
 
 <p>This is something you have already seen in math: you can define list by specifying its general element. For instance:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>squares = [x*x | x &lt;- [1..10]]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>squares = [x*x | x &lt;- [1..10]]
 </code></pre></div></div>
 
 <p>or you can add additional condition, for instance squares divisible by 3:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>squares = [x*x | x &lt;- [1..10], x*x `mod` 3 == 0]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>squares = [x*x | x &lt;- [1..10], x*x `mod` 3 == 0]
 </code></pre></div></div>
 
 <p>or to define list of tuples which have property that their distance from (0,0) is less than 1:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unitcircle = [(x,y) | x &lt;- [0, 0.01..10], y &lt;- [0,0.01..10], x*x + y*y &lt; 1]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unitcircle = [(x,y) | x &lt;- [0, 0.01..10], y &lt;- [0,0.01..10], x*x + y*y &lt; 1]
 </code></pre></div></div>
 
 <p>Note that I have specified step for our ranges for x and y as well.</p>
@@ -383,7 +385,7 @@ which takes one integer and returns function which takes another integer which t
 <p>Something very useful in functional programming languages is pattern matching. Imagine you are trying to implement factorial. First you will check is parameter is zero. If it is, return 1, else return that number times factorial of number decreased by one. 
 In Haskell this checking can be easily written using pattern matching:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fact :: Int -&gt; Int
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fact :: Int -&gt; Int
 fact 0 = 1
 fact n = n * (fact (n-1))
 </code></pre></div></div>
@@ -392,7 +394,7 @@ fact n = n * (fact (n-1))
 
 <p>For example the following function will return 1 if any of its two arguments is zero, 0 otherwise:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>anyzero :: Int -&gt; Int -&gt; Int
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>anyzero :: Int -&gt; Int -&gt; Int
 anyzero 0 x = 1
 anyzero x 0 = 1
 anyzero x y = 0
@@ -400,7 +402,7 @@ anyzero x y = 0
 
 <p>Some list functions</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mymap :: (a -&gt; b) -&gt; [a] -&gt; [b]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mymap :: (a -&gt; b) -&gt; [a] -&gt; [b]
 mymap _ [] = []
 mymap f (x:xs) = (f x) : (mymap f xs)
 
@@ -426,7 +428,7 @@ myfilter f (x:xs) = if (f x) then x : (myfilter f xs) else myfilter f xs
 
 <p>Function which removes repeating elements</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>norepeat :: (Eq a) =&gt; [a] -&gt; [a]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>norepeat :: (Eq a) =&gt; [a] -&gt; [a]
 norepeat [] = [] 
 norepeat (x:[]) = [x]
 norepeat (x:y:xs) = if x == y then norepeat (x:xs) else x:(norepeat (y:xs))
@@ -444,14 +446,14 @@ norepeat (x:y:xs) = if x == y then norepeat (x:xs) else x:(norepeat (y:xs))
 
 <p>Quick sort</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>qsort :: [Int] -&gt; [Int]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>qsort :: [Int] -&gt; [Int]
 qsort [] = []
 qsort l = (qsort [x | x&lt;-l, x &lt; y]) ++ [y] ++ (qsort [x | x&lt;-l, x&gt;y]) where y = (head l)
 </code></pre></div></div>
 
 <p>Splitting string into words</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>findFirstWord :: [Char] -&gt; ([Char], [Char])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>findFirstWord :: [Char] -&gt; ([Char], [Char])
 findFirstWord "" = ("", "")
 findFirstWord " " = ("", "")
 findFirstWord s =
@@ -467,7 +469,7 @@ split s = let (x, y) = findFirstWord s
 
 <p>String length</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>strlen :: String -&gt; Int
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>strlen :: String -&gt; Int
 strlen s
     | s == "" = 0
     | otherwise = 1 + (strlen $ tail s)
@@ -478,7 +480,7 @@ strlen s
 <p>We can define data types by specifying type name and its constructors. Let’s take an example and make Zipper data type. This type
 is used mostly in editors. It is basically a list with focused element. You can go left or right and move focus around the list.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Zipper a = Zip [a] a [a] deriving (Show)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Zipper a = Zip [a] a [a] deriving (Show)
 
 right :: Zipper a -&gt; Zipper a
 right (Zip l focus []) = Zip l focus [] 
@@ -492,7 +494,7 @@ left (Zip l focus r) = Zip (tail l) (head l) (focus:r)
 
 <p>now we can do the following:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*Main&gt; z = Zip [3, 2, 1] 4 [5, 6, 7]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*Main&gt; z = Zip [3, 2, 1] 4 [5, 6, 7]
 *Main&gt; right z 
 Zip [4,3,2,1] 5 [6,7]
 *Main&gt; left $ right z 
@@ -511,7 +513,7 @@ Zip [] 1 [2,3,4,5,6,7]
 <p>Another example is binary tree node. Note that node can be empty (has no children and no value). Here we are using Haskell’s record
 syntax which gives us functions for extracting data. This is not usual way for implementing node in binary tree (we can go pretty well with usual data type definition as above) but we show this to demonstrate record syntax.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data TreeNode = Node {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data TreeNode = Node {
         left :: Node,
         right :: Node,
         value :: Int
@@ -563,7 +565,7 @@ with passed argument and returns it. This is best illustrated with simple exampl
 integer with list of strings which represents debug info. We first make type Debuggable and then implement bind and ret. Other 
 functions are implemented the same way as inc which increases number by one and stores message in a log.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Debuggable = Debuggable (Int, [[Char]]) deriving (Show)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Debuggable = Debuggable (Int, [[Char]]) deriving (Show)
 
 
 ret :: Int -&gt; Debuggable 
@@ -581,7 +583,7 @@ and additional info provided by calling function.</p>
 
 <p>We are deriving Show here to make our type printable on console. Now we can do something like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*Main&gt; ret 5 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*Main&gt; ret 5 
 Debuggable (5,[])
 *Main&gt; inc 5 
 Debuggable (6,["Number increased by one"])
@@ -594,7 +596,7 @@ Debuggable (7,["Number increased by one","Number increased by one"])
 
 <p>Haskell has its own way of defining monads by implementing these operators such that Haskell understands them correctly as monads.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Control.Applicative -- Otherwise you can't do the Applicative instance.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Control.Applicative -- Otherwise you can't do the Applicative instance.
 import Control.Monad (liftM, ap)
 
 data Debuggable a = Debuggable (a, [[Char]]) deriving (Show)
@@ -617,14 +619,14 @@ inc x = Debuggable (x+1, ["Number increased by one"])
 
 <p>Now we can do something like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*Main&gt; (inc 5) &gt;&gt;= (\x -&gt; (return x) &gt;&gt;= inc)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*Main&gt; (inc 5) &gt;&gt;= (\x -&gt; (return x) &gt;&gt;= inc)
 Debuggable (7,["Number increased by one","Number increased by one"])
 *Main&gt;
 </code></pre></div></div>
 
 <p>You can see how we use bind operator here. Haskell has syntatic sugar for this and it’s called do-notation</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inc2 :: Int -&gt; Debuggable Int 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inc2 :: Int -&gt; Debuggable Int 
 inc2 num = do 
   x &lt;- inc num
   y &lt;- inc x 
@@ -635,7 +637,7 @@ inc2 num = do
 
 <p>This is just unit wrapping around type, nothing special:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Control.Applicative -- Otherwise you can't do the Applicative instance.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Control.Applicative -- Otherwise you can't do the Applicative instance.
 import Control.Monad (liftM, ap)
 
 data Unit a = Unit a deriving (Show)
@@ -656,7 +658,7 @@ instance Monad Unit where
 
 <p>Useful if you have something which can be “null” or undefined. Value of this type can be something useful or nothing.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Control.Applicative -- Otherwise you can't do the Applicative instance.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Control.Applicative -- Otherwise you can't do the Applicative instance.
 import Control.Monad (liftM, ap)
 
 data Maybe a = Just a | Nothing
@@ -681,23 +683,23 @@ executable without interactive mode. HAHAHAHA I know what you are thinking, we a
 
 <p>you can compile your program with:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ghc hello.hs -o hello -dynamic 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ghc hello.hs -o hello -dynamic 
 </code></pre></div></div>
 
 <p>and run it with:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./hello
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./hello
 </code></pre></div></div>
 
 <p>and here it is:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>main :: IO ()
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>main :: IO ()
 main = putStrLn "Hello world!" 
 </code></pre></div></div>
 
 <p>Let’s make small i/o program!</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>main :: IO ()
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>main :: IO ()
 main = do
   putStrLn "Enter your name"
   name &lt;- getLine
@@ -708,7 +710,7 @@ main = do
 
 <p>you can create data types like so:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Person = Person {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Person = Person {
 	firstName :: String,
 	lastName :: String,
 	age :: Int
@@ -717,12 +719,12 @@ main = do
 
 <p>and then you can get data from Person value like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fullName p = (firstName p) ++ (lastName p)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fullName p = (firstName p) ++ (lastName p)
 </code></pre></div></div>
 
 <p>or create new value:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>john = Person {firstName = "John", lastName = "Johnson", age=55}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>john = Person {firstName = "John", lastName = "Johnson", age=55}
 </code></pre></div></div>
 
 <h1 id="appendix-2-interesting-links">Appendix 2: Interesting links</h1>

@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>ScaPy - analiza protokola upotrebom Python-a | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="ScaPy - analiza protokola upotrebom Python-a" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="ScaPy je biblioteka za Python koja pruža sastavljanje paketa od “parčića”. Na primer, možemo IP deo spojiti sa TCP delom i na kraju konkretan sadržaj paketa i to poslati serveru. Pored ovoga, ova biblioteka nam pruža i mogućnost “slušanja” dolazećih poruka i odgovaranje na njih." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-05-08T18:15:00+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="ScaPy - analiza protokola upotrebom Python-a" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"ScaPy - analiza protokola upotrebom Python-a","dateModified":"2017-05-08T18:15:00+02:00","datePublished":"2017-05-08T18:15:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/python/2017/05/08/scapy.html"},"description":"ScaPy je biblioteka za Python koja pruža sastavljanje paketa od “parčića”. Na primer, možemo IP deo spojiti sa TCP delom i na kraju konkretan sadržaj paketa i to poslati serveru. Pored ovoga, ova biblioteka nam pruža i mogućnost “slušanja” dolazećih poruka i odgovaranje na njih.","url":"http://fantastic001.github.io/python/2017/05/08/scapy.html","@context":"https://schema.org"}</script>
+{"description":"ScaPy je biblioteka za Python koja pruža sastavljanje paketa od “parčića”. Na primer, možemo IP deo spojiti sa TCP delom i na kraju konkretan sadržaj paketa i to poslati serveru. Pored ovoga, ova biblioteka nam pruža i mogućnost “slušanja” dolazećih poruka i odgovaranje na njih.","headline":"ScaPy - analiza protokola upotrebom Python-a","url":"http://fantastic001.github.io/python/2017/05/08/scapy.html","dateModified":"2017-05-08T18:15:00+02:00","datePublished":"2017-05-08T18:15:00+02:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/python/2017/05/08/scapy.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -112,7 +114,7 @@ može da se izbegne na neki način ali meni nije uspelo, ako neko uspe, napišit
 
 <p>Uključivanje biblioteke se radi na sledeći način:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from scapy.all import * 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from scapy.all import * 
 </code></pre></div></div>
 
 <h2 id="sastavljanje-paketa">Sastavljanje paketa</h2>
@@ -120,17 +122,17 @@ može da se izbegne na neki način ali meni nije uspelo, ako neko uspe, napišit
 <p>Ako želimo da sastavimo neki paket koji u svom IP delu sadrži adresu odredišta, u svom TCP delu sadrži odredišni port 
 sa sadržajem datim kao string, to možemo učiniti na sledeći način:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pkt = IP(dst="192.168.4.5")/TCP(dport=55)/"Poruka"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pkt = IP(dst="192.168.4.5")/TCP(dport=55)/"Poruka"
 </code></pre></div></div>
 
 <p>Ovaj paket možemo poslati na sledeći način</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>send(pkt)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>send(pkt)
 </code></pre></div></div>
 
 <p>a ako želimo da pošaljemo paket i da odmah dobijemo odgovor, to možemo ovako:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ans, unans = sr(pkt)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ans, unans = sr(pkt)
 </code></pre></div></div>
 
 <p>promenljiva ans sadrži listu odgovora od servera.</p>
@@ -141,7 +143,7 @@ sa sadržajem datim kao string, to možemo učiniti na sledeći način:</p>
 
 <p>Naredni primer ilustruje nadzor svih ARP paketa:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def arp_monitor_callback(pkt):
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def arp_monitor_callback(pkt):
     if ARP in pkt and pkt[ARP].op in (1,2): #who-has or is-at
         op = ""
         if pkt[ARP].op == 1: 
@@ -155,7 +157,7 @@ sniff(prn=arp_monitor_callback, filter="arp", store=0)
 
 <p>Drugi primer ilustruje nadzor svega na portu 80</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def tcp_func(pkt):
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def tcp_func(pkt):
     if TCP in pkt and pkt[TCP].dport == 80:
         return str(pkt)
 

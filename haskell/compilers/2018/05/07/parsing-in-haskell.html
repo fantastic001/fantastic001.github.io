@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Parsing in Haskell | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Parsing in Haskell" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="This article is going to explain some basic concepts in compiler design and to give practical implementation of lexical analysis and parsing in Haskell." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-05-07T23:15:00+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Parsing in Haskell" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Parsing in Haskell","dateModified":"2018-05-07T23:15:00+02:00","datePublished":"2018-05-07T23:15:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html"},"description":"This article is going to explain some basic concepts in compiler design and to give practical implementation of lexical analysis and parsing in Haskell.","url":"http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html","@context":"https://schema.org"}</script>
+{"description":"This article is going to explain some basic concepts in compiler design and to give practical implementation of lexical analysis and parsing in Haskell.","headline":"Parsing in Haskell","url":"http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html","dateModified":"2018-05-07T23:15:00+02:00","datePublished":"2018-05-07T23:15:00+02:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/haskell/compilers/2018/05/07/parsing-in-haskell.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -121,7 +123,7 @@ of lexical analysis and parsing in Haskell.</p>
 
 <p>In this article, it will be explained how parsing is done in Haskell using monads. We will assume that we can generate list of tokens from lexical analysis. This will be our input to parser. This list is list of Token type defined like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Token = Identifier String | KeyWord String | Number Int | StringConstant String | 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Token = Identifier String | KeyWord String | Number Int | StringConstant String | 
     	PlusOperator | MinusOperator | DivisionOperator | MultiplicationOperator | OpenP | 
      	ClosedP | Comma | Space | AssignmentOperator |
      	OpenScope | ClosedScope | ListBegin | ListEnd deriving (Show, Eq)
@@ -144,14 +146,14 @@ We also have to enable something like “-a” so we will have special kind of n
 
 <p>To summarize, our definitions look liker this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expression = term "+" expression | term "-" expression | term | "-" term
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expression = term "+" expression | term "-" expression | term | "-" term
 term = factor "*" term | factor "/" term | factor 
 factor = identifier | number | "(" expression ")"
 </code></pre></div></div>
 
 <p>Let’s translate this into Haskell code:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Factor = JustNumber Int | JustIdentifier String | FactorExpression Expression deriving (Show)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Factor = JustNumber Int | JustIdentifier String | FactorExpression Expression deriving (Show)
 data Term = MultiplicationTerm Factor Term | DivisionTerm Factor Term | JustFactor Factor deriving (Show)
 data Expression = SumExpression Term Expression | DifferenceExpression Term Expression | JustTerm Term | NegativeTerm Term  |
 </code></pre></div></div>
@@ -162,13 +164,13 @@ data Expression = SumExpression Term Expression | DifferenceExpression Term Expr
 
 <p>Let’s define result of parsing as something that returns result and list of remaining tokens to be parsed or some kind of error:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type LineNumber = Int 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type LineNumber = Int 
 data ParseResult a = ParseResult [Token] a | ParseError LineNumber String deriving (Show)
 </code></pre></div></div>
 
 <p>Now we can make Parse monad which will represent computation of parsing:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Parse a = Parse ([Token] -&gt; ParseResult a)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data Parse a = Parse ([Token] -&gt; ParseResult a)
 
 instance Functor Parse where 
 	fmap f action = do 
@@ -197,7 +199,7 @@ instance Monad Parse where
 
 <p>Now, how parsing is done? Well, when you see definitions of nodes above, we can use them to easily implement parsing. For now, let’s define two functions:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>getToken :: Parse Token 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>getToken :: Parse Token 
 getToken = Parse $ \tokens -&gt; case tokens of 
 	[] -&gt; ParseError 0 "Cannot take token"
 	t:ts -&gt; ParseResult (t:ts) t 
@@ -207,7 +209,7 @@ getToken = Parse $ \tokens -&gt; case tokens of
 
 <p>Another function is expect which will return parsing error if given token does not exist in list. If it exists, it will remove that token from list of tokens. You can see this function by other names in other articles or literature, for example they call it “eat” somewhere because it “eats” token if it exists.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expect :: Token -&gt; Parse Token
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expect :: Token -&gt; Parse Token
 expect token = Parse $ \tokens -&gt; case tokens of 
 	[] -&gt; ParseError 0 "Expected token but no such token found"
 	t:ts -&gt; if t == token then ParseResult ts t else ParseError 0 $ "Expected token " ++ (show token) ++ " but " ++ (show t) ++ "found"
@@ -215,13 +217,13 @@ expect token = Parse $ \tokens -&gt; case tokens of
 
 <p>Also, for outputting errors during parsing, we will have some simple function which always returns error with given message:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cerror :: String -&gt; Parse a
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cerror :: String -&gt; Parse a
 cerror msg = Parse $ \token -&gt; ParseError 0 msg
 </code></pre></div></div>
 
 <p>Now, parsing can be done easily from definitions of tree nodes. For example, let’s start with factor parsing:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>factor :: Parse Factor 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>factor :: Parse Factor 
 factor = do 
 	t &lt;- getToken 
 	case getToken of 
@@ -244,7 +246,7 @@ You can see how we use expression method (which we will implement later) to easi
 
 <p>Let’s implement term parsing:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>term = do 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>term = do 
 	f &lt;- factor
 	t &lt;- getToken
 	case t of 
@@ -261,7 +263,7 @@ You can see how we use expression method (which we will implement later) to easi
 
 <p>and for expression:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expression = do 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expression = do 
 	t &lt;- getToken 
 	case t of 
 		MinusOperator -&gt; do 

@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Introducing Mako - small but rich organization tool which breaks UNIX philosophy | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Introducing Mako - small but rich organization tool which breaks UNIX philosophy" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="This is my blog where I will express my thoughts about everything which I’m interested in." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-07-29T23:15:00+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Introducing Mako - small but rich organization tool which breaks UNIX philosophy" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Introducing Mako - small but rich organization tool which breaks UNIX philosophy","dateModified":"2017-07-29T23:15:00+02:00","datePublished":"2017-07-29T23:15:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/organization/mako/2017/07/29/mako.html"},"description":"This is my blog where I will express my thoughts about everything which I’m interested in.","url":"http://fantastic001.github.io/organization/mako/2017/07/29/mako.html","@context":"https://schema.org"}</script>
+{"description":"This is my blog where I will express my thoughts about everything which I’m interested in.","headline":"Introducing Mako - small but rich organization tool which breaks UNIX philosophy","url":"http://fantastic001.github.io/organization/mako/2017/07/29/mako.html","dateModified":"2017-07-29T23:15:00+02:00","datePublished":"2017-07-29T23:15:00+02:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/organization/mako/2017/07/29/mako.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -129,12 +131,12 @@ infrastructure how database is organized.</p>
 then subproject for every course you are attending on the university. So, in university project, you can have algebra subproject 
 and every task related to algebra on the university can be placed here. So let’s create our first project:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako projects add university
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako projects add university
 </code></pre></div></div>
 
 <p>so now when you list your projects, it will show that you have one project:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ mako projects 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ mako projects 
 Projects:
 _________________
 university
@@ -143,36 +145,36 @@ university
 
 <p>Now it’s time to add some subprojects to our university project:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subprojects add algebra
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subprojects add algebra
 </code></pre></div></div>
 
 <p>now we can list subprojects of university project:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subprojects 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subprojects 
 </code></pre></div></div>
 
 <p>When we have project and its subprojects we can add individual tasks to them:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subproject algebra tasks add "Read chapter 1" 2017-08-21 2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subproject algebra tasks add "Read chapter 1" 2017-08-21 2
 </code></pre></div></div>
 
 <p>First argument to task add option is description of the task, second is due date and third is estimated time to complete given task. This is important since Mako will calculate how much time you are spending on tasks and how this time relates to your expectations.</p>
 
 <p>Now we can list tasks:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subproject algebra tasks
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subproject algebra tasks
 </code></pre></div></div>
 
 <p>to increase spent time on a task, do the following:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subproject algebra task 1 do 2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subproject algebra task 1 do 2
 </code></pre></div></div>
 
 <p>first you specify task index given by task list and after “do” you specify how much time did you spend doing particular task, this will increase spent time on a task every time you run “do” command.</p>
 
 <p>To mark task as done:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subproject algebra task 1 done 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako project university subproject algebra task 1 done 
 </code></pre></div></div>
 
 <p>Now, when you list tasks, you will see that our task is green instead of red which means it is marked as done.</p>
@@ -181,7 +183,7 @@ university
 
 <p>Since one blog post is not enough to explain whole functionality and since I explained just a little bit of this tool, I suggest to run:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako help
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mako help
 </code></pre></div></div>
 
 <p>to see what you can use.</p>

@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Functional JavaScript | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Functional JavaScript" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="In this article I will try to explain some aspects of JS which enable us to write more functional code and shorter code as well." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-01-23T17:15:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Functional JavaScript" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Functional JavaScript","dateModified":"2018-01-23T17:15:00+01:00","datePublished":"2018-01-23T17:15:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/functional-programming/software/javascript/2018/01/23/functional-javascript.html"},"description":"In this article I will try to explain some aspects of JS which enable us to write more functional code and shorter code as well.","url":"http://fantastic001.github.io/functional-programming/software/javascript/2018/01/23/functional-javascript.html","@context":"https://schema.org"}</script>
+{"description":"In this article I will try to explain some aspects of JS which enable us to write more functional code and shorter code as well.","headline":"Functional JavaScript","url":"http://fantastic001.github.io/functional-programming/software/javascript/2018/01/23/functional-javascript.html","dateModified":"2018-01-23T17:15:00+01:00","datePublished":"2018-01-23T17:15:00+01:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/functional-programming/software/javascript/2018/01/23/functional-javascript.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -105,13 +107,13 @@ and shorter code as well.</p>
 
 <h1 id="node">Node</h1>
 
-<p>You can try examples in node, just type <code class="highlighter-rouge">node</code> to open interactive mode.</p>
+<p>You can try examples in node, just type <code class="language-plaintext highlighter-rouge">node</code> to open interactive mode.</p>
 
 <h1 id="function-definitions">Function definitions</h1>
 
 <p>Let’s explain function definitions in JS:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function f(x)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function f(x)
 {
 	return x*x;
 }
@@ -119,7 +121,7 @@ and shorter code as well.</p>
 
 <p>also we can assign function to variables (since functions are first-class objects)</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; const g = function(x) {return x*x;}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; const g = function(x) {return x*x;}
 undefined
 &gt; g(5)
 25
@@ -130,7 +132,7 @@ undefined
 
 <p>Objects are basically dictionaries and are defined like JSON:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; obj = {"a": 1, "b": 2}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; obj = {"a": 1, "b": 2}
 { a: 1, b: 2 }
 &gt; obj.a
 1
@@ -145,7 +147,7 @@ undefined
 
 <p>Since functions are first-class objects we can do this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; function filter(arr, f) { 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; function filter(arr, f) { 
 ... for (var i = 0; i&lt;arr.length; i++) { 
 ..... if (f(arr[i])) console.log(arr[i]);
 ..... }
@@ -159,35 +161,35 @@ undefined
 
 <p>arrays have filter function as their method:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; [1,2,3].filter(function (x) {return x% 2 == 0})
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; [1,2,3].filter(function (x) {return x% 2 == 0})
 [ 2 ]
 &gt; 
 </code></pre></div></div>
 
 <p>Also, arrays have map method in them:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; [1,2,3].map(f)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; [1,2,3].map(f)
 [1,4,9]
 &gt;
 </code></pre></div></div>
 
 <p>Also they have reduce (right) method:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; [1,2,3].reduce(function (z,x) {return z+x;}, 0)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; [1,2,3].reduce(function (z,x) {return z+x;}, 0)
 6
 &gt; 
 </code></pre></div></div>
 
 <p>We can use arrow notation to make our code shorter, for instance:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; arr.reduce((z,x) =&gt; z*z+x, 0)                                                                                                        	12                                                                                                                                     	&gt; 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; arr.reduce((z,x) =&gt; z*z+x, 0)                                                                                                        	12                                                                                                                                     	&gt; 
 </code></pre></div></div>
 
 <h1 id="this-hell">this hell</h1>
 
 <p>Now we will explain constructors which are functions that return objects.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; function MyObject() { 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; function MyObject() { 
 ... return {
 ..... a: 1,
 ..... b: 2
@@ -218,7 +220,7 @@ data from array as normal, comma-separated, values.</p>
 
 <p>Also, with this syntax we can grab head and tail of array:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; [head, ...tail] = arr 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; [head, ...tail] = arr 
 [ 1, 2, 3 ]
 &gt; tail
 [ 2, 3 ]

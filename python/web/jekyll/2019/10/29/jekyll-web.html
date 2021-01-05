@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Jekyll Web | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Jekyll Web" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Jekyll web is web application made in Django to manage static Jekyll sites from web admin interface." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-10-29T12:15:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Jekyll Web" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Jekyll Web","dateModified":"2019-10-29T12:15:00+01:00","datePublished":"2019-10-29T12:15:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/python/web/jekyll/2019/10/29/jekyll-web.html"},"description":"Jekyll web is web application made in Django to manage static Jekyll sites from web admin interface.","url":"http://fantastic001.github.io/python/web/jekyll/2019/10/29/jekyll-web.html","@context":"https://schema.org"}</script>
+{"description":"Jekyll web is web application made in Django to manage static Jekyll sites from web admin interface.","headline":"Jekyll Web","url":"http://fantastic001.github.io/python/web/jekyll/2019/10/29/jekyll-web.html","dateModified":"2019-10-29T12:15:00+01:00","datePublished":"2019-10-29T12:15:00+01:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/python/web/jekyll/2019/10/29/jekyll-web.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -120,7 +122,7 @@ but in  the future it is planned to have automatic build for building and deploy
 
 <p>you can do this by using manage.py provided by Django. Go to source and execute:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py migrate
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py migrate
 python manage.py createsuperuser
 </code></pre></div></div>
 
@@ -128,18 +130,18 @@ python manage.py createsuperuser
 
 <h1 id="set-up-jekyll-static-site-path">Set up Jekyll static site path</h1>
 
-<p>In <code class="highlighter-rouge">jekyll_web/jekyll_web/settings.py</code> you will be able to set up path to directory where contents of jekyll static page sources are located. The variable name you will have to set up is: <code class="highlighter-rouge">JEKYLL_PATH</code>.</p>
+<p>In <code class="language-plaintext highlighter-rouge">jekyll_web/jekyll_web/settings.py</code> you will be able to set up path to directory where contents of jekyll static page sources are located. The variable name you will have to set up is: <code class="language-plaintext highlighter-rouge">JEKYLL_PATH</code>.</p>
 
 <p>Example of settings is:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>JEKYLL_PATH = "/home/me/myjekyllsite/"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>JEKYLL_PATH = "/home/me/myjekyllsite/"
 </code></pre></div></div>
 
 <h2 id="running-and-usage">Running and usage</h2>
 
 <p>Too test if everything works, run:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py runserver
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py runserver
 </code></pre></div></div>
 
 <p>and go too URL which you will get in console. You will be redirected to browser and will see welcome message. You can log in by clicking “Log In” in upper-left corner and entering your user credentials which you set up previously. Then, you will be able to access article list and create new article features on upper-left corner.</p>

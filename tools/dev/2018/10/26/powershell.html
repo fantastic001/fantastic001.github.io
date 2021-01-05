@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Powershell - next generation shell | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Powershell - next generation shell" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Recently I started using Powershell which friend of mine recommended. Powershell is Microsoft’s product built on .NET platform which introduces .NET functionality in interactive interface. When I say interactive I mean both console and GUI but here we will consider only console aspects of powershell and I won’t discuss powershell host development. (maybe in future articles)" />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-10-26T11:15:00+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Powershell - next generation shell" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Powershell - next generation shell","dateModified":"2018-10-26T11:15:00+02:00","datePublished":"2018-10-26T11:15:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/tools/dev/2018/10/26/powershell.html"},"description":"Recently I started using Powershell which friend of mine recommended. Powershell is Microsoft’s product built on .NET platform which introduces .NET functionality in interactive interface. When I say interactive I mean both console and GUI but here we will consider only console aspects of powershell and I won’t discuss powershell host development. (maybe in future articles)","url":"http://fantastic001.github.io/tools/dev/2018/10/26/powershell.html","@context":"https://schema.org"}</script>
+{"description":"Recently I started using Powershell which friend of mine recommended. Powershell is Microsoft’s product built on .NET platform which introduces .NET functionality in interactive interface. When I say interactive I mean both console and GUI but here we will consider only console aspects of powershell and I won’t discuss powershell host development. (maybe in future articles)","headline":"Powershell - next generation shell","url":"http://fantastic001.github.io/tools/dev/2018/10/26/powershell.html","dateModified":"2018-10-26T11:15:00+02:00","datePublished":"2018-10-26T11:15:00+02:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/tools/dev/2018/10/26/powershell.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -110,12 +112,12 @@ tools to do that. Solution has been developed also in previous century and it is
 
 <p>For reading files, we can use tool called cat. For filtering we can use tool called grep and last but not the least, for replacement we can use sed. Now we use cat to output file contents to standard output, then we take that standard output and add it to standard input for grep which outputs filtered lines to standard output. Now we take standard output of grep and bring it to standard input of sed to get final result on standard output which is showed as result on screen.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat file.txt | grep "FILTER ME" | sed "s/REPLACE ME/REPLACED/g"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat file.txt | grep "FILTER ME" | sed "s/REPLACE ME/REPLACED/g"
 </code></pre></div></div>
 
 <p>Now, let’s consider slightly complicated problem. Let’s say we have file containing list of filenames and we want to replace appearance of “.txt” with “.text” and then create all of them. We can do this by running:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat files.txt | sed "s/\.txt/.text/g" | xargs -n1 touch 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat files.txt | sed "s/\.txt/.text/g" | xargs -n1 touch 
 </code></pre></div></div>
 
 <p>so what does this command do? Let’s go piece by piece. First we get contents of the file to standard output, then we replace needed stuff and finally we call touch which is tool that makes files. The problem is that touch receives command line arguments instead of reading from standard input so we need tool which traverses line by line of standard input and calls touch for every line passing that line as argument to touch. This is why we need to use xargs.</p>
@@ -131,31 +133,31 @@ which are C# libraries built to be used as powershell commandlets. This enabled 
 
 <p>First problem was that we had file containing file names and we wanted to replace “.txt” with “.text” and create them all.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc ./files.txt | % {$_ -replace ".txt", ".text"} | % {touch $_}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc ./files.txt | % {$_ -replace ".txt", ".text"} | % {touch $_}
 </code></pre></div></div>
 
 <p>Now it seems more complicated but take a few minutes to analyse this command further: first we read contents with gc and we get list of strings. With “%” we are executing some function for every element in given list and that element is passed to that function as “$_”. This is like map functionality in functional programming languages. First function we use is function that takes one line and returns that line with replaced text. Second function takes line and calls touch on it. This can be put in one function instead of two, for instance:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc ./files.txt | % {touch ($_ -replace ".txt", ".text")}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc ./files.txt | % {touch ($_ -replace ".txt", ".text")}
 </code></pre></div></div>
 
 <p>For the secund problem we can do:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gci | ? {$_.Name -match ".*\.txt"} | ? {$_.Mode -notmatch ".*r.."} | % {mv $_ "new-$_"}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gci | ? {$_.Name -match ".*\.txt"} | ? {$_.Mode -notmatch ".*r.."} | % {mv $_ "new-$_"}
 </code></pre></div></div>
 
 <p>As you can see, we can use “?” command for filtering, just provide function (inside brackets) which returns condition for filtering.</p>
 
 <p>We can rewrite this command to include one filter with AND operator:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gci | ? {$_.Name -match ".*\.txt" -and $_.Mode -notmatch ".*r.."} | % {mv $_ "new-$_"}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gci | ? {$_.Name -match ".*\.txt" -and $_.Mode -notmatch ".*r.."} | % {mv $_ "new-$_"}
 </code></pre></div></div>
 
 <h1 id="additional-interesting-commandlets">Additional interesting commandlets</h1>
 
 <p>We can read JSON files and output them as objects too: for instance:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc ./object.json                                                                                                                                               
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc ./object.json                                                                                                                                               
 {
         "Something": "value",
         "list": [
@@ -174,17 +176,17 @@ which are C# libraries built to be used as powershell commandlets. This enabled 
 
 <p>Now we can do this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc object.json | ConvertFrom-Json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc object.json | ConvertFrom-Json
 </code></pre></div></div>
 
 <p>and we will get powershell representing our data. Similar thing we can do with CSV and XML files. Also, we can serialize objects back also:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gci | ConvertTo-Json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gci | ConvertTo-Json
 </code></pre></div></div>
 
 <p>For instance for CSV:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc data.csv | ConvertFrom-Csv
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gc data.csv | ConvertFrom-Csv
 </code></pre></div></div>
 
 <p>Also, there are commandlets for making HTTP requests, REST requests etc. You can also make your own commandlets from powershell or from C#.</p>

@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Neural networks are not too hard to understand theoretically - part 2 | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Neural networks are not too hard to understand theoretically - part 2" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="In previous article, I have described background between neural network training. Here I will just further investigate special types of neural networks." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-12-18T20:15:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Neural networks are not too hard to understand theoretically - part 2" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Neural networks are not too hard to understand theoretically - part 2","dateModified":"2018-12-18T20:15:00+01:00","datePublished":"2018-12-18T20:15:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/algorithms/ml/2018/12/18/neural-net-2.html"},"description":"In previous article, I have described background between neural network training. Here I will just further investigate special types of neural networks.","url":"http://fantastic001.github.io/algorithms/ml/2018/12/18/neural-net-2.html","@context":"https://schema.org"}</script>
+{"description":"In previous article, I have described background between neural network training. Here I will just further investigate special types of neural networks.","headline":"Neural networks are not too hard to understand theoretically - part 2","url":"http://fantastic001.github.io/algorithms/ml/2018/12/18/neural-net-2.html","dateModified":"2018-12-18T20:15:00+01:00","datePublished":"2018-12-18T20:15:00+01:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/algorithms/ml/2018/12/18/neural-net-2.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -107,25 +109,25 @@ special types of neural networks.</p>
 
 <p>Here we have neural network with one hidden layer where we have P nodes:</p>
 
-<script type="math/tex; mode=display">y_p = \sigma (\sum_{i=1}^N w^{(1)}_{i,p} x_i)</script>
+\[y_p = \sigma (\sum_{i=1}^N w^{(1)}_{i,p} x_i)\]
 
 <p>where sigma is activation function</p>
 
 <p>now our output node is:</p>
 
-<script type="math/tex; mode=display">f_m(x) = Z(\sum_{i=1}^P w^{(2)}_{i,m} y_i)</script>
+\[f_m(x) = Z(\sum_{i=1}^P w^{(2)}_{i,m} y_i)\]
 
 <p>where Z is called output function.</p>
 
 <p>Now, we can apply our gradient method to update weights:</p>
 
-<script type="math/tex; mode=display">\Delta w = - \alpha (\sum_{n=0}^K \sum_{m=1}^M (f_m(x_n, w) - y_{m,n}) \nabla f_m)</script>
+\[\Delta w = - \alpha (\sum_{n=0}^K \sum_{m=1}^M (f_m(x_n, w) - y_{m,n}) \nabla f_m)\]
 
 <p>where gradients we can calculate as follows:</p>
 
-<script type="math/tex; mode=display">\frac{\partial f_m}{\partial w^{(1)}_{i,j}} = Z'(\sum_{k=1}^P w_{k,m}^{(2)} y_k) (\sum_{k=1}^P w_{k,m}^{(2)} \sigma'(\sum_{l=1}^N w^{(1)}_{l,k} x_l) x_i)</script>
+\[\frac{\partial f_m}{\partial w^{(1)}_{i,j}} = Z'(\sum_{k=1}^P w_{k,m}^{(2)} y_k) (\sum_{k=1}^P w_{k,m}^{(2)} \sigma'(\sum_{l=1}^N w^{(1)}_{l,k} x_l) x_i)\]
 
-<script type="math/tex; mode=display">\frac{\partial f_m}{\partial w^{(2)}_{i,m}} = Z'(\sum_{k=1}^P w^{(2)}_{k,m} y_k) \sigma(\sum_{l=1}^N w_{l,i}^{(1)} x_l)</script>
+\[\frac{\partial f_m}{\partial w^{(2)}_{i,m}} = Z'(\sum_{k=1}^P w^{(2)}_{k,m} y_k) \sigma(\sum_{l=1}^N w_{l,i}^{(1)} x_l)\]
 
 <p>And that’s it!</p>
 
@@ -135,13 +137,13 @@ special types of neural networks.</p>
 
 <h1 id="special-case---z-and-sigma-are-identity-functions">Special case - Z and sigma are identity functions</h1>
 
-<p>In this case: <script type="math/tex">z(t) = t</script> and <script type="math/tex">\sigma(t) = t</script></p>
+<p>In this case: \(z(t) = t\) and \(\sigma(t) = t\)</p>
 
 <p>so our derivatives are like this then:</p>
 
-<script type="math/tex; mode=display">\frac{\partial f_m}{\partial w^{(1)}_{i,j}} = \sum_{k=1}^P w_{k,m}^{(2)} x_i</script>
+\[\frac{\partial f_m}{\partial w^{(1)}_{i,j}} = \sum_{k=1}^P w_{k,m}^{(2)} x_i\]
 
-<script type="math/tex; mode=display">\frac{\partial f_m}{\partial w^{(2)}_{i,m}} = \sum_{l=1}^N w_{l,i}^{(1)} x_l</script>
+\[\frac{\partial f_m}{\partial w^{(2)}_{i,m}} = \sum_{l=1}^N w_{l,i}^{(1)} x_l\]
 
 
   </div>

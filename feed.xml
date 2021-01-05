@@ -6,9 +6,9 @@
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 31 Mar 2020 17:30:41 +0200</pubDate>
-    <lastBuildDate>Tue, 31 Mar 2020 17:30:41 +0200</lastBuildDate>
-    <generator>Jekyll v4.0.0</generator>
+    <pubDate>Tue, 05 Jan 2021 13:09:24 +0100</pubDate>
+    <lastBuildDate>Tue, 05 Jan 2021 13:09:24 +0100</lastBuildDate>
+    <generator>Jekyll v4.2.0</generator>
     
       <item>
         <title>Introduction to TSS - small tool for generating source code from templates</title>
@@ -22,12 +22,12 @@ can be reused. For instance, you can create template class and parametrize its n
 
 &lt;p&gt;TSS can be installed by cloning this repository or via pip:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install tss 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install tss 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;or, if you have downloaded source code from repository:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python setup.py install
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python setup.py install
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;basic-usage&quot;&gt;basic usage&lt;/h1&gt;
@@ -37,32 +37,32 @@ download multiple set of existing templates from third parties and always keep t
 
 &lt;p&gt;There is default set of templates provided by this source code in templates directory, to add it to TSS use:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tss remote add default ./templates
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tss remote add default ./templates
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;first parameter after “remote add” command is name of source which can be whatever you want and second one is path to template collection.&lt;/p&gt;
 
 &lt;p&gt;Now, we can create simple java class from our template collection:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tss create java/class
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tss create java/class
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;You should get editor opened with special settings file for you to fill in. When you set all parameters, you can save the file and close the editor and you will get new java class file created in directory in which you invoked tss command.&lt;/p&gt;
 
 &lt;p&gt;Now, let’s investigate further file which is opened in your editor. First of all, there are variables which you can set and every variable has its type. For instance, 
-you can see &lt;code class=&quot;highlighter-rouge&quot;&gt;name : string = &quot;MyClass&quot;&lt;/code&gt; which means variable name is set to value “MyClass” and is of type string. As user of template, you should never change variable names and their types, only their values. In this manner, you are able to set parameters used in template. For instance, in our case, we have name of the class
+you can see &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;name : string = &quot;MyClass&quot;&lt;/code&gt; which means variable name is set to value “MyClass” and is of type string. As user of template, you should never change variable names and their types, only their values. In this manner, you are able to set parameters used in template. For instance, in our case, we have name of the class
 which we can set.&lt;/p&gt;
 
 &lt;p&gt;There are 3 fundamental types: string, integer and boolean.&lt;/p&gt;
 
-&lt;p&gt;There are also complex types like dictionaries and lists. If you see type like &lt;code class=&quot;highlighter-rouge&quot;&gt;[string]&lt;/code&gt; it means this variable is list of strings. You should set it like this:&lt;/p&gt;
+&lt;p&gt;There are also complex types like dictionaries and lists. If you see type like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[string]&lt;/code&gt; it means this variable is list of strings. You should set it like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SomeParameter : [string] = [&quot;StringA&quot;, &quot;StringB&quot;, &quot;StringC&quot;]
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SomeParameter : [string] = [&quot;StringA&quot;, &quot;StringB&quot;, &quot;StringC&quot;]
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;also, we you see &lt;code class=&quot;highlighter-rouge&quot;&gt;{a : string, b : string}&lt;/code&gt; it means it is dictionary with variables a and b and both of them are strings.&lt;/p&gt;
+&lt;p&gt;also, we you see &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{a : string, b : string}&lt;/code&gt; it means it is dictionary with variables a and b and both of them are strings.&lt;/p&gt;
 
-&lt;p&gt;Common thing to see is list of dictionaries. You can also see in our java/class example where we can define fields of the class. For defining dictionary values, you can use syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;(a=&quot;StringA&quot;, b=&quot;StringB&quot;)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Common thing to see is list of dictionaries. You can also see in our java/class example where we can define fields of the class. For defining dictionary values, you can use syntax: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(a=&quot;StringA&quot;, b=&quot;StringB&quot;)&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;In our java class example, we can define fields by specifying field name and type.&lt;/p&gt;
 
@@ -72,22 +72,22 @@ which we can set.&lt;/p&gt;
 
 &lt;p&gt;First of all, you will need to make your template collection. This is normal directory on your file system. Then, you should create directory which is name of language used and then inside it directory with name of your template. Example would be:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- mytemplates 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- mytemplates 
 |- java
 |-|- mytemplate
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Template has to contain file named &lt;code class=&quot;highlighter-rouge&quot;&gt;params.tps&lt;/code&gt;. This file has syntax you already saw while creating code from template using &lt;code class=&quot;highlighter-rouge&quot;&gt;tss create&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Template has to contain file named &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;params.tps&lt;/code&gt;. This file has syntax you already saw while creating code from template using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tss create&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;All other files are part of template content and will be used to generate code. You can reference  variables using jinja2 syntax. For instance, you can see how java/class template looks like in templates directory.&lt;/p&gt;
 
 &lt;p&gt;As you can see, we can use all jinja2 capabilities including loops and branching as well.&lt;/p&gt;
 
-&lt;p&gt;You can also parametrize names of files and directories inside the template. Just insert triple underscores before and after variable name. For instance, file containing above content can be named &lt;code class=&quot;highlighter-rouge&quot;&gt;___name___.java&lt;/code&gt; and TSS will rename it to name specified in &lt;code class=&quot;highlighter-rouge&quot;&gt;name&lt;/code&gt; variable during code generation.&lt;/p&gt;
+&lt;p&gt;You can also parametrize names of files and directories inside the template. Just insert triple underscores before and after variable name. For instance, file containing above content can be named &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;___name___.java&lt;/code&gt; and TSS will rename it to name specified in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;name&lt;/code&gt; variable during code generation.&lt;/p&gt;
 
 &lt;p&gt;If at least one variable in file name is unspecified or empty, file won’t be created.&lt;/p&gt;
 
-&lt;p&gt;NOTE: do not forget to add your template collection to TSS using &lt;code class=&quot;highlighter-rouge&quot;&gt;tss remote add &amp;lt;NAME&amp;gt; &amp;lt;PATH&amp;gt;&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;NOTE: do not forget to add your template collection to TSS using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tss remote add &amp;lt;NAME&amp;gt; &amp;lt;PATH&amp;gt;&lt;/code&gt; command.&lt;/p&gt;
 
 &lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
 
@@ -151,17 +151,17 @@ which we can set.&lt;/p&gt;
 
 &lt;p&gt;For this reason, there is concept of value category. Value categories existed long before C++ came to this world, one cannot use everything on left-hand side of assignment operator. For instance, the following code in C will be semantically okay:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int a; 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int a; 
 a = 5; 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;“a” is variable of type int, operator &lt;code class=&quot;highlighter-rouge&quot;&gt;=&lt;/code&gt; expects an int on left and an int on right hand side. On the other side, the following code will produce compile error:&lt;/p&gt;
+&lt;p&gt;“a” is variable of type int, operator &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;=&lt;/code&gt; expects an int on left and an int on right hand side. On the other side, the following code will produce compile error:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int a; 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int a; 
 5 = a; 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Type semantics are okay here as well: two ints on both sides. The problem is that value category differs. Variable &lt;code class=&quot;highlighter-rouge&quot;&gt;a&lt;/code&gt; is called lvalue while number 5 is called rvalue. When we are using operator “=”, we have to put lvalue on left hand side.&lt;/p&gt;
+&lt;p&gt;Type semantics are okay here as well: two ints on both sides. The problem is that value category differs. Variable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a&lt;/code&gt; is called lvalue while number 5 is called rvalue. When we are using operator “=”, we have to put lvalue on left hand side.&lt;/p&gt;
 
 &lt;h1 id=&quot;value-categories-in-c&quot;&gt;Value categories in C++&lt;/h1&gt;
 
@@ -184,17 +184,17 @@ a = 5;
 
 &lt;p&gt;So, xvalue is rvalue and glvalue at the same time.&lt;/p&gt;
 
-&lt;p&gt;So, lvalue is everything which is addressable. When you want to know if something is lvalue, ask yourself if you can get address of that object. For instance, variables are lvalues because we can get address of them while &lt;code class=&quot;highlighter-rouge&quot;&gt;5&lt;/code&gt; is not lvalue since we cannot get address of it in memory (it is not explicitly stored in memory).&lt;/p&gt;
+&lt;p&gt;So, lvalue is everything which is addressable. When you want to know if something is lvalue, ask yourself if you can get address of that object. For instance, variables are lvalues because we can get address of them while &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;5&lt;/code&gt; is not lvalue since we cannot get address of it in memory (it is not explicitly stored in memory).&lt;/p&gt;
 
 &lt;p&gt;The tricky part is the following: string constants are lvalues! Same rule applied: we can get address of them since they are stored in memory even though they are not variables.&lt;/p&gt;
 
 &lt;p&gt;If we get address of lvalue, it is prvalue since that address is not stored. If we store that address to pointer variable, then pointer variable is lvalue, of course.&lt;/p&gt;
 
-&lt;p&gt;Also, when using &lt;code class=&quot;highlighter-rouge&quot;&gt;new&lt;/code&gt; operator for memory allocation, it is stored in memory (we have just allocated space for it) but we cannot reference it unless we save it to variable. So, what is value category of expression with &lt;code class=&quot;highlighter-rouge&quot;&gt;new&lt;/code&gt; operator? It is stored in memory temporally, so it is xvalue.&lt;/p&gt;
+&lt;p&gt;Also, when using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;new&lt;/code&gt; operator for memory allocation, it is stored in memory (we have just allocated space for it) but we cannot reference it unless we save it to variable. So, what is value category of expression with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;new&lt;/code&gt; operator? It is stored in memory temporally, so it is xvalue.&lt;/p&gt;
 
 &lt;p&gt;everything else is prvalue.&lt;/p&gt;
 
-&lt;p&gt;Attention! &lt;code class=&quot;highlighter-rouge&quot;&gt;this&lt;/code&gt; pointer is also prvalue, even though it is variable. The reason for this is it is stored in register on most architectures rather then in memory, so address of it cannot be read.&lt;/p&gt;
+&lt;p&gt;Attention! &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;this&lt;/code&gt; pointer is also prvalue, even though it is variable. The reason for this is it is stored in register on most architectures rather then in memory, so address of it cannot be read.&lt;/p&gt;
 
 &lt;h1 id=&quot;telling-functions-which-value-categories-are-permitted&quot;&gt;Telling functions which value categories are permitted&lt;/h1&gt;
 
@@ -202,9 +202,9 @@ a = 5;
 
 &lt;h2 id=&quot;lvalue-references&quot;&gt;lvalue references&lt;/h2&gt;
 
-&lt;p&gt;If we want to permit only lvalues, we can make function with &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt; added to its parameter to tell it can receive only lvalues:&lt;/p&gt;
+&lt;p&gt;If we want to permit only lvalues, we can make function with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt; added to its parameter to tell it can receive only lvalues:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int my_function(int&amp;amp; a) {
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int my_function(int&amp;amp; a) {
 	a = 5; // a is changed also outside of scope of function, reference to variable is copied instead of whole value
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -213,7 +213,7 @@ a = 5;
 
 &lt;p&gt;Also, we can assign some variable to lvalue references as well:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;std::string mystr(&quot;my string&quot;);
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;std::string mystr(&quot;my string&quot;);
 std::string&amp;amp; ref = mystr;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -221,7 +221,7 @@ std::string&amp;amp; ref = mystr;
 
 &lt;p&gt;If we do not want to copy whole value (like we did in lvalue references) but still want to be able to pass rvalues, we can make our lvalue reference constant. That means we won’t modify it inside function (if we do, we will get compile error):&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int count_spaces(const std::string&amp;amp; str) {
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int count_spaces(const std::string&amp;amp; str) {
 	int c = 0;
 	for (int i = 0; i&amp;lt;str.size(); i++) {
 		if (str[i] == ' ') c++;
@@ -234,7 +234,7 @@ std::string&amp;amp; ref = mystr;
 
 &lt;p&gt;Now, we can make function which can get only rvalues. This is introduces in C++11. This is important because sometimes we want to distinguish between lvalues and rvalues.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;std::string&amp;amp; make_copy(std::string&amp;amp;&amp;amp; str) 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;std::string&amp;amp; make_copy(std::string&amp;amp;&amp;amp; str) 
 {
 	return str;
 }
@@ -249,7 +249,7 @@ std::string&amp;amp; make_copy(std::string&amp;amp; str) {
 
 &lt;p&gt;And, finally, we have old-fashioned way with copying, we copy whole value and as such, our function can take lvalues and rvalues and value will be copied:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int copy_function(sstd::string str) 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int copy_function(sstd::string str) 
 {
 	// .. 
 }
@@ -259,7 +259,7 @@ std::string&amp;amp; make_copy(std::string&amp;amp; str) {
 
 &lt;p&gt;Now, as we can have different implementations of the same function for rvalue and lvalue. This means we can have constructors which do copy (in case lvalue is received) and constructors which do move (in case rvalue is received).&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClass::MyClass(MyClass&amp;amp; other) 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClass::MyClass(MyClass&amp;amp; other) 
 {
 	// do copy here
 }
@@ -268,9 +268,9 @@ MyClass::MyClass(MyClass&amp;amp;&amp;amp; other) {
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Now, what if we want to move existing, already stored in memory, variable? If we just pass it, it will be passed as lvalue and hence copy constructor will be called. How to force move? Well, we need to cast it to rvalue. Here, &lt;code class=&quot;highlighter-rouge&quot;&gt;std::move&lt;/code&gt; is useful function, it receives lvalue reference and converts it to lvalue reference:&lt;/p&gt;
+&lt;p&gt;Now, what if we want to move existing, already stored in memory, variable? If we just pass it, it will be passed as lvalue and hence copy constructor will be called. How to force move? Well, we need to cast it to rvalue. Here, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;std::move&lt;/code&gt; is useful function, it receives lvalue reference and converts it to lvalue reference:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClass obj;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MyClass obj;
 // .. use obj 
 MyClass obj2(std::move(obj));
 // now obj cannot be used anymore
@@ -278,11 +278,11 @@ MyClass obj2(std::move(obj));
 
 &lt;h1 id=&quot;how-stdmove-works&quot;&gt;how std::move works&lt;/h1&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;std::move&lt;/code&gt; is function which heavily abuses meta programming capabilities of C++. In compile time, it casts passed object to rvalue reference of the same type. It first removes reference with &lt;code class=&quot;highlighter-rouge&quot;&gt;std::remove_reference&lt;/code&gt; meta function and adds &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;&amp;amp;&lt;/code&gt; to type and returns casted value.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;std::move&lt;/code&gt; is function which heavily abuses meta programming capabilities of C++. In compile time, it casts passed object to rvalue reference of the same type. It first removes reference with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;std::remove_reference&lt;/code&gt; meta function and adds &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;&amp;amp;&lt;/code&gt; to type and returns casted value.&lt;/p&gt;
 
 &lt;h1 id=&quot;stdforward-explained&quot;&gt;std::forward explained&lt;/h1&gt;
 
-&lt;p&gt;Since, when we use parameters in a function (whatever value category it is passed as), maybe we want to forward that parameter to another function and, if we just forward it as normal argument, we will always pass it as lvalue. Now, we need to cast it to value category based on which parameter it was in our parameter list. We can do it manually or we can use &lt;code class=&quot;highlighter-rouge&quot;&gt;std::forward&lt;/code&gt; to do it for us. So, like std::move converts lvalue to rvalues, std::forward will convert lvalues to anything it was before (value category of argument).&lt;/p&gt;
+&lt;p&gt;Since, when we use parameters in a function (whatever value category it is passed as), maybe we want to forward that parameter to another function and, if we just forward it as normal argument, we will always pass it as lvalue. Now, we need to cast it to value category based on which parameter it was in our parameter list. We can do it manually or we can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;std::forward&lt;/code&gt; to do it for us. So, like std::move converts lvalue to rvalues, std::forward will convert lvalues to anything it was before (value category of argument).&lt;/p&gt;
 
 &lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
 
@@ -324,7 +324,7 @@ but in  the future it is planned to have automatic build for building and deploy
 
 &lt;p&gt;you can do this by using manage.py provided by Django. Go to source and execute:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python manage.py migrate
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python manage.py migrate
 python manage.py createsuperuser
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -332,18 +332,18 @@ python manage.py createsuperuser
 
 &lt;h1 id=&quot;set-up-jekyll-static-site-path&quot;&gt;Set up Jekyll static site path&lt;/h1&gt;
 
-&lt;p&gt;In &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll_web/jekyll_web/settings.py&lt;/code&gt; you will be able to set up path to directory where contents of jekyll static page sources are located. The variable name you will have to set up is: &lt;code class=&quot;highlighter-rouge&quot;&gt;JEKYLL_PATH&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;In &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jekyll_web/jekyll_web/settings.py&lt;/code&gt; you will be able to set up path to directory where contents of jekyll static page sources are located. The variable name you will have to set up is: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;JEKYLL_PATH&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;Example of settings is:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;JEKYLL_PATH = &quot;/home/me/myjekyllsite/&quot;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;JEKYLL_PATH = &quot;/home/me/myjekyllsite/&quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;running-and-usage&quot;&gt;Running and usage&lt;/h2&gt;
 
 &lt;p&gt;Too test if everything works, run:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python manage.py runserver
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python manage.py runserver
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;and go too URL which you will get in console. You will be redirected to browser and will see welcome message. You can log in by clicking “Log In” in upper-left corner and entering your user credentials which you set up previously. Then, you will be able to access article list and create new article features on upper-left corner.&lt;/p&gt;
@@ -372,25 +372,25 @@ python manage.py createsuperuser
 very often easier said than done. We often want to expose some kind of interface to our application. This is usually done using HTTP protocol because there are lot of libraries 
 for making HTTP communication easy. This article is about Python library I’ve made to ease this process. The library is called Instant API and you can find it &lt;a href=&quot;https://gitlab.com/fantastic001/InstantAPI&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;The idea is to build your API by adding handlers. A handler is some endpoint (actually, it is subset of endpoints in your API) which handles specific type of request. For instance, you can have handler which will handle all endpoints on &lt;code class=&quot;highlighter-rouge&quot;&gt;/myhandler/&lt;/code&gt; path like &lt;code class=&quot;highlighter-rouge&quot;&gt;/myhandler/A&lt;/code&gt; , &lt;code class=&quot;highlighter-rouge&quot;&gt;/myhandler/B/123&lt;/code&gt; etc…&lt;/p&gt;
+&lt;p&gt;The idea is to build your API by adding handlers. A handler is some endpoint (actually, it is subset of endpoints in your API) which handles specific type of request. For instance, you can have handler which will handle all endpoints on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/myhandler/&lt;/code&gt; path like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/myhandler/A&lt;/code&gt; , &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/myhandler/B/123&lt;/code&gt; etc…&lt;/p&gt;
 
 &lt;p&gt;Your API has to have at least one, default handler. Default handler will handle all subpaths that are not handled by some other handler.&lt;/p&gt;
 
 &lt;p&gt;Another thing is type of objects which Instant API uses. These objects are called CloudObjects and you can construct them in Python very easily:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;myobject = CloudObject(name=&quot;somename&quot;, age=25)
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;myobject = CloudObject(name=&quot;somename&quot;, age=25)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;As you can see, these objects are like dicts. You can specify whatever fields to them. You can get particular field by accessing its attributes:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;print(myobject.name)
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;print(myobject.name)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;example-with-simple-server-with-simple-file-system-handler&quot;&gt;Example with simple server with simple file system handler&lt;/h1&gt;
 
 &lt;p&gt;Here is an example of API creation in Python with one default handler: FSHandler. This handler will handle GET requests which will get content of a file and POST request which will handle writing to file. Since we are working with CloudObject objects, file created will be JSON serialized representation of object.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from InstantAPI.http import HTTPServer
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from InstantAPI.http import HTTPServer
 from InsttantAPI.handlers import *
 from InstantAPI import CloudServer
 import sys
@@ -401,9 +401,9 @@ print(&quot;Running server on port 8080&quot;)
 HTTPServer(cloud, port=8080).serve()
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;As simple as that. Endpoint for FSHandler is &lt;code class=&quot;highlighter-rouge&quot;&gt;/data/&lt;/code&gt; so you can try it out with curl:&lt;/p&gt;
+&lt;p&gt;As simple as that. Endpoint for FSHandler is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/data/&lt;/code&gt; so you can try it out with curl:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST -d '{&quot;name&quot;: &quot;John&quot;}' &quot;localhost:8080/data/john&quot;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST -d '{&quot;name&quot;: &quot;John&quot;}' &quot;localhost:8080/data/john&quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;and you will see file created in directory you specified as first argument to your server (root path where files are served).&lt;/p&gt;
@@ -412,9 +412,9 @@ HTTPServer(cloud, port=8080).serve()
 
 &lt;h1 id=&quot;another-example-with-two-handlers&quot;&gt;Another example with two handlers&lt;/h1&gt;
 
-&lt;p&gt;This is example where we have default handler FSHandler and TimeHandler on endpoint &lt;code class=&quot;highlighter-rouge&quot;&gt;/time&lt;/code&gt; which will return current time.&lt;/p&gt;
+&lt;p&gt;This is example where we have default handler FSHandler and TimeHandler on endpoint &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/time&lt;/code&gt; which will return current time.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from InstantAPI.http import HTTPServer
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from InstantAPI.http import HTTPServer
 from InsttantAPI.handlers import *
 from InstantAPI import CloudServer
 import sys
@@ -427,12 +427,12 @@ HTTPServer(cloud, port=8080).serve()
 
 &lt;p&gt;you can try it out with curl:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X GET localhost:8080/time
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X GET localhost:8080/time
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;and you will get something like:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{&quot;time&quot;: &quot;2019-10-05 13:22:03.206878&quot;}
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{&quot;time&quot;: &quot;2019-10-05 13:22:03.206878&quot;}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;current-state-and-extensions&quot;&gt;Current state and extensions&lt;/h1&gt;
@@ -441,14 +441,14 @@ HTTPServer(cloud, port=8080).serve()
 
 &lt;p&gt;You can implement your own handler by inheriting CloudHandler class and implementing handle and handlePut functions.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def handlle(self, path, state={})
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def handlle(self, path, state={})
 def handlePut(self, path, state={}, obj=CloudObject())
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;These functions will be called on POST and GET requests. You will also need to set &lt;code class=&quot;highlighter-rouge&quot;&gt;HANDLES&lt;/code&gt; field in your class and put there string with which your handler is 
+&lt;p&gt;These functions will be called on POST and GET requests. You will also need to set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HANDLES&lt;/code&gt; field in your class and put there string with which your handler is 
 identified when parsing endpoint path. For instance:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyHandler(ClooudHandler):
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyHandler(ClooudHandler):
 	
 	HANDLES = &quot;myhandler&quot;
 	def handlle(self, path, state={}):
@@ -457,7 +457,7 @@ identified when parsing endpoint path. For instance:&lt;/p&gt;
 		pass
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;will be called on all paths starting with &lt;code class=&quot;highlighter-rouge&quot;&gt;/myhandler/&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;will be called on all paths starting with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/myhandler/&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;You can see source code of existing handlers how are they implemented.&lt;/p&gt;
 
@@ -502,47 +502,47 @@ explain Docker the easy way, such that someone can use it as soon as possible. I
 
 &lt;p&gt;The most minimalistic image is busybox. It is image which requires very small amount of memory and other resources but it comes with few tools with limited functionality. Just basic UNIX commands and nothing more. Let’s create container from that image:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --name example -it busybox
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --name example -it busybox
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;so, in run command, we create container with name “example” and run it. You can see that we did not specify command which will be executed on container. If we do not specify command, default command for image will be executed (in this case: /bin/sh). We also pass interactive flag (-i) to enable binding to host stdout, stderr and stdin. Also, we pass -t flag to emulate pseudo-tty.&lt;/p&gt;
 
 &lt;p&gt;you can specify explicitly command like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --name example -it busybox /bin/sh
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --name example -it busybox /bin/sh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;More complex images can be found at https://hub.docker.com/&lt;/p&gt;
 
 &lt;p&gt;Now, when we have started container, we can see it running by executing:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker ps 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker ps 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;To execute new command in already running container, call:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker exec example your-command
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker exec example your-command
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;To enable interactive and ptty mode (for /bin/bash for instance), you can specify -it flag.&lt;/p&gt;
 
-&lt;p&gt;Now, when was container starter? Well, when we have run &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run&lt;/code&gt;. This command creates and starts container immediately.If we want step by step process, it would go like this:&lt;/p&gt;
+&lt;p&gt;Now, when was container starter? Well, when we have run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker run&lt;/code&gt;. This command creates and starts container immediately.If we want step by step process, it would go like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker create –name someImage
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker create –name someImage
 docker start myContainer
 docker exec -it myContainer bash
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Also, you can create image from existing container (such that it can be used to make other containers):&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker commit myccontainer myimage:latest
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker commit myccontainer myimage:latest
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;and also you can publish image to Docker Hub such that community can use it.&lt;/p&gt;
 
 &lt;p&gt;When you create image, you can put it into tarball to send to a friend and restore it from tarball&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker save mmyImage &amp;gt; myImage.tar
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker save mmyImage &amp;gt; myImage.tar
 docker load &amp;lt; myImage.tar
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -576,25 +576,25 @@ special types of neural networks.&lt;/p&gt;
 
 &lt;p&gt;Here we have neural network with one hidden layer where we have P nodes:&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;y_p = \sigma (\sum_{i=1}^N w^{(1)}_{i,p} x_i)&lt;/script&gt;
+\[y_p = \sigma (\sum_{i=1}^N w^{(1)}_{i,p} x_i)\]
 
 &lt;p&gt;where sigma is activation function&lt;/p&gt;
 
 &lt;p&gt;now our output node is:&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;f_m(x) = Z(\sum_{i=1}^P w^{(2)}_{i,m} y_i)&lt;/script&gt;
+\[f_m(x) = Z(\sum_{i=1}^P w^{(2)}_{i,m} y_i)\]
 
 &lt;p&gt;where Z is called output function.&lt;/p&gt;
 
 &lt;p&gt;Now, we can apply our gradient method to update weights:&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\Delta w = - \alpha (\sum_{n=0}^K \sum_{m=1}^M (f_m(x_n, w) - y_{m,n}) \nabla f_m)&lt;/script&gt;
+\[\Delta w = - \alpha (\sum_{n=0}^K \sum_{m=1}^M (f_m(x_n, w) - y_{m,n}) \nabla f_m)\]
 
 &lt;p&gt;where gradients we can calculate as follows:&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\frac{\partial f_m}{\partial w^{(1)}_{i,j}} = Z'(\sum_{k=1}^P w_{k,m}^{(2)} y_k) (\sum_{k=1}^P w_{k,m}^{(2)} \sigma'(\sum_{l=1}^N w^{(1)}_{l,k} x_l) x_i)&lt;/script&gt;
+\[\frac{\partial f_m}{\partial w^{(1)}_{i,j}} = Z'(\sum_{k=1}^P w_{k,m}^{(2)} y_k) (\sum_{k=1}^P w_{k,m}^{(2)} \sigma'(\sum_{l=1}^N w^{(1)}_{l,k} x_l) x_i)\]
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\frac{\partial f_m}{\partial w^{(2)}_{i,m}} = Z'(\sum_{k=1}^P w^{(2)}_{k,m} y_k) \sigma(\sum_{l=1}^N w_{l,i}^{(1)} x_l)&lt;/script&gt;
+\[\frac{\partial f_m}{\partial w^{(2)}_{i,m}} = Z'(\sum_{k=1}^P w^{(2)}_{k,m} y_k) \sigma(\sum_{l=1}^N w_{l,i}^{(1)} x_l)\]
 
 &lt;p&gt;And that’s it!&lt;/p&gt;
 
@@ -604,13 +604,13 @@ special types of neural networks.&lt;/p&gt;
 
 &lt;h1 id=&quot;special-case---z-and-sigma-are-identity-functions&quot;&gt;Special case - Z and sigma are identity functions&lt;/h1&gt;
 
-&lt;p&gt;In this case: &lt;script type=&quot;math/tex&quot;&gt;z(t) = t&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;\sigma(t) = t&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;In this case: \(z(t) = t\) and \(\sigma(t) = t\)&lt;/p&gt;
 
 &lt;p&gt;so our derivatives are like this then:&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\frac{\partial f_m}{\partial w^{(1)}_{i,j}} = \sum_{k=1}^P w_{k,m}^{(2)} x_i&lt;/script&gt;
+\[\frac{\partial f_m}{\partial w^{(1)}_{i,j}} = \sum_{k=1}^P w_{k,m}^{(2)} x_i\]
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\frac{\partial f_m}{\partial w^{(2)}_{i,m}} = \sum_{l=1}^N w_{l,i}^{(1)} x_l&lt;/script&gt;
+\[\frac{\partial f_m}{\partial w^{(2)}_{i,m}} = \sum_{l=1}^N w_{l,i}^{(1)} x_l\]
 
 </description>
         <pubDate>Tue, 18 Dec 2018 20:15:00 +0100</pubDate>
@@ -634,18 +634,18 @@ special types of neural networks.&lt;/p&gt;
 
 &lt;p&gt;Let’s say we have function f(x) which we need to minimize such that to find x0 that satisfies condition f(x0) &amp;lt; f(x) for any other x near x0. We can do that by using analytical 
 methods of derivatives etc. This works for functions for which we can easily calculate roots of derivatives. If we do not know how to calculate derivatives, we need to move on 
-to numerical iterative methods. Iterative method starts with initial guess and updates that guess based on formula: &lt;script type=&quot;math/tex&quot;&gt;x_{t+1} = x_t + \Delta x (x_{t})&lt;/script&gt; where &lt;script type=&quot;math/tex&quot;&gt;\Delta x&lt;/script&gt; is 
+to numerical iterative methods. Iterative method starts with initial guess and updates that guess based on formula: \(x_{t+1} = x_t + \Delta x (x_{t})\) where \(\Delta x\) is 
 some function depending on method.&lt;/p&gt;
 
-&lt;p&gt;Newton’s method: &lt;script type=&quot;math/tex&quot;&gt;\Delta x = - \frac{f'(x_t)}{f''(x_{t})}&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;Newton’s method: \(\Delta x = - \frac{f'(x_t)}{f''(x_{t})}\)&lt;/p&gt;
 
-&lt;p&gt;Gradient method: &lt;script type=&quot;math/tex&quot;&gt;\Delta x = - \alpha f'(x_{t})&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;Gradient method: \(\Delta x = - \alpha f'(x_{t})\)&lt;/p&gt;
 
 &lt;p&gt;We can extend this to more variables, then x is vector and f is multivariate scalar function. Now our iterative algorithms look like this:&lt;/p&gt;
 
-&lt;p&gt;Newton’s method: &lt;script type=&quot;math/tex&quot;&gt;\Delta x = -H^{-1}f(x_{t}) \nabla f (x_{t})&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;Newton’s method: \(\Delta x = -H^{-1}f(x_{t}) \nabla f (x_{t})\)&lt;/p&gt;
 
-&lt;p&gt;Gradient algorithm: &lt;script type=&quot;math/tex&quot;&gt;\Delta x = - \alpha \nabla f(x_{t})&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;Gradient algorithm: \(\Delta x = - \alpha \nabla f(x_{t})\)&lt;/p&gt;
 
 &lt;p&gt;As we can see, gradient algorithm is computationally easier to calculate and is faster than Newton’s algorithm. Reason for that is that gradient algorithm does not 
 calculate Hessian matrix which grows quadratically with dimensionality of x. Gradient algorithm, instead, approximates Hessian by scalar alpha.&lt;/p&gt;
@@ -656,15 +656,15 @@ calculate Hessian matrix which grows quadratically with dimensionality of x. Gra
 
 &lt;p&gt;Now let’s assume we have multivariate scalar function with unknown parameters. We want to estimate those parameters such that that function approximates our data.&lt;/p&gt;
 
-&lt;p&gt;In other words, we want to minimize error: &lt;script type=&quot;math/tex&quot;&gt;E = \frac{1}{2} \sum_{n=0}^K (y_{n} - f(x_{n}, w))^2&lt;/script&gt; where w is vector of parameters and xn is nth training point while yn is 
+&lt;p&gt;In other words, we want to minimize error: \(E = \frac{1}{2} \sum_{n=0}^K (y_{n} - f(x_{n}, w))^2\) where w is vector of parameters and xn is nth training point while yn is 
 expected value of function of nth data point. Now we need to find vector w such that we minimize that error (to make f as close as possible to y’s). We can apply our gradient 
 algorithm to update w. We start with some initial guess and update w as follows:&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;w_{t+1} = w_{t} - \alpha \nabla E(w_{t})&lt;/script&gt;
+\[w_{t+1} = w_{t} - \alpha \nabla E(w_{t})\]
 
 &lt;p&gt;now, we need to calculate gradient of our error function:&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\nabla E = \frac{1}{2} \sum_{n=0}^K 2 (f(x_{n}, w_{t}) - y_{n}) \nabla f(x_{n}, w_{t})&lt;/script&gt;
+\[\nabla E = \frac{1}{2} \sum_{n=0}^K 2 (f(x_{n}, w_{t}) - y_{n}) \nabla f(x_{n}, w_{t})\]
 
 &lt;p&gt;and that’s it, we also need to calculate gradient of our function f such that our algorithm is complete and we will do that after introducing what our function f is.&lt;/p&gt;
 
@@ -672,19 +672,19 @@ algorithm to update w. We start with some initial guess and update w as follows:
 
 &lt;p&gt;Now, let’s consider simple neural network with one input layer and one output layer (without hidden layer). Let’s say we have N nodes in input layer and M nodes in output layer. now we have M functions to calculate:&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;f_{m} = \sum_{i=0}^N w_{i,m} x_{i}&lt;/script&gt;
+\[f_{m} = \sum_{i=0}^N w_{i,m} x_{i}\]
 
 &lt;p&gt;oh wait….is this linear regression? Yeah….&lt;/p&gt;
 
 &lt;p&gt;but wait again… we said earlier that our f is scalar function but here we say that neural network has M output nodes, WTF??? Well, we can still update our weights, just with slightly modified gradient of error:&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\nabla E = \sum_{n=0}^K (f(x_{n}, w_{t}) - y_{n})\nabla f = \sum_{n=0}^K \sum_{j=0}^M (f_{j}(x_{n}, w_{t}) - y_{n,j}) \nabla f_{j}&lt;/script&gt;
+\[\nabla E = \sum_{n=0}^K (f(x_{n}, w_{t}) - y_{n})\nabla f = \sum_{n=0}^K \sum_{j=0}^M (f_{j}(x_{n}, w_{t}) - y_{n,j}) \nabla f_{j}\]
 
 &lt;p&gt;Now we are back in the game, we just treat this product as scalar product and we are fine. It can be proven mathematically that this is correct assumption but here there is no need for it.&lt;/p&gt;
 
 &lt;p&gt;Now, as we have calculated this error gradient, we just need to calculate gradient for every possible function. Well, this is easy:&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\frac{\partial f_{j}}{\partial w_{i,j}} = x_{i}&lt;/script&gt;
+\[\frac{\partial f_{j}}{\partial w_{i,j}} = x_{i}\]
 
 &lt;h1 id=&quot;advanced-stuff&quot;&gt;“Advanced stuff”&lt;/h1&gt;
 
@@ -711,24 +711,24 @@ library, it is much harder to know what is implemented inside it. I know that yo
 
 &lt;p&gt;You probably know about lists in Python, if you don’t, here is example:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l = [1,2,3]
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l = [1,2,3]
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Pretty simple, right? You can access elements by indexing:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l[2] # will be 3 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l[2] # will be 3 
 l[0] # will be 1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;you can even add elements to it:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l.append(5)
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l.append(5)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now the problem with these lists is that they are not actually lists! I bet computer science professors are angry at Python developers for assigning wrong names to things. Lists in Python
-are actually dynamic arrays. They are dynamic arrays of pointers to objects. In C++, one can implement this behaviour using &lt;code class=&quot;highlighter-rouge&quot;&gt;std::vector&lt;/code&gt; for instance like this:&lt;/p&gt;
+are actually dynamic arrays. They are dynamic arrays of pointers to objects. In C++, one can implement this behaviour using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;std::vector&lt;/code&gt; for instance like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;std::vector&amp;lt;PythonObject&amp;gt; l;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;std::vector&amp;lt;PythonObject&amp;gt; l;
 l.push_back(PythonObject::Integer(1));
 l.push_back(PythonObject::Integer(2));
 l.push_back(PythonObject::Integer(3));
@@ -740,10 +740,10 @@ l.push_back(PythonObject::Integer(3));
 
 &lt;p&gt;Well, as far as I know, there is no implementation of linked lists in Python. Please correct me if I am wrong down in comment section. Linked lists can be easily implemented and I will explain its implementation now.&lt;/p&gt;
 
-&lt;p&gt;First of all, we will need simple class called &lt;code class=&quot;highlighter-rouge&quot;&gt;list_node&lt;/code&gt; to represent node of our list. This object will contain value and pointer to next node.Python provides really nice
+&lt;p&gt;First of all, we will need simple class called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;list_node&lt;/code&gt; to represent node of our list. This object will contain value and pointer to next node.Python provides really nice
 way to implement such simple class and it is called named tuple:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from collections import namedtuple
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from collections import namedtuple
 list_node = namedtuple(&quot;list_node&quot;, [&quot;value&quot;, &quot;next&quot;])
 my_node = list_node(value=2, next=None)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -752,7 +752,7 @@ my_node = list_node(value=2, next=None)
 
 &lt;p&gt;This is implementation of whole container:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class list_node:
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class list_node:
     def __init__(self, value, next):
         self.value = value
         self.next = next
@@ -783,7 +783,7 @@ class linked_list:
 
 &lt;p&gt;and now you can do something like:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l = linked_list([1,2,3])
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;l = linked_list([1,2,3])
 l.append(4)
 for v in l:
     print(v)
@@ -791,7 +791,7 @@ for v in l:
 
 &lt;p&gt;From here, we can implement double-linked list:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class list_node:
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class list_node:
     def __init__(self, value, next, prev):
         self.value = value
         self.next = next
@@ -855,14 +855,14 @@ class linked_list:
 
 &lt;p&gt;To install it simply run:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python setup.py install
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python setup.py install
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Make sure your user have proper privileges or to run it inside virtualenv.&lt;/p&gt;
 
 &lt;p&gt;Now we can make simple “hello world” bot. Just create your Python script with the following code:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from src import * 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;from src import * 
 class MyBot(WebHookServer):
 	def handle_message(self, sender_id, text, timestamp):
 		if text == &quot;hello&quot;:
@@ -872,7 +872,7 @@ VERIFY_TOKEN = &quot;&quot;
 MyBot(TOKEN, port=563, verify_token=VERIFY_TOKEN).serve()
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Let’s analyse what have we done here. First of all, we subclass WebHookServer and implement function &lt;code class=&quot;highlighter-rouge&quot;&gt;on_message&lt;/code&gt;. This is function which is called when our bot receives message and provides access to ID of sender, text of message and timestamp of message. Function should return response to message. If it returns None or “” then bot won’t respond to given message. If function returns some string, that string will be response from our bot. As simple as that!&lt;/p&gt;
+&lt;p&gt;Let’s analyse what have we done here. First of all, we subclass WebHookServer and implement function &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;on_message&lt;/code&gt;. This is function which is called when our bot receives message and provides access to ID of sender, text of message and timestamp of message. Function should return response to message. If it returns None or “” then bot won’t respond to given message. If function returns some string, that string will be response from our bot. As simple as that!&lt;/p&gt;
 
 &lt;p&gt;Then we have defined two variables, token and verify token. They will be set properly when we register our bot on Messenger developer panel. In the end, we run our bot as web server. When we register our bot to Messenger, every message will be passed to this server and server will respond in a form of HTTP request to Messenger.&lt;/p&gt;
 
@@ -880,13 +880,13 @@ MyBot(TOKEN, port=563, verify_token=VERIFY_TOKEN).serve()
 
 &lt;p&gt;Now we have to register our bot to Messenger. First of all, we need to set up web server properly to use SSL and to correctly route to our bot instance. I will give example of nginx configuration:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        location /webhook/ {
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        location /webhook/ {
             proxy_set_header Host $host;
             proxy_pass http://127.0.0.1:563/;
         }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;As you can see, we just need to redirect requests from &lt;code class=&quot;highlighter-rouge&quot;&gt;/webhook&lt;/code&gt; location on our web server to internal bot running on specified port. We also need to set up HTTPS, please see 
+&lt;p&gt;As you can see, we just need to redirect requests from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/webhook&lt;/code&gt; location on our web server to internal bot running on specified port. We also need to set up HTTPS, please see 
 &lt;a href=&quot;https://www.nginx.com/blog/using-free-ssltls-certificates-from-lets-encrypt-with-nginx/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Now we have to register our bot, so go to &lt;a href=&quot;https://developers.facebook.com/docs/messenger-platform/&quot;&gt;Developer console&lt;/a&gt; and go to “My apps” and and click on “New app”. If you are not registered to developer console, you will need to do it first. When creating app, you will enter URL to your webhook and your verification token. Also you will see your token and you need to update these two variables in code and re-run app. After that, you will be prompted from developer console to verify your application. You just click to verify and library will handle verification for you. After that, you will be able to chat with your bot. :)&lt;/p&gt;

@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Purescript - a nice path to web | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Purescript - a nice path to web" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Recently I have been playing with Haskell and functional programming. I’ve found a nice Haskell-like language which compiles to Javascript which means it is very suitable for web. It is PureScript and you can easily set up project with pulp and run it. It can be used to develop backend part or frontend part." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-04-03T00:15:00+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Purescript - a nice path to web" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Purescript - a nice path to web","dateModified":"2018-04-03T00:15:00+02:00","datePublished":"2018-04-03T00:15:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/haskell/purescript/web/2018/04/03/purescript.html"},"description":"Recently I have been playing with Haskell and functional programming. I’ve found a nice Haskell-like language which compiles to Javascript which means it is very suitable for web. It is PureScript and you can easily set up project with pulp and run it. It can be used to develop backend part or frontend part.","url":"http://fantastic001.github.io/haskell/purescript/web/2018/04/03/purescript.html","@context":"https://schema.org"}</script>
+{"description":"Recently I have been playing with Haskell and functional programming. I’ve found a nice Haskell-like language which compiles to Javascript which means it is very suitable for web. It is PureScript and you can easily set up project with pulp and run it. It can be used to develop backend part or frontend part.","headline":"Purescript - a nice path to web","url":"http://fantastic001.github.io/haskell/purescript/web/2018/04/03/purescript.html","dateModified":"2018-04-03T00:15:00+02:00","datePublished":"2018-04-03T00:15:00+02:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/haskell/purescript/web/2018/04/03/purescript.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -107,12 +109,12 @@ it is very suitable for web. It is PureScript and you can easily set up project 
 
 <p>Tools needed for purescript project can be installed via npm:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install pulp purescript bower
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install pulp purescript bower
 </code></pre></div></div>
 
 <p>Most of purescript packages can be installed with bower, for example AFF library:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bower install purescript-aff 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bower install purescript-aff 
 </code></pre></div></div>
 
 <p>pulp is PureScript’s equivalent of gulp and it is used to run, build and initialize project. It can be also used to generate javascript code which can be 
@@ -120,27 +122,27 @@ linked to HTML.</p>
 
 <p>After installation, you should add pulp to path:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export PATH="$PATH:node_modules/.bin/"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export PATH="$PATH:node_modules/.bin/"
 </code></pre></div></div>
 
 <p>Now you can initialize project:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pulp init 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pulp init 
 </code></pre></div></div>
 
 <p>To generate JS file:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pulp browserify -t script.js 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pulp browserify -t script.js 
 </code></pre></div></div>
 
 <p>To build project and run:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pulp run
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pulp run
 </code></pre></div></div>
 
 <p>To launch REPL with project’s environment:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pulp repl
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pulp repl
 </code></pre></div></div>
 
 <p>===Learning PureScript===</p>

@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Creating Facebook Messenger bots made simple | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Creating Facebook Messenger bots made simple" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Every day there are more and more chat bots which are useful for various businesses and even individuals. Imagine that you have created simple app with few options and you do not want (or you are too lazy) to make frontend (or even REST API) for it. You have limited number of users which are willing to use your app and are happy with simple things that do not require install or registration. Chat bots come handy in this situation. In this article, I will explain how to set up your own chat bot on Facebook Messenger with library I have developed. Currently library only supports text messages which is enough in most applications but in the future I plan to introduce more functionality." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-10-29T10:15:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Creating Facebook Messenger bots made simple" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Creating Facebook Messenger bots made simple","dateModified":"2018-10-29T10:15:00+01:00","datePublished":"2018-10-29T10:15:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/tools/dev/2018/10/29/mbot.html"},"description":"Every day there are more and more chat bots which are useful for various businesses and even individuals. Imagine that you have created simple app with few options and you do not want (or you are too lazy) to make frontend (or even REST API) for it. You have limited number of users which are willing to use your app and are happy with simple things that do not require install or registration. Chat bots come handy in this situation. In this article, I will explain how to set up your own chat bot on Facebook Messenger with library I have developed. Currently library only supports text messages which is enough in most applications but in the future I plan to introduce more functionality.","url":"http://fantastic001.github.io/tools/dev/2018/10/29/mbot.html","@context":"https://schema.org"}</script>
+{"description":"Every day there are more and more chat bots which are useful for various businesses and even individuals. Imagine that you have created simple app with few options and you do not want (or you are too lazy) to make frontend (or even REST API) for it. You have limited number of users which are willing to use your app and are happy with simple things that do not require install or registration. Chat bots come handy in this situation. In this article, I will explain how to set up your own chat bot on Facebook Messenger with library I have developed. Currently library only supports text messages which is enough in most applications but in the future I plan to introduce more functionality.","headline":"Creating Facebook Messenger bots made simple","url":"http://fantastic001.github.io/tools/dev/2018/10/29/mbot.html","dateModified":"2018-10-29T10:15:00+01:00","datePublished":"2018-10-29T10:15:00+01:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/tools/dev/2018/10/29/mbot.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -108,14 +110,14 @@
 
 <p>To install it simply run:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python setup.py install
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python setup.py install
 </code></pre></div></div>
 
 <p>Make sure your user have proper privileges or to run it inside virtualenv.</p>
 
 <p>Now we can make simple “hello world” bot. Just create your Python script with the following code:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from src import * 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from src import * 
 class MyBot(WebHookServer):
 	def handle_message(self, sender_id, text, timestamp):
 		if text == "hello":
@@ -125,7 +127,7 @@ VERIFY_TOKEN = ""
 MyBot(TOKEN, port=563, verify_token=VERIFY_TOKEN).serve()
 </code></pre></div></div>
 
-<p>Let’s analyse what have we done here. First of all, we subclass WebHookServer and implement function <code class="highlighter-rouge">on_message</code>. This is function which is called when our bot receives message and provides access to ID of sender, text of message and timestamp of message. Function should return response to message. If it returns None or “” then bot won’t respond to given message. If function returns some string, that string will be response from our bot. As simple as that!</p>
+<p>Let’s analyse what have we done here. First of all, we subclass WebHookServer and implement function <code class="language-plaintext highlighter-rouge">on_message</code>. This is function which is called when our bot receives message and provides access to ID of sender, text of message and timestamp of message. Function should return response to message. If it returns None or “” then bot won’t respond to given message. If function returns some string, that string will be response from our bot. As simple as that!</p>
 
 <p>Then we have defined two variables, token and verify token. They will be set properly when we register our bot on Messenger developer panel. In the end, we run our bot as web server. When we register our bot to Messenger, every message will be passed to this server and server will respond in a form of HTTP request to Messenger.</p>
 
@@ -133,13 +135,13 @@ MyBot(TOKEN, port=563, verify_token=VERIFY_TOKEN).serve()
 
 <p>Now we have to register our bot to Messenger. First of all, we need to set up web server properly to use SSL and to correctly route to our bot instance. I will give example of nginx configuration:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        location /webhook/ {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        location /webhook/ {
             proxy_set_header Host $host;
             proxy_pass http://127.0.0.1:563/;
         }
 </code></pre></div></div>
 
-<p>As you can see, we just need to redirect requests from <code class="highlighter-rouge">/webhook</code> location on our web server to internal bot running on specified port. We also need to set up HTTPS, please see 
+<p>As you can see, we just need to redirect requests from <code class="language-plaintext highlighter-rouge">/webhook</code> location on our web server to internal bot running on specified port. We also need to set up HTTPS, please see 
 <a href="https://www.nginx.com/blog/using-free-ssltls-certificates-from-lets-encrypt-with-nginx/">here</a>.</p>
 
 <p>Now we have to register our bot, so go to <a href="https://developers.facebook.com/docs/messenger-platform/">Developer console</a> and go to “My apps” and and click on “New app”. If you are not registered to developer console, you will need to do it first. When creating app, you will enter URL to your webhook and your verification token. Also you will see your token and you need to update these two variables in code and re-run app. After that, you will be prompted from developer console to verify your application. You just click to verify and library will handle verification for you. After that, you will be able to chat with your bot. :)</p>

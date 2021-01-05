@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Algorithm analysis in functional programming | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Algorithm analysis in functional programming" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="This article has purpose to demonstrate the way of reasoning when algorithm analysis comes for programs written in functional programming paradigm. I will give some examples in Haskell to demonstrate methodology and also explain some core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic manner which is when we take limit where size of input goes to infinity." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-01-16T23:15:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Algorithm analysis in functional programming" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Algorithm analysis in functional programming","dateModified":"2018-01-16T23:15:00+01:00","datePublished":"2018-01-16T23:15:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html"},"description":"This article has purpose to demonstrate the way of reasoning when algorithm analysis comes for programs written in functional programming paradigm. I will give some examples in Haskell to demonstrate methodology and also explain some core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic manner which is when we take limit where size of input goes to infinity.","url":"http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html","@context":"https://schema.org"}</script>
+{"description":"This article has purpose to demonstrate the way of reasoning when algorithm analysis comes for programs written in functional programming paradigm. I will give some examples in Haskell to demonstrate methodology and also explain some core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic manner which is when we take limit where size of input goes to infinity.","headline":"Algorithm analysis in functional programming","url":"http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html","dateModified":"2018-01-16T23:15:00+01:00","datePublished":"2018-01-16T23:15:00+01:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/functional-programming/software/algorithms/2018/01/16/algorithm-analysis-in-fp.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -110,18 +112,18 @@ we take limit where size of input goes to infinity.</p>
 <p>First let’s start by simple things. List comprehension is a way to define new list in terms of existing one. It is similar to what 
 you can see in math. For example the following list:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>l = [x^2 | x &lt;- [1..10]]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>l = [x^2 | x &lt;- [1..10]]
 </code></pre></div></div>
 
 <p>is a list of squares from 1 to 10 (it is list [1,4,9, …, 100])</p>
 
 <p>List comprehension is done in O(n) time. Another example is finding prime numbers:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>primes = [x | x &lt;- [1..100], [y | y &lt;- [2..x-1], x `mod` y == 0] == []]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>primes = [x | x &lt;- [1..100], [y | y &lt;- [2..x-1], x `mod` y == 0] == []]
 </code></pre></div></div>
 
 <p>This is list of primes from 1 to 100. Let’s determine what time does it take to find prime numbers from 1 to n using this method. First 
-we need to generate list of n numbers and for each to check is list [y|y&lt;-[2..x-1], x <code class="highlighter-rouge">mod</code> y == 0] empty. To generate this second
+we need to generate list of n numbers and for each to check is list [y|y&lt;-[2..x-1], x <code class="language-plaintext highlighter-rouge">mod</code> y == 0] empty. To generate this second
 list we need to check x elements. This yields formula: 1 + 2 + … + n which is asymptotically equal to O(n^2).</p>
 
 <p>Here you can see that filtering does not lower number of operations since we have to perform them anyway.</p>
@@ -133,7 +135,7 @@ function is executed while in functional programming, call to function with spec
 
 <p>We can check that in the following example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fact :: Int -&gt; Int 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fact :: Int -&gt; Int 
 fact 1 = 1
 fact n = n * fact (n-1)
 </code></pre></div></div>
@@ -143,7 +145,7 @@ programming, function always returns the same result when called with the same p
 is good for us when worrying about time but may be bad if we worry about space. This complicates our time analysis 
 For example, consider Fibonacci number generator:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fib = 0 = 1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fib = 0 = 1
 fib 1 = 1 
 fib n = fib (n-1) + fib (n-2) 
 </code></pre></div></div>
@@ -166,14 +168,14 @@ to traverse list and make copy of elements to be able to create concatenated ver
 
 <p>Let’s do the analysis for our quick sort example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>qsort :: [Int] -&gt; [Int]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>qsort :: [Int] -&gt; [Int]
 qsort [] = []
 qsort l = (qsort [x | x&lt;-l, x &lt; y]) ++ [y] ++ (qsort [x | x&lt;-l, x&gt;y]) where y = (head l)
 </code></pre></div></div>
 
 <p>first we will do list comprehension for left and right part and it takes O(n) time and then we will merge results of sorting individual parts which also takes O(n) time. For sorting both sides we need 2T(n/2) time if we assume that left and right sides are approximately equal. Now we have formula:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>T(n) = 2T(n/2) + O(n)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>T(n) = 2T(n/2) + O(n)
 </code></pre></div></div>
 
 <p>so by Akra-Bazzi theorem we conclude that T(n) = O(nlog(n)).</p>

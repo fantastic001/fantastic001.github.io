@@ -27,9 +27,9 @@
   <link rel="alternate" type="application/rss+xml" title="Stefan Nožinić" href="http://fantastic001.github.io/feed.xml">
 </head>
 
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>height3d | Stefan Nožinić</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="height3d" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="During one of my research projects in Petnica Science Center, I have developed small open source framework which adds C++ features to OpenGL and lays around it. I will give short introduction in this article how to use Height3D framework to make your job of creating small 3D apps easier." />
@@ -39,8 +39,10 @@
 <meta property="og:site_name" content="Stefan Nožinić" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-02-16T15:15:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="height3d" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"height3d","dateModified":"2018-02-16T15:15:00+01:00","datePublished":"2018-02-16T15:15:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/height3d/c++/2018/02/16/height3d.html"},"description":"During one of my research projects in Petnica Science Center, I have developed small open source framework which adds C++ features to OpenGL and lays around it. I will give short introduction in this article how to use Height3D framework to make your job of creating small 3D apps easier.","url":"http://fantastic001.github.io/height3d/c++/2018/02/16/height3d.html","@context":"https://schema.org"}</script>
+{"description":"During one of my research projects in Petnica Science Center, I have developed small open source framework which adds C++ features to OpenGL and lays around it. I will give short introduction in this article how to use Height3D framework to make your job of creating small 3D apps easier.","headline":"height3d","url":"http://fantastic001.github.io/height3d/c++/2018/02/16/height3d.html","dateModified":"2018-02-16T15:15:00+01:00","datePublished":"2018-02-16T15:15:00+01:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://fantastic001.github.io/height3d/c++/2018/02/16/height3d.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -109,7 +111,7 @@ OpenGL and lays around it. I will give short introduction in this article how to
 
 <p>To install it, just run:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake . 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake . 
 make 
 make install 
 </code></pre></div></div>
@@ -121,7 +123,7 @@ to shaders and these data get rendered on the screen. Currently Height3S has sup
 
 <p>Basic vertex shader is shown below:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 120
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 120
 attribute vec4 vPosition;
 
 void main()
@@ -132,7 +134,7 @@ void main()
 
 <p>Here we just set our vertex coordinates. Fragment shader is shown below:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 120
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 120
 attribute vec4 vPosition;
 
 void main()
@@ -145,7 +147,7 @@ void main()
 
 <p>Now let’s see our code implementation for this particular example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
 
 #define GL3_PROTOTYPES 1
 #include &lt;GL/glew.h&gt;
@@ -225,8 +227,8 @@ int main()
 }
 </code></pre></div></div>
 
-<p>As you can see, here we can recognize basic opengl element with GLEW. The catch point here is that we have Objects <code class="highlighter-rouge">Program</code> which 
-is responsible for compiling and linking our shaders and <code class="highlighter-rouge">Buffer</code> which is OOP implementation of buffer communication to GPU.</p>
+<p>As you can see, here we can recognize basic opengl element with GLEW. The catch point here is that we have Objects <code class="language-plaintext highlighter-rouge">Program</code> which 
+is responsible for compiling and linking our shaders and <code class="language-plaintext highlighter-rouge">Buffer</code> which is OOP implementation of buffer communication to GPU.</p>
 
 <p>In this example, we draw our window with three colors and then draw red triangle on it.</p>
 
@@ -234,7 +236,7 @@ is responsible for compiling and linking our shaders and <code class="highlighte
 
 <p>We can also use textures to color our objects, for example the following code will draw triangle with nice gradient on it:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
 
 #define GL3_PROTOTYPES 1
 #include &lt;GL/glew.h&gt;
@@ -328,7 +330,7 @@ int main()
 
 <p>But now we will also have to modify our shader:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 120
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 120
 
 attribute vec4 vPosition;
 attribute vec2 uv;
@@ -343,7 +345,7 @@ void main()
 
 <p>and fragment shader:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 120
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 120
 
 varying vec2 st;
 uniform sampler2D image;
@@ -364,11 +366,11 @@ void main()
 
 <p>This before was just introduction of what Height3D can do but it is not all!</p>
 
-<p>To fully use benefits of OOP, there’s class SDLLoop which can be subclassed and you can implement event handling, initialization and similar things there. Also, this class exposes <code class="highlighter-rouge">onFrame()</code> method which can be implemented to do drawing of objects for us.</p>
+<p>To fully use benefits of OOP, there’s class SDLLoop which can be subclassed and you can implement event handling, initialization and similar things there. Also, this class exposes <code class="language-plaintext highlighter-rouge">onFrame()</code> method which can be implemented to do drawing of objects for us.</p>
 
-<p>Also, there’s <code class="highlighter-rouge">Scene</code> class which can draw all objects for you, using that class you can set camera position, perspective parameters
+<p>Also, there’s <code class="language-plaintext highlighter-rouge">Scene</code> class which can draw all objects for you, using that class you can set camera position, perspective parameters
 as well as to add objects. Here important thing is to distinguish between object and model. Model is description of how something is drawn on unit cube, it specifies vertex coordinates, texture coordinates, vertex normals etc. You can implement your own model 
-by subclassing <code class="highlighter-rouge">AbstractModel</code> class and then implementing needed methods. In these methods, you have to return needed coordinates, colors and normals.</p>
+by subclassing <code class="language-plaintext highlighter-rouge">AbstractModel</code> class and then implementing needed methods. In these methods, you have to return needed coordinates, colors and normals.</p>
 
 <p>Object is made of model, its size, position, assigned texture etc…</p>
 
@@ -376,7 +378,7 @@ by subclassing <code class="highlighter-rouge">AbstractModel</code> class and th
 
 <p>vertex shader:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 120
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 120
 
 attribute vec4 vPosition;
 attribute vec4 vColor;
@@ -406,7 +408,7 @@ void main()
 
 <p>fragment shader:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 120
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 120
 
 
 uniform sampler2D image;
@@ -440,7 +442,7 @@ void main()
 
 <p>and our code will look like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
 
 #define GL3_PROTOTYPES 1
 #include &lt;GL/glew.h&gt;
@@ -648,7 +650,7 @@ int main()
 
 <p>Now we can implement our mode, for example, to be cube:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class PhongCubeModel : public AbstractModel
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class PhongCubeModel : public AbstractModel
 {
 protected:
         std::vector&lt;float&gt; genVertices()
@@ -759,15 +761,15 @@ protected:
 <h1 id="height-fields">Height fields</h1>
 
 <p>You can make models easily by making height fields. A height field is model which has two levels: bottom and top one. For every coordinate on unit cube, it draws surface starting from bottom level and ending on top level. You can specify height by giving function 
-which returns <code class="highlighter-rouge">pair&lt;float, float&gt;</code> where first number is starting height and second number is ending height. To use this, you have to include  HeightfieldModel class:</p>
+which returns <code class="language-plaintext highlighter-rouge">pair&lt;float, float&gt;</code> where first number is starting height and second number is ending height. To use this, you have to include  HeightfieldModel class:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;structures/heightfield/LayeredHeightfield.hpp&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;structures/heightfield/LayeredHeightfield.hpp&gt;
 #include &lt;structures/heightfield/LayeredHeightfieldModel.hpp&gt;
 </code></pre></div></div>
 
 <p>For example, to make a cube, you will use something like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LayeredHeightfield h = new LayeredHeightfield(128); // as its constructor, we pass precision, how many samples we want in unit cube, too high precision means better look but consumes more memory
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LayeredHeightfield h = new LayeredHeightfield(128); // as its constructor, we pass precision, how many samples we want in unit cube, too high precision means better look but consumes more memory
 
 h-&gt;addLevel(); // we have to add level to it, every level is one heightfield. For example if we want two cubes separated by space and one is on top of another, we will have to levels!
 
@@ -776,7 +778,7 @@ h-&gt;assign([=] (int level, float x, float z) -&gt; pair&lt;float, float&gt; {r
 
 <p>And now we can use our heightfield to construct model and object with it:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cube = scene.addObject(new SceneObject(
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cube = scene.addObject(new SceneObject(
 	new  LayeredHeightfieldModel(h), // use cube model to draw this object
 	new Texture(GL_TEXTURE_2D, 1, 1, GL_RGB), // use dummy texture 
 	0.0, 0.0, 0.0, // location 
@@ -796,7 +798,7 @@ h-&gt;assign([=] (int level, float x, float z) -&gt; pair&lt;float, float&gt; {r
 
 <p>This project is still in development and I know that there’s still much of boilerplate code and I will work to decrease amount of 
 code needed to implement some stuff. I will post about that when I make changes. You can see more examples on repository under 
-<code class="highlighter-rouge">functional</code> directory, here are some photos what can be done (from examples in repository):</p>
+<code class="language-plaintext highlighter-rouge">functional</code> directory, here are some photos what can be done (from examples in repository):</p>
 
 <p><img src="/images/height3d/3.png" alt="Example 1" /></p>
 
