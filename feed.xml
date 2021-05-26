@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Stefan Nožinić</title>
-    <description>This is my blog where I will express my thoughts about everything which I'm interested in.
+    <description>This is my blog where I will express my thoughts about everything which I&apos;m interested in.
 </description>
     <link>http://fantastic001.github.io/</link>
     <atom:link href="http://fantastic001.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 05 Jan 2021 13:22:48 +0100</pubDate>
-    <lastBuildDate>Tue, 05 Jan 2021 13:22:48 +0100</lastBuildDate>
+    <pubDate>Wed, 26 May 2021 20:40:00 +0200</pubDate>
+    <lastBuildDate>Wed, 26 May 2021 20:40:00 +0200</lastBuildDate>
     <generator>Jekyll v4.2.0</generator>
     
       <item>
@@ -186,7 +186,7 @@ std::string&amp;amp; ref = mystr;
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int count_spaces(const std::string&amp;amp; str) {
 	int c = 0;
 	for (int i = 0; i&amp;lt;str.size(); i++) {
-		if (str[i] == ' ') c++;
+		if (str[i] == &apos; &apos;) c++;
 	}
 	return c;
 }
@@ -365,7 +365,7 @@ HTTPServer(cloud, port=8080).serve()
 
 &lt;p&gt;As simple as that. Endpoint for FSHandler is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/data/&lt;/code&gt; so you can try it out with curl:&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST -d '{&quot;name&quot;: &quot;John&quot;}' &quot;localhost:8080/data/john&quot;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST -d &apos;{&quot;name&quot;: &quot;John&quot;}&apos; &quot;localhost:8080/data/john&quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;and you will see file created in directory you specified as first argument to your server (root path where files are served).&lt;/p&gt;
@@ -554,9 +554,9 @@ special types of neural networks.&lt;/p&gt;
 
 &lt;p&gt;where gradients we can calculate as follows:&lt;/p&gt;
 
-\[\frac{\partial f_m}{\partial w^{(1)}_{i,j}} = Z'(\sum_{k=1}^P w_{k,m}^{(2)} y_k) (\sum_{k=1}^P w_{k,m}^{(2)} \sigma'(\sum_{l=1}^N w^{(1)}_{l,k} x_l) x_i)\]
+\[\frac{\partial f_m}{\partial w^{(1)}_{i,j}} = Z&apos;(\sum_{k=1}^P w_{k,m}^{(2)} y_k) (\sum_{k=1}^P w_{k,m}^{(2)} \sigma&apos;(\sum_{l=1}^N w^{(1)}_{l,k} x_l) x_i)\]
 
-\[\frac{\partial f_m}{\partial w^{(2)}_{i,m}} = Z'(\sum_{k=1}^P w^{(2)}_{k,m} y_k) \sigma(\sum_{l=1}^N w_{l,i}^{(1)} x_l)\]
+\[\frac{\partial f_m}{\partial w^{(2)}_{i,m}} = Z&apos;(\sum_{k=1}^P w^{(2)}_{k,m} y_k) \sigma(\sum_{l=1}^N w_{l,i}^{(1)} x_l)\]
 
 &lt;p&gt;And that’s it!&lt;/p&gt;
 
@@ -599,9 +599,9 @@ methods of derivatives etc. This works for functions for which we can easily cal
 to numerical iterative methods. Iterative method starts with initial guess and updates that guess based on formula: \(x_{t+1} = x_t + \Delta x (x_{t})\) where \(\Delta x\) is 
 some function depending on method.&lt;/p&gt;
 
-&lt;p&gt;Newton’s method: \(\Delta x = - \frac{f'(x_t)}{f''(x_{t})}\)&lt;/p&gt;
+&lt;p&gt;Newton’s method: \(\Delta x = - \frac{f&apos;(x_t)}{f&apos;&apos;(x_{t})}\)&lt;/p&gt;
 
-&lt;p&gt;Gradient method: \(\Delta x = - \alpha f'(x_{t})\)&lt;/p&gt;
+&lt;p&gt;Gradient method: \(\Delta x = - \alpha f&apos;(x_{t})\)&lt;/p&gt;
 
 &lt;p&gt;We can extend this to more variables, then x is vector and f is multivariate scalar function. Now our iterative algorithms look like this:&lt;/p&gt;
 
