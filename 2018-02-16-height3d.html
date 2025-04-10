@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>height3d - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="height3d" />
+	<meta name="date" content="2018-02-16 15:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-02-16 15:15:00+01:00" />
+	<meta property="og:title" content="height3d" />
+	<meta property="og:url" content="/2018-02-16-height3d.html" />
+	<meta property="og:description" content="During one of my research projects in Petnica Science Center, I have developed small open source framework which adds C++ features to OpenGL and lays around it. I will give short introduction in this article how to use Height3D framework to make your job of creating small 3D apps easier …" />
+	<meta name="description" content="During one of my research projects in Petnica Science Center, I have developed small open source framework which adds C++ features to OpenGL and lays around it. I will give short introduction in this article how to use Height3D framework to make your job of creating small 3D apps easier …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>height3d</h1>
+			<p>During one of my research projects in Petnica Science Center, I have developed small open source framework which adds C++ features to
+OpenGL and lays around it. I will give short introduction in this article how to use Height3D framework to make your job of creating small 3D apps easier. </p>
+<h1>Installation</h1>
+<p>Height3D can be downloaded on <a href="https://github.com/fantastic001/Height3D">GitHub</a></p>
+<p>To install it, just run:</p>
+<div class="highlight"><pre><span></span><code>cmake . 
+make 
+make install
+</code></pre></div>
+
+<h1>Basic handling of buffers and shaders</h1>
+<p>First of all, it functions just like OpenGL, you have to write shaders and link and compile them. Then you send data 
+to shaders and these data get rendered on the screen. Currently Height3S has support for SDL to render graphics on your window. </p>
+<p>Basic vertex shader is shown below:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#version</span><span class="w"> </span><span class="mi">120</span>
+<span class="n">attribute</span><span class="w"> </span><span class="n">vec4</span><span class="w"> </span><span class="n">vPosition</span><span class="p">;</span>
+
+<span class="n">void</span><span class="w"> </span><span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">gl_Position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vPosition</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Here we just set our vertex coordinates. Fragment shader is shown below:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#version</span><span class="w"> </span><span class="mi">120</span>
+<span class="n">attribute</span><span class="w"> </span><span class="n">vec4</span><span class="w"> </span><span class="n">vPosition</span><span class="p">;</span>
+
+<span class="n">void</span><span class="w"> </span><span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">gl_Position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vPosition</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>As you can see, you write shaders just you would write them in your standard OpenGL application, these are basic shaders suitable for drawing 2D objects. </p>
+<p>Now let's see our code implementation for this particular example:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+
+<span class="cp">#define GL3_PROTOTYPES 1</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;GL/glew.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;core/Vector.hpp&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;SDL2/SDL.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;debug.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;shaders.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;sdl_init.hpp&quot;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;core/Buffer.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;core/Vector.hpp&quot;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;gui/Window.hpp&quot;</span>
+
+<span class="n">using</span><span class="w"> </span><span class="n">namespace</span><span class="w"> </span><span class="nn">std</span><span class="p">;</span>
+
+<span class="kr">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+
+<span class="w">    </span><span class="n">Window</span><span class="w"> </span><span class="n">win</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tutorial&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">glClearColor</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="n">glClear</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">GL_COLOR_BUFFER_BIT</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="n">win</span><span class="p">.</span><span class="n">redraw</span><span class="p">();</span>
+<span class="w">    </span><span class="n">win</span><span class="p">.</span><span class="nf">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">glClearColor</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="n">glClear</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">GL_COLOR_BUFFER_BIT</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="n">win</span><span class="p">.</span><span class="n">redraw</span><span class="p">();</span>
+<span class="w">    </span><span class="n">win</span><span class="p">.</span><span class="nf">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">glClearColor</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="n">glClear</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">GL_COLOR_BUFFER_BIT</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="n">win</span><span class="p">.</span><span class="n">redraw</span><span class="p">();</span>
+<span class="w">    </span><span class="n">win</span><span class="p">.</span><span class="nf">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">glewInit</span><span class="p">();</span>
+<span class="w">    </span><span class="n">Program</span><span class="w"> </span><span class="n">program</span><span class="p">;</span>
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">addShader</span><span class="p">(</span><span class="n">Shader</span><span class="p">(</span><span class="n">GL_VERTEX_SHADER</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;functional/basic//shader.vp&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">addShader</span><span class="p">(</span><span class="n">Shader</span><span class="p">(</span><span class="n">GL_FRAGMENT_SHADER</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;functional/basic/shader.fp&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">link</span><span class="p">();</span>
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">bind</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kr">int</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getAttributeLocation</span><span class="p">(</span><span class="s">&quot;vPosition&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">enableAttributeArray</span><span class="p">(</span><span class="n">loc</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Vector</span><span class="w"> </span><span class="n">vertices</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Vector</span><span class="p">(</span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">),</span>
+<span class="w">        </span><span class="n">Vector</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">),</span>
+<span class="w">        </span><span class="n">Vector</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="n">GLfloat</span><span class="w"> </span><span class="n">g_vertex_buffer_data</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="mf">-1.0f</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">,</span>
+
+<span class="w">        </span><span class="mf">1.0f</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">,</span>
+
+<span class="w">        </span><span class="mf">0.0f</span><span class="p">,</span><span class="w">  </span><span class="mf">1.0f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">,</span>
+
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">Buffer</span><span class="w"> </span><span class="n">buf</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">);</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">sendData</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="kr">false</span><span class="p">);</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">bind</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">setAttributeArray</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">glDrawArrays</span><span class="p">(</span><span class="n">GL_TRIANGLES</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span><span class="w"> </span><span class="c1">// Starting from vertex 0; 3 vertices total -&gt; 1 triangle</span>
+
+<span class="w">    </span><span class="n">win</span><span class="p">.</span><span class="n">redraw</span><span class="p">();</span>
+<span class="w">    </span><span class="n">win</span><span class="p">.</span><span class="nf">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">SDL_Quit</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>As you can see, here we can recognize basic opengl element with GLEW. The catch point here is that we have Objects <code>Program</code> which 
+is responsible for compiling and linking our shaders and <code>Buffer</code> which is OOP implementation of buffer communication to GPU. </p>
+<p>In this example, we draw our window with three colors and then draw red triangle on it. </p>
+<h1>Textures</h1>
+<p>We can also use textures to color our objects, for example the following code will draw triangle with nice gradient on it:</p>
+<div class="highlight"><pre><span></span><code><span class="n">#include</span><span class="w"> </span><span class="o">&lt;</span><span class="n">iostream</span><span class="o">&gt;</span>
+
+<span class="n">#define</span><span class="w"> </span><span class="n">GL3_PROTOTYPES</span><span class="w"> </span><span class="mi">1</span>
+<span class="n">#include</span><span class="w"> </span><span class="o">&lt;</span><span class="n">GL</span><span class="o">/</span><span class="n">glew</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;</span>
+
+<span class="n">#include</span><span class="w"> </span><span class="o">&lt;</span><span class="n">core</span><span class="o">/</span><span class="n">Vector</span><span class="p">.</span><span class="n">hpp</span><span class="o">&gt;</span>
+
+<span class="n">#include</span><span class="w"> </span><span class="o">&lt;</span><span class="n">SDL2</span><span class="o">/</span><span class="n">SDL</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;</span>
+
+<span class="n">#include</span><span class="w"> </span><span class="ss">&quot;core/Program.hpp&quot;</span>
+<span class="n">#include</span><span class="w"> </span><span class="ss">&quot;core/Buffer.hpp&quot;</span>
+<span class="n">#include</span><span class="w"> </span><span class="ss">&quot;core/Vector.hpp&quot;</span>
+<span class="n">#include</span><span class="w"> </span><span class="ss">&quot;core/Texture.hpp&quot;</span>
+
+<span class="n">#include</span><span class="w"> </span><span class="ss">&quot;gui/Window.hpp&quot;</span>
+
+<span class="n">#include</span><span class="w"> </span><span class="o">&lt;</span><span class="n">textures</span><span class="o">/</span><span class="n">GradientTextureFactory</span><span class="p">.</span><span class="n">hpp</span><span class="o">&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">namespace</span><span class="w"> </span><span class="n">std</span><span class="p">;</span>
+
+<span class="nc">int</span><span class="w"> </span><span class="n">main</span><span class="p">()</span>
+<span class="err">{</span>
+
+<span class="w">    </span><span class="k">Window</span><span class="w"> </span><span class="n">win</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;tutorial&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">glClearColor</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="n">glClear</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">GL_COLOR_BUFFER_BIT</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="n">win</span><span class="p">.</span><span class="n">redraw</span><span class="p">();</span>
+<span class="w">    </span><span class="n">win</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">glewInit</span><span class="p">();</span>
+<span class="w">    </span><span class="n">Program</span><span class="w"> </span><span class="n">program</span><span class="p">;</span>
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">addShader</span><span class="p">(</span><span class="n">Shader</span><span class="p">(</span><span class="n">GL_VERTEX_SHADER</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;functional/textures/shader.vp&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">addShader</span><span class="p">(</span><span class="n">Shader</span><span class="p">(</span><span class="n">GL_FRAGMENT_SHADER</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;functional/textures/shader.fp&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">link</span><span class="p">();</span>
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">bind</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getAttributeLocation</span><span class="p">(</span><span class="ss">&quot;vPosition&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">coords_loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getAttributeLocation</span><span class="p">(</span><span class="ss">&quot;uv&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">sampler_loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="ss">&quot;image&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">enableAttributeArray</span><span class="p">(</span><span class="n">loc</span><span class="p">);</span>
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">enableAttributeArray</span><span class="p">(</span><span class="n">coords_loc</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Vector</span><span class="w"> </span><span class="n">vertices</span><span class="o">[</span><span class="n">3</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="n">Vector</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">),</span>
+<span class="w">        </span><span class="n">Vector</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">),</span>
+<span class="w">        </span><span class="n">Vector</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span>
+<span class="w">    </span><span class="err">}</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nc">float</span><span class="w"> </span><span class="n">coordinates</span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
+<span class="w">        </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
+<span class="w">        </span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span>
+<span class="w">    </span><span class="err">}</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">Buffer</span><span class="w"> </span><span class="n">buf</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">);</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">sendData</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="k">false</span><span class="p">);</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">bind</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">setAttributeArray</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">Buffer</span><span class="w"> </span><span class="n">coords_buffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">);</span>
+<span class="w">    </span><span class="n">coords_buffer</span><span class="p">.</span><span class="n">sendData</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">);</span>
+<span class="w">    </span><span class="n">coords_buffer</span><span class="p">.</span><span class="n">bind</span><span class="p">();</span>
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">setAttributeArray</span><span class="p">(</span><span class="n">coords_loc</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/*float image[512][512][3];</span>
+<span class="cm">    for (int i = 0; i&lt;512; i++) </span>
+<span class="cm">    {</span>
+<span class="cm">        for (int j = 0; j&lt;512; j++) </span>
+<span class="cm">        {</span>
+<span class="cm">            image[i][j][2] = 1.0;</span>
+<span class="cm">            image[i][j][1] = 0;</span>
+<span class="cm">            image[i][j][0] = j / 512.0;</span>
+<span class="cm">        }</span>
+<span class="cm">    }</span>
+<span class="cm">    Texture t(GL_TEXTURE_2D, 512, 512);</span>
+<span class="cm">    t.sendData(image);*/</span>
+<span class="w">    </span><span class="n">Texture</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GradientTextureFactory</span><span class="p">(</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">),</span><span class="w"> </span><span class="n">Color</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="mi">512</span><span class="p">).</span><span class="n">getTexture</span><span class="p">();</span>
+<span class="w">    </span><span class="n">t</span><span class="p">.</span><span class="n">bind</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">program</span><span class="p">.</span><span class="n">setUniformValue</span><span class="p">(</span><span class="n">sampler_loc</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">glDrawArrays</span><span class="p">(</span><span class="n">GL_TRIANGLES</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">Starting</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">vertex</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">vertices</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">triangle</span>
+
+<span class="w">    </span><span class="n">win</span><span class="p">.</span><span class="n">redraw</span><span class="p">();</span>
+<span class="w">    </span><span class="n">win</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">SDL_Quit</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>But now we will also have to modify our shader: </p>
+<div class="highlight"><pre><span></span><code><span class="c1">#version 120</span>
+
+<span class="n">attribute</span><span class="w"> </span><span class="n">vec4</span><span class="w"> </span><span class="n">vPosition</span><span class="p">;</span>
+<span class="n">attribute</span><span class="w"> </span><span class="n">vec2</span><span class="w"> </span><span class="n">uv</span><span class="p">;</span>
+<span class="n">varying</span><span class="w"> </span><span class="n">vec2</span><span class="w"> </span><span class="n">st</span><span class="p">;</span>
+
+<span class="nb nb-Type">void</span><span class="w"> </span><span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">gl_Position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vPosition</span><span class="p">;</span>
+<span class="w">  </span><span class="n">st</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uv</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>and fragment shader:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#version 120</span>
+
+<span class="n">varying</span><span class="w"> </span><span class="n">vec2</span><span class="w"> </span><span class="n">st</span><span class="p">;</span>
+<span class="n">uniform</span><span class="w"> </span><span class="n">sampler2D</span><span class="w"> </span><span class="n">image</span><span class="p">;</span>
+
+<span class="nb nb-Type">void</span><span class="w"> </span><span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">gl_FragColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">texture2D</span><span class="p">(</span><span class="n">image</span><span class="p">,</span><span class="w"> </span><span class="n">st</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>When we compile and test this, we will get something like below:</p>
+<p><img alt="Gradient" src="/images/height3d/1.png"></p>
+<p>Here we are using gradient texture factory class to construct texture for us. </p>
+<h1>Phong shading and Scene class</h1>
+<p>This before was just introduction of what Height3D can do but it is not all! </p>
+<p>To fully use benefits of OOP, there's class SDLLoop which can be subclassed and you can implement event handling, initialization and similar things there. Also, this class exposes <code>onFrame()</code> method which can be implemented to do drawing of objects for us. </p>
+<p>Also, there's <code>Scene</code> class which can draw all objects for you, using that class you can set camera position, perspective parameters
+as well as to add objects. Here important thing is to distinguish between object and model. Model is description of how something is drawn on unit cube, it specifies vertex coordinates, texture coordinates, vertex normals etc. You can implement your own model 
+by subclassing <code>AbstractModel</code> class and then implementing needed methods. In these methods, you have to return needed coordinates, colors and normals. </p>
+<p>Object is made of model, its size, position, assigned texture etc... </p>
+<p>For all our examples we will use the following code skeleton:</p>
+<p>vertex shader: </p>
+<div class="highlight"><pre><span></span><code><span class="c1">#version 120</span>
+
+<span class="n">attribute</span><span class="w"> </span><span class="n">vec4</span><span class="w"> </span><span class="n">vPosition</span><span class="p">;</span>
+<span class="n">attribute</span><span class="w"> </span><span class="n">vec4</span><span class="w"> </span><span class="n">vColor</span><span class="p">;</span>
+<span class="n">attribute</span><span class="w"> </span><span class="n">vec2</span><span class="w"> </span><span class="n">uv</span><span class="p">;</span>
+<span class="n">attribute</span><span class="w"> </span><span class="n">vec4</span><span class="w"> </span><span class="n">Normal</span><span class="p">;</span>
+
+
+<span class="n">varying</span><span class="w"> </span><span class="n">vec3</span><span class="w"> </span><span class="n">N</span><span class="p">;</span>
+<span class="n">varying</span><span class="w"> </span><span class="n">vec3</span><span class="w"> </span><span class="n">L</span><span class="p">;</span>
+<span class="n">varying</span><span class="w"> </span><span class="n">vec3</span><span class="w"> </span><span class="n">E</span><span class="p">;</span>
+
+<span class="n">uniform</span><span class="w"> </span><span class="n">mat4</span><span class="w"> </span><span class="n">model</span><span class="p">;</span>
+<span class="n">uniform</span><span class="w"> </span><span class="n">mat4</span><span class="w"> </span><span class="n">perspective</span><span class="p">;</span>
+<span class="n">uniform</span><span class="w"> </span><span class="n">vec4</span><span class="w"> </span><span class="n">LightPosition</span><span class="p">;</span>
+
+<span class="nb nb-Type">void</span><span class="w"> </span><span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">gl_Position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">perspective</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">model</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">vPosition</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Normal</span><span class="o">.</span><span class="n">xyz</span><span class="p">;</span>
+<span class="w">  </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LightPosition</span><span class="o">.</span><span class="n">xyz</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">vPosition</span><span class="o">.</span><span class="n">xyz</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">LightPosition</span><span class="o">.</span><span class="n">w</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LightPosition</span><span class="o">.</span><span class="n">xyz</span><span class="p">;</span>
+<span class="w">  </span><span class="n">E</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vPosition</span><span class="o">.</span><span class="n">xyz</span><span class="p">;</span>
+
+<span class="p">}</span>
+</code></pre></div>
+
+<p>fragment shader:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#version 120</span>
+
+
+<span class="n">uniform</span><span class="w"> </span><span class="n">sampler2D</span><span class="w"> </span><span class="n">image</span><span class="p">;</span>
+
+<span class="n">uniform</span><span class="w"> </span><span class="n">vec4</span><span class="w"> </span><span class="n">ambientProduct</span><span class="p">,</span><span class="w"> </span><span class="n">diffuseProduct</span><span class="p">,</span><span class="w"> </span><span class="n">specularProduct</span><span class="p">;</span>
+<span class="n">uniform</span><span class="w"> </span><span class="n">vec4</span><span class="w"> </span><span class="n">LightPosition</span><span class="p">;</span>
+<span class="n">uniform</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="w"> </span><span class="n">shininess</span><span class="p">;</span>
+
+<span class="n">varying</span><span class="w"> </span><span class="n">vec3</span><span class="w"> </span><span class="n">N</span><span class="p">;</span>
+<span class="n">varying</span><span class="w"> </span><span class="n">vec3</span><span class="w"> </span><span class="n">L</span><span class="p">;</span>
+<span class="n">varying</span><span class="w"> </span><span class="n">vec3</span><span class="w"> </span><span class="n">E</span><span class="p">;</span>
+
+
+<span class="nb nb-Type">void</span><span class="w"> </span><span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">vec3</span><span class="w"> </span><span class="n">NN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">normalize</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+<span class="w">  </span><span class="n">vec3</span><span class="w"> </span><span class="n">EE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">normalize</span><span class="p">(</span><span class="n">E</span><span class="p">);</span>
+<span class="w">  </span><span class="n">vec3</span><span class="w"> </span><span class="n">LL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">normalize</span><span class="p">(</span><span class="n">L</span><span class="p">);</span>
+<span class="w">  </span><span class="n">vec4</span><span class="w"> </span><span class="n">ambient</span><span class="p">,</span><span class="w"> </span><span class="n">diffuse</span><span class="p">,</span><span class="w"> </span><span class="n">specular</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">vec3</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">normalize</span><span class="p">(</span><span class="n">LL</span><span class="o">+</span><span class="n">EE</span><span class="p">);</span>
+<span class="w">  </span><span class="nb nb-Type">float</span><span class="w"> </span><span class="n">kd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">LL</span><span class="p">,</span><span class="n">NN</span><span class="p">),</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span>
+<span class="w">  </span><span class="nb nb-Type">float</span><span class="w"> </span><span class="n">ks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">pow</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">NN</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">),</span><span class="w"> </span><span class="mf">0.0</span><span class="p">),</span><span class="w"> </span><span class="n">shininess</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">ambient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ambientProduct</span><span class="p">;</span>
+<span class="w">  </span><span class="n">diffuse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kd</span><span class="o">*</span><span class="n">diffuseProduct</span><span class="p">;</span>
+<span class="w">  </span><span class="n">specular</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ks</span><span class="o">*</span><span class="n">specularProduct</span><span class="p">;</span>
+<span class="w">  </span><span class="n">gl_FragColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vec4</span><span class="p">((</span><span class="n">ambient</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">diffuse</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">specular</span><span class="p">)</span><span class="o">.</span><span class="n">xyz</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>and our code will look like this:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+
+<span class="cp">#define GL3_PROTOTYPES 1</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;GL/glew.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;core/Vector.hpp&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;SDL2/SDL.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;core/Program.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;core/Buffer.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;core/Vector.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;core/Texture.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;core/Scene.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;core/SceneObject.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;core/AbstractModel.hpp&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;gui/Window.hpp&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cmath&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;loops/SDLLoop.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;loops/SDLEvent.hpp&gt;</span>
+
+<span class="n">using</span><span class="w"> </span><span class="n">namespace</span><span class="w"> </span><span class="nn">std</span><span class="p">;</span>
+
+<span class="kr">class</span><span class="w"> </span><span class="nc">PhongCubeModel</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="n">AbstractModel</span><span class="w"> </span>
+<span class="p">{</span>
+<span class="kr">protected</span><span class="o">:</span><span class="w"> </span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kr">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">genVertices</span><span class="p">()</span><span class="w"> </span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// we have to return vector&lt;float&gt; instance which represents vertex coordinates of our model </span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="kr">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">genIndices</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// here we have to return vertex indices, i.e. order of which vertices are drawn </span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="kr">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">genTextureCoordinates</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// here we return texture coordinates</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="kr">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">genVertexColors</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// here we return vertex colours in case textures are not used in shader</span>
+<span class="w">        </span><span class="c1">// we will use textures in shaders so you only have to pay attention the size of this vector is appropirate</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="kr">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">genNormals</span><span class="p">()</span><span class="w"> </span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// here we have to return normals for each vertex</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kr">class</span><span class="w"> </span><span class="nc">MyPhongLoop</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="n">SDLLoop</span><span class="w"> </span>
+<span class="p">{</span>
+
+<span class="w">    </span><span class="n">Program</span><span class="w"> </span><span class="n">program</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">int</span><span class="w"> </span><span class="n">vertexLocation</span><span class="p">,</span><span class="w"> </span><span class="n">texCoordLocation</span><span class="p">,</span><span class="w"> </span><span class="n">vertexColorLocation</span><span class="p">,</span><span class="w"> </span><span class="n">samplerLocation</span><span class="p">,</span><span class="w"> </span><span class="n">modelLocation</span><span class="p">,</span><span class="w"> </span><span class="n">perspectiveLocation</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">int</span><span class="w"> </span><span class="n">normalLocation</span><span class="p">,</span><span class="w"> </span><span class="n">ambientProductLocation</span><span class="p">,</span><span class="w"> </span><span class="n">diffuseProductLocation</span><span class="p">,</span><span class="w"> </span><span class="n">specularProductLocation</span><span class="p">,</span><span class="w"> </span><span class="n">lightPositionLocation</span><span class="p">,</span><span class="w"> </span><span class="n">shininessLocation</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Scene</span><span class="w"> </span><span class="n">scene</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">SceneObject</span><span class="o">*</span><span class="w"> </span><span class="n">cube</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// angle of rotation</span>
+<span class="w">    </span><span class="kr">float</span><span class="w"> </span><span class="n">alpha</span><span class="p">;</span>
+
+<span class="kr">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">MyPhongLoop</span><span class="p">(</span><span class="n">Window</span><span class="w"> </span><span class="o">*</span><span class="n">w</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">SDLLoop</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Initializing glew</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">glewInit</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Binding program</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">program</span><span class="p">.</span><span class="n">addShader</span><span class="p">(</span><span class="n">Shader</span><span class="p">(</span><span class="n">GL_VERTEX_SHADER</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;functional/phong/shader.vp&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="n">program</span><span class="p">.</span><span class="n">addShader</span><span class="p">(</span><span class="n">Shader</span><span class="p">(</span><span class="n">GL_FRAGMENT_SHADER</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;functional/phong/shader.fp&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="n">program</span><span class="p">.</span><span class="n">link</span><span class="p">();</span>
+<span class="w">        </span><span class="n">program</span><span class="p">.</span><span class="n">bind</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Getting locations of shader parameters</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">vertexLocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getAttributeLocation</span><span class="p">(</span><span class="s">&quot;vPosition&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">texCoordLocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getAttributeLocation</span><span class="p">(</span><span class="s">&quot;uv&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">vertexColorLocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getAttributeLocation</span><span class="p">(</span><span class="s">&quot;vColor&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">samplerLocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;</span><span class="nf">image</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">modelLocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;model&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">perspectiveLocation</span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;perspective&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">normalLocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getAttributeLocation</span><span class="p">(</span><span class="s">&quot;Normal&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ambientProductLocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;ambientProduct&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">diffuseProductLocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;diffuseProduct&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">specularProductLocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;specularProduct&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">lightPositionLocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;LightPosition&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">shininessLocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;shininess&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w">  </span><span class="n">program</span><span class="p">.</span><span class="n">getAttributeLocation</span><span class="p">(</span><span class="s">&quot;vPosition&quot;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w">  </span><span class="n">program</span><span class="p">.</span><span class="n">getAttributeLocation</span><span class="p">(</span><span class="s">&quot;uv&quot;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w">  </span><span class="n">program</span><span class="p">.</span><span class="n">getAttributeLocation</span><span class="p">(</span><span class="s">&quot;vColor&quot;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w">  </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;</span><span class="nf">image</span><span class="s">&quot;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w">  </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;model&quot;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w">  </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;perspective&quot;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w">  </span><span class="n">program</span><span class="p">.</span><span class="n">getAttributeLocation</span><span class="p">(</span><span class="s">&quot;Normal&quot;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w">  </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;ambientProduct&quot;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w">  </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;diffuseProduct&quot;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w">  </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;specularProduct&quot;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w">  </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;LightPosition&quot;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w">  </span><span class="n">program</span><span class="p">.</span><span class="n">getUniformLocation</span><span class="p">(</span><span class="s">&quot;shininess&quot;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Normal location: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">normalLocation</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">program</span><span class="p">.</span><span class="n">enableAttributeArray</span><span class="p">(</span><span class="n">vertexLocation</span><span class="p">);</span>
+<span class="w">        </span><span class="n">program</span><span class="p">.</span><span class="n">enableAttributeArray</span><span class="p">(</span><span class="n">texCoordLocation</span><span class="p">);</span>
+<span class="w">        </span><span class="n">program</span><span class="p">.</span><span class="n">enableAttributeArray</span><span class="p">(</span><span class="n">vertexColorLocation</span><span class="p">);</span>
+<span class="w">        </span><span class="n">program</span><span class="p">.</span><span class="n">enableAttributeArray</span><span class="p">(</span><span class="n">normalLocation</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+
+<span class="kr">protected</span><span class="o">:</span>
+<span class="w">    </span><span class="kr">void</span><span class="w"> </span><span class="n">onInit</span><span class="p">()</span><span class="w"> </span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Setting scene</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">scene</span><span class="p">.</span><span class="n">setCamera</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.00</span><span class="p">),</span><span class="w"> </span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+<span class="w">        </span><span class="n">scene</span><span class="p">.</span><span class="n">setPerspective</span><span class="p">(</span><span class="mf">3.1415</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+<span class="w">        </span><span class="n">cube</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scene</span><span class="p">.</span><span class="n">addObject</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SceneObject</span><span class="p">(</span>
+<span class="w">            </span><span class="k">new</span><span class="w">  </span><span class="n">PhongCubeModel</span><span class="p">(),</span><span class="w"> </span><span class="c1">// use cube model to draw this object</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="n">Texture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">GL_RGB</span><span class="p">),</span><span class="w"> </span><span class="c1">// use dummy texture </span>
+<span class="w">            </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="c1">// location </span>
+<span class="w">            </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="c1">// angles of rotation </span>
+<span class="w">            </span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">  </span><span class="c1">// size</span>
+<span class="w">            </span><span class="n">Material</span><span class="p">(</span>
+<span class="w">                </span><span class="n">Color</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="c1">// ambiental conductivity</span>
+<span class="w">                </span><span class="n">Color</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="c1">// diffusional conductivity</span>
+<span class="w">                </span><span class="n">Color</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="c1">// specular conductivity</span>
+<span class="w">                </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2</span><span class="p">,</span><span class="w"> </span><span class="c1">// diffusion params</span>
+<span class="w">                </span><span class="mi">1</span><span class="w"> </span><span class="c1">// shininess</span>
+<span class="w">            </span><span class="p">)</span>
+<span class="w">        </span><span class="p">));</span>
+<span class="w">        </span><span class="n">SceneObject</span><span class="w"> </span><span class="o">*</span><span class="n">cube2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scene</span><span class="p">.</span><span class="n">addObject</span><span class="p">(</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="n">SceneObject</span><span class="p">(</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="n">PhongCubeModel</span><span class="p">(),</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="n">Texture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">GL_RGB</span><span class="p">),</span>
+<span class="w">                </span><span class="mf">5.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">                </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                </span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
+<span class="w">                </span><span class="n">Material</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">Color</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">Color</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">Color</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+<span class="w">                    </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">                    </span><span class="mi">1</span>
+<span class="w">                </span><span class="p">)</span>
+<span class="w">            </span><span class="p">)</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">        </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Adding light</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">scene</span><span class="p">.</span><span class="n">addLight</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Light</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="c1">// position</span>
+<span class="w">                </span><span class="n">Color</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">),</span><span class="w"> </span><span class="c1">// ambient component</span>
+<span class="w">                </span><span class="n">Color</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">),</span><span class="w"> </span><span class="c1">// diffuse component</span>
+<span class="w">                </span><span class="n">Color</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span><span class="w"> </span><span class="mf">0.8</span><span class="p">,</span><span class="w"> </span><span class="mf">0.9</span><span class="p">)</span><span class="w"> </span><span class="c1">// specular component</span>
+<span class="w">            </span><span class="p">),</span>
+<span class="w">            </span><span class="n">lightPositionLocation</span><span class="p">,</span><span class="w"> </span><span class="n">ambientProductLocation</span><span class="p">,</span><span class="w"> </span><span class="n">diffuseProductLocation</span><span class="p">,</span><span class="w"> </span><span class="n">specularProductLocation</span>
+<span class="w">        </span><span class="p">);</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kr">void</span><span class="w"> </span><span class="n">onKeyPress</span><span class="p">(</span><span class="n">Event</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">SDLEvent</span><span class="o">::</span><span class="n">asEvent</span><span class="p">(</span><span class="n">SDLK_LEFT</span><span class="p">))</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mf">3.14</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">SDLEvent</span><span class="o">::</span><span class="n">asEvent</span><span class="p">(</span><span class="n">SDLK_RIGHT</span><span class="p">))</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mf">3.14</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+<span class="w">        </span><span class="n">scene</span><span class="p">.</span><span class="n">setCamera</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">Vector</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="nf">cos</span><span class="p">(</span><span class="n">alpha</span><span class="p">),</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="o">*</span><span class="nf">sin</span><span class="p">(</span><span class="n">alpha</span><span class="p">)),</span><span class="w"> </span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kr">void</span><span class="w"> </span><span class="n">onKeyRelease</span><span class="p">(</span><span class="n">Event</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">{</span>
+
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kr">void</span><span class="w"> </span><span class="n">onQuit</span><span class="p">()</span><span class="w"> </span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">SDL_Quit</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kr">void</span><span class="w"> </span><span class="n">onFrame</span><span class="p">()</span><span class="w"> </span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Drawing</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">scene</span><span class="p">.</span><span class="n">drawObjects</span><span class="p">(</span>
+<span class="w">            </span><span class="o">&amp;</span><span class="n">program</span><span class="p">,</span><span class="w"> </span>
+<span class="w">            </span><span class="n">modelLocation</span><span class="p">,</span><span class="w"> </span>
+<span class="w">            </span><span class="n">perspectiveLocation</span><span class="p">,</span><span class="w"> </span>
+<span class="w">            </span><span class="n">vertexLocation</span><span class="p">,</span><span class="w"> </span>
+<span class="w">            </span><span class="n">texCoordLocation</span><span class="p">,</span><span class="w"> </span>
+<span class="w">            </span><span class="n">vertexColorLocation</span><span class="p">,</span><span class="w"> </span>
+<span class="w">            </span><span class="n">samplerLocation</span><span class="p">,</span>
+<span class="w">            </span><span class="kr">true</span><span class="p">,</span><span class="w"> </span><span class="c1">// use phong lighting model</span>
+<span class="w">            </span><span class="n">shininessLocation</span><span class="p">,</span>
+<span class="w">            </span><span class="n">normalLocation</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kr">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+
+<span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Running phong&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Window</span><span class="w"> </span><span class="n">win</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tutorial&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">MyPhongLoop</span><span class="w"> </span><span class="nb">loop</span><span class="p">(</span><span class="o">&amp;</span><span class="n">win</span><span class="p">);</span>
+<span class="w">    </span><span class="nb">loop</span><span class="p">.</span><span class="nf">run</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Now we can implement our mode, for example, to be cube:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">PhongCubeModel</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nt">public</span><span class="w"> </span><span class="nt">AbstractModel</span>
+<span class="p">{</span>
+<span class="n">protected</span><span class="p">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="k">float</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">genVertices</span><span class="p">()</span>
+<span class="w">        </span><span class="err">{</span>
+<span class="w">                </span><span class="k">float</span><span class="w"> </span><span class="n">vertices</span><span class="cp">[</span><span class="mi">24</span><span class="cp">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="err">{</span>
+<span class="w">                        </span><span class="o">//</span><span class="w"> </span><span class="kc">bottom</span><span class="w"> </span><span class="n">face</span>
+<span class="w">                        </span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">,</span>
+<span class="w">                        </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">,</span>
+<span class="w">                        </span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
+<span class="w">                        </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
+
+<span class="w">                        </span><span class="o">//</span><span class="w"> </span><span class="kc">top</span><span class="w"> </span><span class="n">face</span>
+<span class="w">                        </span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">,</span>
+<span class="w">                        </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">,</span>
+<span class="w">                        </span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
+<span class="w">                        </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
+<span class="w">                </span><span class="p">}</span><span class="o">;</span>
+<span class="w">                </span><span class="nt">return</span><span class="w"> </span><span class="nt">vector</span><span class="o">&lt;</span><span class="nt">float</span><span class="o">&gt;(</span><span class="nt">vertices</span><span class="o">,</span><span class="w"> </span><span class="nt">vertices</span><span class="o">+</span><span class="nt">24</span><span class="o">);</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">        </span><span class="nt">vector</span><span class="o">&lt;</span><span class="nt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="nt">genIndices</span><span class="o">()</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">                </span><span class="err">int</span><span class="w"> </span><span class="err">indices</span><span class="cp">[</span><span class="mi">36</span><span class="cp">]</span><span class="w"> </span><span class="err">=</span>
+<span class="w">                </span><span class="err">{</span>
+<span class="w">                        </span><span class="err">//</span><span class="w"> </span><span class="err">bottom</span><span class="w"> </span><span class="err">face</span>
+<span class="w">                        </span><span class="err">0,</span><span class="w"> </span><span class="err">1,</span><span class="w"> </span><span class="err">2,</span>
+<span class="w">                        </span><span class="err">1,</span><span class="w"> </span><span class="err">2,</span><span class="w"> </span><span class="err">3,</span>
+
+<span class="w">                        </span><span class="err">//</span><span class="w"> </span><span class="err">left</span><span class="w"> </span><span class="err">face</span>
+<span class="w">                        </span><span class="err">0,</span><span class="w"> </span><span class="err">2,</span><span class="w"> </span><span class="err">4,</span>
+<span class="w">                        </span><span class="err">4,</span><span class="w"> </span><span class="err">6,</span><span class="w"> </span><span class="err">2,</span>
+
+<span class="w">                        </span><span class="err">//</span><span class="w"> </span><span class="err">right</span><span class="w"> </span><span class="err">face</span>
+<span class="w">                        </span><span class="err">1,</span><span class="w"> </span><span class="err">3,</span><span class="w"> </span><span class="err">5,</span>
+<span class="w">                        </span><span class="err">5,</span><span class="w"> </span><span class="err">3,</span><span class="w"> </span><span class="err">7,</span>
+
+<span class="w">                        </span><span class="err">//</span><span class="w"> </span><span class="err">front</span><span class="w"> </span><span class="err">face</span>
+<span class="w">                        </span><span class="err">0,</span><span class="w"> </span><span class="err">1,</span><span class="w"> </span><span class="err">4,</span>
+<span class="w">                        </span><span class="err">4,</span><span class="w"> </span><span class="err">1,</span><span class="w"> </span><span class="err">5,</span>
+
+<span class="w">                        </span><span class="err">//</span><span class="w"> </span><span class="err">back</span><span class="w"> </span><span class="err">face</span>
+<span class="w">                        </span><span class="err">2,</span><span class="w"> </span><span class="err">3,</span><span class="w"> </span><span class="err">7,</span>
+<span class="w">                        </span><span class="err">7,</span><span class="w"> </span><span class="err">6,</span><span class="w"> </span><span class="err">2,</span>
+
+<span class="w">                        </span><span class="err">//</span><span class="w"> </span><span class="err">top</span><span class="w"> </span><span class="err">face</span>
+<span class="w">                        </span><span class="err">4,</span><span class="w"> </span><span class="err">5,</span><span class="w"> </span><span class="err">6,</span>
+<span class="w">                        </span><span class="err">5,</span><span class="w"> </span><span class="err">6,</span><span class="w"> </span><span class="err">7</span>
+<span class="w">                </span><span class="p">}</span><span class="o">;</span>
+<span class="w">                </span><span class="nt">return</span><span class="w"> </span><span class="nt">vector</span><span class="o">&lt;</span><span class="nt">int</span><span class="o">&gt;(</span><span class="nt">indices</span><span class="o">,</span><span class="w"> </span><span class="nt">indices</span><span class="o">+</span><span class="nt">36</span><span class="o">);</span>
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">        </span><span class="nt">vector</span><span class="o">&lt;</span><span class="nt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="nt">genTextureCoordinates</span><span class="o">()</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">                </span><span class="err">float</span><span class="w"> </span><span class="err">textures</span><span class="cp">[</span><span class="mi">16</span><span class="cp">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                        </span><span class="err">0.0,</span><span class="w"> </span><span class="err">0.0,</span>
+<span class="w">                        </span><span class="err">0.0,</span><span class="w"> </span><span class="err">0.0,</span>
+<span class="w">                        </span><span class="err">0.0,</span><span class="w"> </span><span class="err">0.0,</span>
+<span class="w">                        </span><span class="err">0.0,</span><span class="w"> </span><span class="err">0.0,</span>
+<span class="w">                        </span><span class="err">0.0,</span><span class="w"> </span><span class="err">0.0,</span>
+<span class="w">                        </span><span class="err">0.0,</span><span class="w"> </span><span class="err">0.0,</span>
+<span class="w">                        </span><span class="err">0.0,</span><span class="w"> </span><span class="err">0.0,</span>
+<span class="w">                        </span><span class="err">0.0,</span><span class="w"> </span><span class="err">0.0,</span>
+<span class="w">                </span><span class="p">}</span><span class="o">;</span>
+<span class="w">                </span><span class="nt">return</span><span class="w"> </span><span class="nt">vector</span><span class="o">&lt;</span><span class="nt">float</span><span class="o">&gt;(</span><span class="nt">textures</span><span class="o">,</span><span class="w"> </span><span class="nt">textures</span><span class="o">+</span><span class="nt">16</span><span class="o">);</span>
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">        </span><span class="nt">vector</span><span class="o">&lt;</span><span class="nt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="nt">genVertexColors</span><span class="o">()</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">                </span><span class="err">float</span><span class="w"> </span><span class="err">colors</span><span class="cp">[</span><span class="mi">32</span><span class="cp">]</span><span class="w"> </span><span class="err">=</span>
+<span class="w">                </span><span class="err">{</span>
+<span class="w">                        </span><span class="err">1.0,</span><span class="w"> </span><span class="err">0.0,</span><span class="w"> </span><span class="err">0.0,</span><span class="w"> </span><span class="err">1.0,</span>
+<span class="w">                        </span><span class="err">0.0,</span><span class="w"> </span><span class="err">1.0,</span><span class="w"> </span><span class="err">0.0,</span><span class="w"> </span><span class="err">1.0,</span>
+<span class="w">                        </span><span class="err">0.0,</span><span class="w"> </span><span class="err">0.0,</span><span class="w"> </span><span class="err">1.0,</span><span class="w"> </span><span class="err">1.0,</span>
+<span class="w">                        </span><span class="err">1.0,</span><span class="w"> </span><span class="err">1.0,</span><span class="w"> </span><span class="err">0.0,</span><span class="w"> </span><span class="err">1.0,</span>
+
+<span class="w">                        </span><span class="err">1.0,</span><span class="w"> </span><span class="err">0.0,</span><span class="w"> </span><span class="err">0.0,</span><span class="w"> </span><span class="err">1.0,</span>
+<span class="w">                        </span><span class="err">0.0,</span><span class="w"> </span><span class="err">1.0,</span><span class="w"> </span><span class="err">0.0,</span><span class="w"> </span><span class="err">1.0,</span>
+<span class="w">                        </span><span class="err">0.0,</span><span class="w"> </span><span class="err">0.0,</span><span class="w"> </span><span class="err">1.0,</span><span class="w"> </span><span class="err">1.0,</span>
+<span class="w">                        </span><span class="err">1.0,</span><span class="w"> </span><span class="err">1.0,</span><span class="w"> </span><span class="err">0.0,</span><span class="w"> </span><span class="err">1.0</span>
+<span class="w">                </span><span class="p">}</span><span class="o">;</span>
+<span class="w">                </span><span class="nt">return</span><span class="w"> </span><span class="nt">vector</span><span class="o">&lt;</span><span class="nt">float</span><span class="o">&gt;(</span><span class="nt">colors</span><span class="o">,</span><span class="w"> </span><span class="nt">colors</span><span class="o">+</span><span class="nt">32</span><span class="o">);</span>
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">        </span><span class="nt">vector</span><span class="o">&lt;</span><span class="nt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="nt">genNormals</span><span class="o">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">                </span><span class="err">cout</span><span class="w"> </span><span class="err">&lt;&lt;</span><span class="w"> </span><span class="err">&quot;Generating</span><span class="w"> </span><span class="err">normals\n&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="err">float</span><span class="w"> </span><span class="err">a</span><span class="cp">[</span><span class="mi">24</span><span class="cp">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                </span><span class="err">-1.0,</span><span class="w"> </span><span class="err">-1.0,</span><span class="w"> </span><span class="err">-1.0,</span>
+<span class="w">                </span><span class="err">1.0,</span><span class="w"> </span><span class="err">-1.0,</span><span class="w"> </span><span class="err">-1.0,</span>
+<span class="w">                </span><span class="err">-1.0,</span><span class="w"> </span><span class="err">-1.0,</span><span class="w"> </span><span class="err">1.0,</span>
+<span class="w">                </span><span class="err">1.0,</span><span class="w"> </span><span class="err">-1.0,</span><span class="w"> </span><span class="err">1.0,</span>
+<span class="w">                </span><span class="err">-1.0,</span><span class="w"> </span><span class="err">1.0,</span><span class="w"> </span><span class="err">-1.0,</span>
+<span class="w">                </span><span class="err">1.0,</span><span class="w"> </span><span class="err">1.0,</span><span class="w"> </span><span class="err">-1.0,</span>
+<span class="w">                </span><span class="err">-1.0,</span><span class="w"> </span><span class="err">1.0,</span><span class="w"> </span><span class="err">1.0,</span>
+<span class="w">                </span><span class="err">1.0,</span><span class="w"> </span><span class="err">1.0,</span><span class="w"> </span><span class="err">1.0</span>
+<span class="w">                </span><span class="p">}</span><span class="o">;</span>
+<span class="w">                </span><span class="nt">return</span><span class="w"> </span><span class="nt">vector</span><span class="o">&lt;</span><span class="nt">float</span><span class="o">&gt;(</span><span class="nt">a</span><span class="o">,</span><span class="w"> </span><span class="nt">a</span><span class="o">+</span><span class="nt">24</span><span class="o">);</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div>
+
+<p>so when you compile your program, you'll get something like this: </p>
+<p><img alt="Cube" src="/images/height3d/2.png"></p>
+<p>You can now use your arrows to navigate through the scene. </p>
+<h1>Height fields</h1>
+<p>You can make models easily by making height fields. A height field is model which has two levels: bottom and top one. For every coordinate on unit cube, it draws surface starting from bottom level and ending on top level. You can specify height by giving function 
+which returns <code>pair&lt;float, float&gt;</code> where first number is starting height and second number is ending height. To use this, you have to include  HeightfieldModel class:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;structures/heightfield/LayeredHeightfield.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;structures/heightfield/LayeredHeightfieldModel.hpp&gt;</span>
+</code></pre></div>
+
+<p>For example, to make a cube, you will use something like this:</p>
+<div class="highlight"><pre><span></span><code><span class="n">LayeredHeightfield</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">LayeredHeightfield</span><span class="p">(</span><span class="mi">128</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">its</span><span class="w"> </span><span class="n">constructor</span><span class="p">,</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="k">pass</span><span class="w"> </span><span class="n">precision</span><span class="p">,</span><span class="w"> </span><span class="n">how</span><span class="w"> </span><span class="n">many</span><span class="w"> </span><span class="n">samples</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">unit</span><span class="w"> </span><span class="n">cube</span><span class="p">,</span><span class="w"> </span><span class="n">too</span><span class="w"> </span><span class="n">high</span><span class="w"> </span><span class="n">precision</span><span class="w"> </span><span class="n">means</span><span class="w"> </span><span class="n">better</span><span class="w"> </span><span class="n">look</span><span class="w"> </span><span class="n">but</span><span class="w"> </span><span class="n">consumes</span><span class="w"> </span><span class="n">more</span><span class="w"> </span><span class="n">memory</span>
+
+<span class="n">h</span><span class="o">-&gt;</span><span class="n">addLevel</span><span class="p">();</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="n">level</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">it</span><span class="p">,</span><span class="w"> </span><span class="n">every</span><span class="w"> </span><span class="n">level</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">heightfield</span><span class="o">.</span><span class="w"> </span><span class="n">For</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="n">cubes</span><span class="w"> </span><span class="n">separated</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">space</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">another</span><span class="p">,</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">levels</span><span class="o">!</span>
+
+<span class="n">h</span><span class="o">-&gt;</span><span class="n">assign</span><span class="p">([</span><span class="o">=</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb nb-Type">int</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="w"> </span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">pair</span><span class="o">&lt;</span><span class="nb nb-Type">float</span><span class="p">,</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="k">return</span><span class="w"> </span><span class="n">make_pair</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);});</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="n">lambda</span><span class="w"> </span><span class="n">functions</span><span class="w"> </span><span class="n">here</span>
+</code></pre></div>
+
+<p>And now we can use our heightfield to construct model and object with it:</p>
+<div class="highlight"><pre><span></span><code>cube = scene.addObject(new SceneObject(
+    new  LayeredHeightfieldModel(h), // use cube model to draw this object
+    new Texture(GL_TEXTURE_2D, 1, 1, GL_RGB), // use dummy texture 
+    0.0, 0.0, 0.0, // location 
+    0.0, 0.0, // angles of rotation 
+    0.5, 0.5, 0.5,  // size
+    Material(
+        Color(1.0,0,0), // ambiental conductivity
+        Color(1.0, 0, 0), // diffusional conductivity
+        Color(1.0, 0, 0), // specular conductivity
+        2, 1, 0.2, // diffusion params
+        1 // shininess
+    )
+));
+</code></pre></div>
+
+<h1>More</h1>
+<p>This project is still in development and I know that there's still much of boilerplate code and I will work to decrease amount of 
+code needed to implement some stuff. I will post about that when I make changes. You can see more examples on repository under 
+<code>functional</code> directory, here are some photos what can be done (from examples in repository):</p>
+<p><img alt="Example 1" src="/images/height3d/3.png"></p>
+<p><img alt="Example 1" src="/images/height3d/4.png"></p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-02-16T15:15:00+01:00" pubdate>Fri 16 February 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

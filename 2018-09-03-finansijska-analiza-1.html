@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Uvod u finansijsku analizu - 1. deo - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Uvod u finansijsku analizu - 1. deo" />
+	<meta name="date" content="2018-09-03 18:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-09-03 18:15:00+01:00" />
+	<meta property="og:title" content="Uvod u finansijsku analizu - 1. deo" />
+	<meta property="og:url" content="/2018-09-03-finansijska-analiza-1.html" />
+	<meta property="og:description" content="Finansijska analiza je oblast koja spaja finansije, matematiku a od skoro i računarske nauke. Ona ne samo da nam može značiti kada je reč o novcu nego i bilo čemu što iziskuje procenjivanje vrednosti nečega u nekoj jedinici za koju smo se dogovorili da je jedinica vrednovanja. U praksi je …" />
+	<meta name="description" content="Finansijska analiza je oblast koja spaja finansije, matematiku a od skoro i računarske nauke. Ona ne samo da nam može značiti kada je reč o novcu nego i bilo čemu što iziskuje procenjivanje vrednosti nečega u nekoj jedinici za koju smo se dogovorili da je jedinica vrednovanja. U praksi je …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Uvod u finansijsku analizu - 1. deo</h1>
+			<p>Finansijska analiza je oblast koja spaja finansije, matematiku a od skoro i računarske nauke. 
+Ona ne samo da nam može značiti kada je reč o novcu nego i bilo čemu što iziskuje procenjivanje vrednosti nečega 
+u nekoj jedinici za koju smo se dogovorili da je jedinica vrednovanja. U praksi je najčešće to novac jer njime možemo 
+kupiti proizvode i usluge i ceo svet se njime koristi ali se neka grupa ljudi interno može dogovoriti o svoj internoj jedinici
+vrednosti ali je važno da se ona može prikazati brojem. </p>
+<p>U ovom članku i u nastavcima će se za jedinicu uzimati novac.</p>
+<p>Osnovni zadaci finansijske analize</p>
+<p>Koliko god oblast bila kompleksna, ona ima samo dva zadatka a to su: procena vrednosti i donošenje odluka. Zadatak se svodi 
+na procenu vrednosti svih mogućih opcija i uzimanje one najvrednije. Dakle, suština je procena vrednosti. U ovom članku ću prikazati 
+kako izgleda procena vrednosti za neka jednostavna finansijska instrumenta koj ne uključuju rizik u svoju kalkulaciju i time su jako prediktabilni. </p>
+<p>Šta je imovina?</p>
+<p>Mi svi koristimo pojam imovina da označimo šta neko poseduje. Međutim, za nas je važno i da matematički definišemo šta znači imovina 
+kako bismo lakše mogli da koristimo matematičke modele za procenu njene vrednosti. </p>
+<p>Mi možemo posedovati imovinu u raznim oblicima, ljudima najčešće pada na pamet nekretnine kao što je kuća, stan, automobil ali imovina može biti i nematerijalna kao što su znanje, reputacija, patent, poslovna tajna. Ostali tipovi imovine su: akcije, opcije, obveznice itd...</p>
+<p>Kao što vidimo, imovina može biti svašta a nama treba matematička definicija iste, zbog ovoga uvodimo sledeću definiciju (koja je opet apstraktna za sada):</p>
+<p>Imovina u trenutak T je lista protoka novca u budućnosti.</p>
+<p>Dakle, imovina je zapravo: (P(T), P(T + dt), P(t + 2dt), ...)</p>
+<p>Protok novca u datom trenutku može biti i negativna vrednost. Za takvu imovinu kažemo da je "obaveza" (eng. liability).</p>
+<p>Principi finansijske analize</p>
+<p>Sada, kada smo uveli pojam imovine, treba uvesti i neke pretpostavke na kojima ćemo bazirati svo naše dalje izlaganje a to su:</p>
+<ol>
+<li>Ništa nije besplatno </li>
+<li>Ljudi preferiraju uvek više novca nego manje novca </li>
+<li>Ljudi preferiraju novac sada umesto novac kasnije </li>
+<li>Ljudi ne preferiraju rizik</li>
+<li>Svako radi u svom najboljem interesu </li>
+<li>Finansijska tržišta teže da izjednače ponudu i potražnju</li>
+<li>Finansijska tržišta su jako adaptibilna</li>
+<li>Podela rizika je centralna stavka finansijske inovacije</li>
+</ol>
+<p>Okej, verujem da neki principi izgledaju jako logično dok neki su nerazumljivi. Ovde smo ih samo naveli a kasnije ćemo u praksi pokazati kako svaki od ovih principa prirodno nadolazi kao priroda čoveka. Ove hipoteze ne zavise od političkog i ekonomskog modela neke države. Ove hipoteze su posledica čovekovog razmišljanja koje je duboko usađeno u njemu. Ako mislite da nije tako, pišite u komentarima i rado ću dati kontra-argument. :)</p>
+<p>Procena vrednosti</p>
+<p>Kao što se vidi iz gornje definicije imovine, imovina je definisana kao nešto što zavisi od vremena. Zbog ovoga, kada računamo vrednost 
+imovine, jako je važno da tu vrednost računamo u zavisnosti od vremena. Trenutna vrednost neke imovine se može izraziti kao V = V(P(T), P(T + dt), ....) dakle kao funkcija svih budućih protoka novca (kojih može biti i beskonačno mnogo). </p>
+<p>ada treba da odredimo funkciju V koja će nam dati vrednost imovine opisane sa listom protoka novca P. </p>
+<p>Pre toga, uvedimo da je T vreme na godinu dana tako da dt = 1 znači vreme od jedne godine a dt = 2 znači vreme od dve godine itd. </p>
+<p>Isto tako, uvedimo da se mi nalazimo u trenutku T=0 kako bismo lakše mogli zapisati naredne delove. </p>
+<p>Posle ovakvog dogovora (koji ne umanjuje opštost) imamo da je V = V(P(0), P(1), ....).</p>
+<p>Pre nego što definišemo funkciju V, treba uvesti fenomen koji je posledica gore-navedenih principa.</p>
+<p>Vremenska vrednost novca</p>
+<p>Zamislite da vam ja dam ugovor koji kaže da ću vam dati 1000 dinara za godinu dana. Koliko biste platili sada za taj ugovor? Ako biste platili tačno 1000 dinara onda mi je velika čast da poslujem sa vama. :) Realnost je da nećete dati 1000 dinara kako bih vam ja vratio tih istih 1000 dinara za godinu dana. Zašto? Zato što su ljudi nestrpljivi, rekli smo da preferiraju novac sada a ne novac kasnije. Kako možete da kompenzujete tih godinu dana čekanja? Tako što možete da mi date manje para sada za godinu dana kasnije. Zamislimo sada situaciju da ja odem i ponudim ugovor na tržištu od 100 ljudi. Svako može da ponudi cenu i onaj ko ponudi najviše dobija ugovor. Dakle princip aukcije. Zamislimo sada da je poslednja cena 990 dinara. Dakle, neko će se strpeti godinu dana za 10 dinara dobitka. Kao što vidimo, danas dinar ne vredi kao dinar za godinu dana. Ovde nisam ni pomenuo inflaciju i slično, to dolazi kasnije. Ovde sam samo rekao da ljudi preferiraju pare sada a ne pare kasnije. Dakle i bez inflacije i bez rizika i slično, opet ću morati da platim kamatu na pozajmljenih 990 dinara tako da ću za godinu dana morati da vratim 1000. Upravo smo, uz pomoć tržišta, odredili cenu ovog mog ugovora. Kako izgleda protok novca za vas koji dobijete taj ugovor: </p>
+<p>P = (0, 1000, 0, ...., 0)</p>
+<p>Dakle sada ne dobijate ništa a za godinu dana dobijate 1000 dinara. Cenu smo odredili isto i znamo da je V = 990. </p>
+<p>Dakle znamo da je cena niža od protoka novca za godinu dana tako da je 990 = k * 1000.</p>
+<p>Ovo je posledica nestrpljenja kod tržišta i tako zaključujemo da 1000 dinara danas nije iste vrednosti kao 1000 dinara sutra ili bilo kad u vremenu. Novac gubi vrednost samim tim što vreme protiče. </p>
+<p>A sada, procena vrednosti</p>
+<p>Našu funkciju V možemo definisati kao zbir svih protoka novca ALI moramo paziti da ne sabiramo babe i žabe. Protok novca u budućnosti moramo konvertovati u ekvivalentnu vrednost danas.</p>
+<p>V = P(0) + k(1)P(1) + k(2)P(2) + ...</p>
+<p>k(T) je smanjenje u trenutku t. Naravno kako T raste, k(T) opada jer sve više moramo da čekamo i zato manje vrednujemo protoke novca koji su dalje u budućnosti. </p>
+<p>Naravno, k može varirati tokom vremena ali zbog jednostavnosti uvedimo da je K(T) = 1 / (1+r)^T gde je r kamatna stopa uzrokovana
+vremenskom vrednošću novca. Iz ove jednakosti vidimo da je k uvek manje od 1 i da se sa porastom T, k smanjuje. </p>
+<p>r se lako može utvrditi na tržištu kao što smo videli u primeru. </p>
+<p>Sada ćemo uvesti neke primere finansijskih instrumenata i njihove vrednosti kako se računaju. </p>
+<p>Večne obveznice</p>
+<p>Zamislimo da imamo ugovor koji večno isplaćuje C tokom svake godine i tako zauvek. Ovo čak postoji i u praksi, na primer, Britanska vlada izdaje večne obveznice. </p>
+<p>Dakle, V = C/(1+r) + C/(1+r)^2 + ...</p>
+<p>ovu sumu možemo zapisati i u zatvorenoj formi kao: V = C / r.</p>
+<p>Dakle, ako znamo vrednost obveznice i godišnju isplatu, možemo lako izračunati kamatu r. </p>
+<p>Večne obveznice sa rastom</p>
+<p>Sada zamislimo da imamo obveznicu koja isplaćuje C i svake godine raste za g procenata, onda je vrednost:</p>
+<p>V = C(1+g)/(1+r) + C(1+g)^2 / (1 + r)^2 + ....</p>
+<p>Kao i gornja, i ova suma se može izračunati što daje: V = C / (r - g) uz uslov da je g &lt; r. </p>
+<p>Pored matematičkog smisla, ovaj uslov ima smisla i u realnosti. Dakle ne možemo imati rast veći od kamate a da je to održivo večno. Na primer, Kina ima rast oko 10% ali pošto su kamate znatno niže, ona taj rast ne može da ima večno. Ako to ne bi važilo, ceo univerzum bi pričao kineski i bili bi toliko bogati da bi sve na ovom svetu bilo njihovo što naravno nije moguće.</p>
+<p>Ograničene obveznice</p>
+<p>Većina obveznica je ograničeno i ne izdaju se na period od beskonačno vremena nego su ograničene na N godina. Za njih dobijamo: </p>
+<p>V = C / (1 + r) + C / (1+r)^2 + .... C / (1 + r)^N = C((1 - 1/(1 + r)^N) / r)</p>
+<p>U praksi ovakve obveznice su jao česte. Na primer, na sajtu za javni dug Republike Srbije se mogu naći obveznice koje država nudi građanima. Građani daju pare državi sada kako bi ona finansirala svoje potrebe a onda država isplaćuje rate građanu na određeni vremenski period. Ovo je i najsigurniji finansijski instrument pogotovo ako vam obveznice izdaje država jer ona garantuje da će vam ih uvek isplatiti. Ako država nema para da vam ih isplati, može da ih odštampa u najgorem slučaju. Kod korporativnih obveznica postoji rizik da firma bankrotira ali to je već tema za neki naredni ćlanak.</p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-09-03T18:15:00+01:00" pubdate>Mon 03 September 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

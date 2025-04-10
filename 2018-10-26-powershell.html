@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Powershell - next generation shell - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Powershell - next generation shell" />
+	<meta name="date" content="2018-10-26 10:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-10-26 10:15:00+01:00" />
+	<meta property="og:title" content="Powershell - next generation shell" />
+	<meta property="og:url" content="/2018-10-26-powershell.html" />
+	<meta property="og:description" content="Recently I started using Powershell which friend of mine recommended. Powershell is Microsoft's product built on .NET platform which introduces .NET functionality in interactive interface. When I say interactive I mean both console and GUI but here we will consider only console aspects of powershell and I won't discuss powershell …" />
+	<meta name="description" content="Recently I started using Powershell which friend of mine recommended. Powershell is Microsoft's product built on .NET platform which introduces .NET functionality in interactive interface. When I say interactive I mean both console and GUI but here we will consider only console aspects of powershell and I won't discuss powershell …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Powershell - next generation shell</h1>
+			<p>Recently I started using Powershell which friend of mine recommended. Powershell is Microsoft's product built on .NET platform which introduces .NET functionality in interactive 
+interface. When I say interactive I mean both console and GUI but here we will consider only console aspects of powershell and I won't discuss powershell host development. (maybe in future articles)</p>
+<p>As we know, standard way of thinking about console applications is there is 3 channels of communication to user: standard input, standard output and standard error. We send character sequence
+to standard input and receive character sequence to standard output and standard error. All 3 channels are character-based which means we get information as array of characters. 
+This approach is used since late 60s and is used now and nothing has been changed. Main reason for this situation is compatibility with legacy apps. If you are a developer, you probably use Vim, Emacs, GCC, etc... and you know these tools are developed  20 or 30 years ago. Still, they are so powerful that they are still used now. The problem with this approach is that we face day-to-day challenges where we need to combine these tools such that we can do complex operations on our systems. This becomes more and more challenging since we need to interface two or more 
+tools to do that. Solution has been developed also in previous century and it is shell pipe-lining. For instance, let's take example that we want to filter lines in file containing "FILTER ME" and then replace all appearances of "REPLACE ME" with "REPLACED". We have one tool to get contents of file, another tool which reads standard input and outputs filtered lines to standard output and another tool which reads from standard input and outputs to standard output every line with replaced text. </p>
+<p>For reading files, we can use tool called cat. For filtering we can use tool called grep and last but not the least, for replacement we can use sed. Now we use cat to output file contents to standard output, then we take that standard output and add it to standard input for grep which outputs filtered lines to standard output. Now we take standard output of grep and bring it to standard input of sed to get final result on standard output which is showed as result on screen. </p>
+<div class="highlight"><pre><span></span><code>cat file.txt | grep &quot;FILTER ME&quot; | sed &quot;s/REPLACE ME/REPLACED/g&quot;
+</code></pre></div>
+
+<p>Now, let's consider slightly complicated problem. Let's say we have file containing list of filenames and we want to replace appearance of ".txt" with ".text" and then create all of them. We can do this by running:</p>
+<div class="highlight"><pre><span></span><code>cat files.txt | sed &quot;s/\.txt/.text/g&quot; | xargs -n1 touch
+</code></pre></div>
+
+<p>so what does this command do? Let's go piece by piece. First we get contents of the file to standard output, then we replace needed stuff and finally we call touch which is tool that makes files. The problem is that touch receives command line arguments instead of reading from standard input so we need tool which traverses line by line of standard input and calls touch for every line passing that line as argument to touch. This is why we need to use xargs. </p>
+<p>Now let's take even more complicated problem: we want to rename all files which satisfy condition that their name ends with ".txt" and are not readable by others. Now we can use command "ls" to get information about files but since we are getting text to standard output, we will need to parse that output first to get some kind of ability to filter and map stuff. Now we start to see disadvantages of text stdin,stdout and stderr approaches. Powershell solves this issue by introducing objects instead of sequence of characters. </p>
+<h1>Powershell solution</h1>
+<p>Powershell solved this problem by introducing that, instead of pure character-based standard output and standard input, we use object-oriented approach. Now on standard output and on standard input, there are objects instead of basic text. Now you can ask, what about legacy apps? Well, Well their output is represented as list of strings where each string is one line while objects in standard input are converted to strings and sent to these apps. </p>
+<p>So, Powershell enables you to use everything which you could use earlier in other shells and adds additional functionality. Powershell has its own commands called commandlets 
+which are C# libraries built to be used as powershell commandlets. This enabled commandlets to get and send objects instead of pure text. Let's take our last two problems and solve them using powershell. </p>
+<p>First problem was that we had file containing file names and we wanted to replace ".txt" with ".text" and create them all. </p>
+<div class="highlight"><pre><span></span><code>gc ./files.txt | % {$_ -replace &quot;.txt&quot;, &quot;.text&quot;} | % {touch $_}
+</code></pre></div>
+
+<p>Now it seems more complicated but take a few minutes to analyse this command further: first we read contents with gc and we get list of strings. With "%" we are executing some function for every element in given list and that element is passed to that function as "$_". This is like map functionality in functional programming languages. First function we use is function that takes one line and returns that line with replaced text. Second function takes line and calls touch on it. This can be put in one function instead of two, for instance:</p>
+<div class="highlight"><pre><span></span><code>gc ./files.txt | % {touch ($_ -replace &quot;.txt&quot;, &quot;.text&quot;)}
+</code></pre></div>
+
+<p>For the secund problem we can do:</p>
+<div class="highlight"><pre><span></span><code>gci | ? {$_.Name -match &quot;.*\.txt&quot;} | ? {$_.Mode -notmatch &quot;.*r..&quot;} | % {mv $_ &quot;new-$_&quot;}
+</code></pre></div>
+
+<p>As you can see, we can use "?" command for filtering, just provide function (inside brackets) which returns condition for filtering.</p>
+<p>We can rewrite this command to include one filter with AND operator:</p>
+<div class="highlight"><pre><span></span><code>gci | ? {$_.Name -match &quot;.*\.txt&quot; -and $_.Mode -notmatch &quot;.*r..&quot;} | % {mv $_ &quot;new-$_&quot;}
+</code></pre></div>
+
+<h1>Additional interesting commandlets</h1>
+<p>We can read JSON files and output them as objects too: for instance:</p>
+<div class="highlight"><pre><span></span><code>gc ./object.json                                                                                                                                               
+{
+        &quot;Something&quot;: &quot;value&quot;,
+        &quot;list&quot;: [
+                {
+                        &quot;name&quot;: &quot;object1&quot;
+                },
+                {
+                        &quot;name&quot;: &quot;object2&quot;
+                },
+                {
+                        &quot;name&quot;: &quot;object3&quot;
+                },
+        ]
+}
+</code></pre></div>
+
+<p>Now we can do this:</p>
+<div class="highlight"><pre><span></span><code>gc object.json | ConvertFrom-Json
+</code></pre></div>
+
+<p>and we will get powershell representing our data. Similar thing we can do with CSV and XML files. Also, we can serialize objects back also:</p>
+<div class="highlight"><pre><span></span><code>gci | ConvertTo-Json
+</code></pre></div>
+
+<p>For instance for CSV:</p>
+<div class="highlight"><pre><span></span><code>gc data.csv | ConvertFrom-Csv
+</code></pre></div>
+
+<p>Also, there are commandlets for making HTTP requests, REST requests etc. You can also make your own commandlets from powershell or from C#. </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-10-26T10:15:00+01:00" pubdate>Fri 26 October 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

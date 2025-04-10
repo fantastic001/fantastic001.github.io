@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Git - kako se koristi? - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Git - kako se koristi?" />
+	<meta name="date" content="2017-07-04 13:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2017-07-04 13:15:00+01:00" />
+	<meta property="og:title" content="Git - kako se koristi?" />
+	<meta property="og:url" content="/2017-07-04-git.html" />
+	<meta property="og:description" content="Uvod Tokom razvoja softvera često imamo potrebu da razvoj podelimo na više ljudi. Ovde nastaju problemi sinhronizacije kao i problem kontrole koje su se izmene desile tokom razvoja. Pored ovoga, često se dešava da želimo da se vratimo na prethodnu verziju. Sve ove probleme rešava version control system. Sistem za …" />
+	<meta name="description" content="Uvod Tokom razvoja softvera često imamo potrebu da razvoj podelimo na više ljudi. Ovde nastaju problemi sinhronizacije kao i problem kontrole koje su se izmene desile tokom razvoja. Pored ovoga, često se dešava da želimo da se vratimo na prethodnu verziju. Sve ove probleme rešava version control system. Sistem za …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Git - kako se koristi?</h1>
+			<h1>Uvod</h1>
+<p>Tokom razvoja softvera često imamo potrebu da razvoj podelimo na više ljudi. Ovde nastaju problemi sinhronizacije kao i problem kontrole koje su se izmene desile tokom razvoja. Pored ovoga, često se dešava da želimo da se vratimo na prethodnu verziju. Sve ove probleme rešava version control system. </p>
+<p>Sistem za kontrolu verzija nam služi da vodimo evidenciju o izmenama, da sinhronizujemo rad na softveru u slučaju kada se softver razvija od strane tima itd. Iako je namenjen za timove, sistem za kontrolu verzija se često koristi i za slučajeve kada se razvoj obavlja samo od strane jedne osobe jer pruža lak način povratka na prethodne verzije. </p>
+<p>Sistemi za kontrolu verzija funkcionišu tako što postoji jedan repozitorijum gde se nalazi kod i na njemu se obavljaju sve izmene. Repozitorijum je često direktorijum gde se nalazi kod sa fajlovima. </p>
+<p>Po načinu funkcionisanja, sistemi za kontrolu verzija mogu biti centralizovani ili distribuirani. Centralizovani sistemi funkcionišu tako što imamo centralni repozitorijum gde svaki član tima dodaje svoje izmene i sve se dešava na tom centralnom repozitorijumu. Distribuirani sistemi funkcionišu tako što 
+svaki član tima ima svoj repozitorijum i tim funkcioniše tako što se repozitorijumi svakog člana tima
+sinhronizuju međusobno.</p>
+<p>Centralizovani sistemi imaju taj problem što prilikom kvara na serveru gde se nalazi repozitorijum, članovi tima ne mogu da rade na razvoju. Kod distribuiranih sistema se ovaj problem rešava upravo time što svako ima svoju lokalnu verziju repozitorijuma. </p>
+<h1>Git</h1>
+<p>Git je sistem za kontrolu verzija koji je slobodan i otvorenog koda (open source). Razvijen je za potrebe razvoja Linuxa i razvio ga je tvorac Linuxa Linus Torvalds. Git je distribuirani sistem što znači da poseduje sve prednosti takvih sistema koje su pomenute iznad. Git je sam po sebi konzolni alat ali 
+postoje softveri koji omogućavaju upotrebu Gita upotrebom grafičkih alata. Radi na Linuxu, Windowsu i OSX a čak postoje i verzije za Android.</p>
+<h1>Inicijalizacija repozitorijuma</h1>
+<p>Recimo da \želimo da napravimo naš repozitorijum lokalno, ovo radimo tako što prvo napravimo direktorijum gde ćemo držati naš kod a zatim inicijalizujemo git repozitorijum u njemu. </p>
+<div class="highlight"><pre><span></span><code>mkdir repo 
+cd repo 
+git init
+</code></pre></div>
+
+<p>Sada, za svaku promenu u kodu će git beležiti ko ju je napravio. Zbog ovoga je važno da podesimo
+naše ime i adresu elektronske pošte koja će se pokazati u listi izmena. </p>
+<div class="highlight"><pre><span></span><code><span class="n">git</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">--</span><span class="k">global</span><span class="w"> </span><span class="k">user</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="ss">&quot;Pera Perić&quot;</span>
+<span class="n">git</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="c1">--global user.email nasemail@host.com</span>
+</code></pre></div>
+
+<h1>Operacije nad repozitorijumom</h1>
+<p>Sada kada smo inicijalizovali naš repozitorijum i rekli git-u ko smo i koji nam je mejl kako bi on znao da zabeleži ispravno ko je uradio određenu izmenu, sada možemo da krenemo sa razvojem softvera. </p>
+<p>Dodavanje fajlova </p>
+<p>Za početak, treba naglasiti da ako napravimo fajl u našem direktorijumu gde nam je kod, to ne znači da je taj fajl dodat i u repozitorijum. Da dodamo fajl u repozitorijum, koristimo sledeću komandu:</p>
+<div class="highlight"><pre><span></span><code>git add imefajla
+</code></pre></div>
+
+<p>Sada je fajl dodat u repozitorijum. Isto tako, svaki put kad izmenimo fajl, ako želimo da git prepozna izmene, moramo ga dodati na isti način. Za ovo postoji prečica koju ćemo pomenuti kasnije. </p>
+<p>Snimanje izmena </p>
+<p>Kada uradimo izmene i kada ih dodamo na repozitorijum sa git add, potrebno je da ih snimimo (komitujemo). Prilikom snimanja izmena, treba da unesemo poruku koja opisuje datu izmenu, na primer ovako: </p>
+<div class="highlight"><pre><span></span><code>git commit -m &quot;Popravljen bug #67867&quot;
+</code></pre></div>
+
+<p>Ako smo dodali fajlove u repozitorijum, nema potrebe da izmene ponovo dodajemo sa git add već možemo da ih automatski dodamo prosleđivanjem opcije -a u commit komandu:</p>
+<div class="highlight"><pre><span></span><code>git commit -a -m &quot;Ispravljen bug #67776&quot;
+</code></pre></div>
+
+<p>Isto tako, ako zaboravimo da izmenimo nešto a deo je nekog komita, možemo tu izmenu dodati na poslednji komit sa opcijom --amend </p>
+<div class="highlight"><pre><span></span><code>git commit -a --amend
+</code></pre></div>
+
+<p>Pregled izmena i diff</p>
+<p>Sve izmene koje su se desile možemo pregledati sa git log</p>
+<div class="highlight"><pre><span></span><code>git log
+</code></pre></div>
+
+<p>a ako želimo da vidimo šta je izmenjeno za dati komit, koristimo git diff </p>
+<div class="highlight"><pre><span></span><code>git diff heš-komita
+</code></pre></div>
+
+<p>Ako želimo da obrišemo nekomitovane promene, koristimo:</p>
+<div class="highlight"><pre><span></span><code>git reset --hard
+</code></pre></div>
+
+<p>Da obrišemo poslednji komit i vratimo se na prethodni:</p>
+<div class="highlight"><pre><span></span><code>git reset --hard HEAD~1
+</code></pre></div>
+
+<p>Grananje </p>
+<p>Grananje se upotrebljava kada je potrebno razvijati feature nezavisno od ostalih ili kada se razvijaju dva feature-a nezavisno. Može da posluži i ako želimo da dati problem rešimo na više načina pa da vidimo koji se metod pokazuje bolje. U tom slučaju jednu granu ostavljamo a drugu brišemo. Grananje funkcioniše tako što razvoj razdvojimo na grane i svaka ima svoju istoriju izmena, posle granu spajamo u glavnu granu (master).</p>
+<p><img alt="Prikaz grananja" src="http://redstack.files.wordpress.com/2013/05/version-control.png?w=640&amp;h=238"></p>
+<p>Novu granu pravimo ovako:</p>
+<div class="highlight"><pre><span></span><code>git checkout -b imenovegrane
+</code></pre></div>
+
+<p>Ovo će napraviti novu granu i prebaciti se na nju. Sada su sve buduće izmene snimaju na novu granu, da menjamo granu, koristimo git checkout </p>
+<div class="highlight"><pre><span></span><code>git checkout grana
+</code></pre></div>
+
+<p>Glavna grana se zove master pa da se vratimo na nju, radimo:</p>
+<div class="highlight"><pre><span></span><code>git checkout master
+</code></pre></div>
+
+<p>Da sve izmene spojimo sa glavnom granom, moramo da uradimo git merge, prvo, pređemo na master granu (ili u neku drugu gde želimo da uradimo spajanje)</p>
+<div class="highlight"><pre><span></span><code>git checkout master 
+git merge grana
+</code></pre></div>
+
+<p>Da obrišemo granu:</p>
+<div class="highlight"><pre><span></span><code>git branch -d grana
+</code></pre></div>
+
+<h1>Dobre prakse</h1>
+<p>Tokom vremena, nastao je dobar model kako organizovati grane i razvoj softvera. Ovo nije must-to-do 
+ali se pokazuje kao jako koristan metod. </p>
+<p>Prvo, master grana služi za stabilnu verziju softvera. U njoj se uvek nalazi stabilna verzija softvera. Druga grana je dev u kojoj se nalazi trenutna razvojna verzija softvera. Za svaku novu stavku ili komponentu koju treba implementirati, potrebno je napraviti specijalnu granu za tu stavku. Na primer, ako želimo da implementiramo novu komponentu u GUI-u, recimo iscrtavanje statističkih podataka u nekom prozoru, napravimo granu graphing iz dev grane. Na tome radimo neko vreme i onda radimo merge u dev granu. Kada sve istestiramo i spremni smo da objavimo novu stabilnu verziju, radimo merge dev grane u master. U ovom trenutku ne sme biti grana za dodatne stavke. Kada uradimo merge u master, obavezno kreiramo tag da obeležimo novu verziju: </p>
+<div class="highlight"><pre><span></span><code>git checkout master 
+git merge dev 
+git tag 2.0
+</code></pre></div>
+
+<h1>Rad sa remote serverom</h1>
+<p>Iako je git distribuirani sistem, ;esto imamo potrebu da imamo i neki centralni repozitorijum gde je uvek sve up-to-date. Za ovo možemo koristiti git server i to:</p>
+<p>da kloniramo repozitorijum sa remote servera, koristimo git clone </p>
+<div class="highlight"><pre><span></span><code>git clone adresa-repozitorijuma
+</code></pre></div>
+
+<p>da uradimo update na lokalni repozitorijum koji je klon sa remote servera: </p>
+<div class="highlight"><pre><span></span><code>git pull
+</code></pre></div>
+
+<p>da odradimo update konkretne grane sa servera</p>
+<div class="highlight"><pre><span></span><code>git pull grana
+</code></pre></div>
+
+<p>da pošaljemo sve izmene koje smo napravili na server:</p>
+<div class="highlight"><pre><span></span><code>git push
+</code></pre></div>
+
+<p>ovo će poslati izmene na master granu, ako želimo poslati izmene na neku drugu granu:</p>
+<div class="highlight"><pre><span></span><code>git push grana
+</code></pre></div>
+
+<p>Postoje i servisi koji pružaju usluge git servera za free ili određenu svotu novca u zavisnosti od potreba, na primer GitHub, GitLab itd... </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2017-07-04T13:15:00+01:00" pubdate>Tue 04 July 2017</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Why some software projects fail? (and how to fix that) - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Why some software projects fail? (and how to fix that)" />
+	<meta name="date" content="2018-08-23 12:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-08-23 12:15:00+01:00" />
+	<meta property="og:title" content="Why some software projects fail? (and how to fix that)" />
+	<meta property="og:url" content="/2018-08-23-why-software-fails.html" />
+	<meta property="og:description" content="after some time and many projects and books I have caught some reason why software projects fail. Let's face it: our world depends on software more than ever before on anything before. However, software projects usually fail or they make it to the end of their development (version release) but …" />
+	<meta name="description" content="after some time and many projects and books I have caught some reason why software projects fail. Let's face it: our world depends on software more than ever before on anything before. However, software projects usually fail or they make it to the end of their development (version release) but …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Why some software projects fail? (and how to fix that)</h1>
+			<p>after some time and many projects and books I have caught some reason why software projects fail. Let's face it: our world depends on software more than ever 
+before on anything before.  However, software projects usually fail or they make it to the end of their development (version release) but they are broken in some way. 
+Many software projects even do not make it to the final release and these which do, they are feature-short or have damaged performance. </p>
+<p>After reading "Rapid Development" by S. McConnell, you start to realize that many software projects share common mistakes made during development which make them to fail 
+or to be broken when released. Many software projects do not make proper requirements analysis, architecture planning or risk management. Also, many of them face 
+problems involved with people, poor teamwork and loss of motivation. In this article, I am going to list and describe some of these common issues but if you think that
+these mistakes are worth further investigation, I suggest to read rapid development book by mentioned author above. </p>
+<p>Importance of planning </p>
+<p>There is huge part before implementation which will help in software development and which will come back to you as boomerang if you miss this phase. 
+I have worked on projects before where I did little or even no planning and where I started coding immediately. These projects were performance-poor or even did not 
+make it to the end at all. If you plan to develop project in a team, development is impossible without further planning. </p>
+<p>Here I am going to divide planning process into four main phases: </p>
+<ul>
+<li>requirements analysis </li>
+<li>life cycle planning</li>
+<li>architecture planning</li>
+<li>design phase </li>
+</ul>
+<p>These phases are not disjoin and can overlap (and should). </p>
+<p>First of all you should ask yourself "what am I doing?" and write down answer on the paper (or into text editor). Requirements analysis consists of defining what the software 
+should look like. In this phase you list all inputs and outputs of software, all features you want at near future, UI design. If you are developing GUI application then you
+should draw interface and all user interactions. If you are building console applications, write down all command line arguments and their possible use cases. If you 
+are building web app, design frontend side and interaction with user. If you are designing background service, define how it will behave and change state. You can 
+draw state machine for your software if possible where you describe all possible states and their transitions. If you are developing software for customer, ask questions such
+that customer needs to explain what he/she wants in detail. You can write use case scenario in form "Given X, when I do Y then Z" where X is state, Y is user action and Z is result 
+and/or new state. In this process you also define performance requirements: how software fast needs to be? What is size of data processed. What is time required for one 
+entry processing? This also means that you have to take into account user interaction. You should make use case such that user can do tasks fast (required time of interaction).</p>
+<p>After requirements analysis, there is life cycle planning. In this phase you choose how to deliver product and what is process during development. For instance, the oldest 
+one is waterfall where you go step by step in planning (from requirements analysis to architecture then to design and then to code / testing / QA) without overlapping.
+This model is not used in many cases and is good if you have fully-specified software requirements. Examples of these are cases where you have to port software to 
+another platform or to another language or technology. In that case you already have software and you know exactly what is needed. </p>
+<p>Another life cycle which is used for projects smaller than 500 lines of code (scripts and prototyping) is code and fix. Here you jump to coding without any planning. This
+is enough for scripts and prototypes. The reason why I am mentioning this is to show that planning does not to be done for simple scripts but you have to draw clear red line
+where border is. </p>
+<p>Method used today the most is evolutionary delivery. Where you do general requirements analysis and architectural analysis (and possibly some kind of code design) and 
+then work in stages by versions. Every stage consists of further requirements,  design, coding and testing and finally delivery. After delivery, you take feedback from customer
+and decide on next features (requirements) and repeat process. </p>
+<p>After life cycle analysis, based on selected model, we probably will do architectural analysis. In this step we define components of our software in general. Here 
+we define do we have database, back-end, frontend? How do components interact with each other. Do we have some services running in background and how they communicate? 
+Here we do not define our classes and UML diagrams. We just make black boxes and decide what parts do they communicate with. </p>
+<p>After architectural process, for each component, we do design process. Design depends on type of component. For database we will probably do entity relationship diagram. 
+For back-end we will define classes, methods and API. For frontend we will define how we are planning to make interface to user and how to communicate with back-end. Here we choose 
+technology stack which is going to be used and also make design compatible with technology stack. For instance, we do not worry about memory management if we are using Java 
+but we do worry about it if we are using C and we have to take this into consideration. 
+Also, in design phase we can provide unit tests for our API and even write some of them. </p>
+<p>After this, we are ready to start with construction. </p>
+<p>How important coding is?</p>
+<p>After all above mentioned process, you probably realize that coding is very small part of whole process and typically is easy one. After you do proper planning, 
+coding becomes just implementing functions inside components. You probably won't come to problems in this phase. </p>
+<p>Major risks </p>
+<p>Here is list of all major risks in most fo software projects. You should do risk management and make sure to control these risks. </p>
+<ul>
+<li>undermining motivation - treating people like children, not having empathy, acting as a bad-ass manager</li>
+<li>weak personnel</li>
+<li>not going well with bad apples in a team, not resolving issues in a team</li>
+<li>not informing upper-management of trouble or behind-schedule things, making "can-do" schedules instead of carefully thinking</li>
+<li>adding people to a late project</li>
+<li>noisy, crowded offices</li>
+<li>friction between developers and customers</li>
+<li>unrealistic expectations</li>
+<li>lack of effective project sponsorship</li>
+<li>lack of user input</li>
+<li>lack of stakeholder (marketing, sales, engineering, finance, ...) cooperation</li>
+<li>wishful thinking - if we work hard enough and get lucky, we will succeed!</li>
+<li>overly-optimistic schedules</li>
+<li>insufficient risk management - not taking into account what can get wrong and making room to fix it</li>
+<li>insufficient planning</li>
+<li>abandonment of planning under pressure</li>
+<li>too much time of fuzzy process like budgeting</li>
+<li>jumping directly to coding without design and planning</li>
+<li>inadequate design</li>
+<li>shortening QA</li>
+<li>omitting necessary tasks from estimates</li>
+<li>planning to catch up later</li>
+<li>code-like-hell programming</li>
+<li>unnecessary requirements in the beginning</li>
+<li>developer gold-plating - need to try brand new technologies, language features or implement non-required features</li>
+<li>push me - pull me negotiation - make schedule longer but add additional features even though project is behind schedule</li>
+<li>research-oriented development</li>
+<li>silver-bullet syndrome - using technology without previously having experience with it</li>
+<li>switching tools in the middle of a project</li>
+<li>lack of automated source code control</li>
+</ul>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-08-23T12:15:00+01:00" pubdate>Thu 23 August 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

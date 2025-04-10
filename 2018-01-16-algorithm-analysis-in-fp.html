@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Algorithm analysis in functional programming - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Algorithm analysis in functional programming" />
+	<meta name="date" content="2018-01-16 23:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-01-16 23:15:00+01:00" />
+	<meta property="og:title" content="Algorithm analysis in functional programming" />
+	<meta property="og:url" content="/2018-01-16-algorithm-analysis-in-fp.html" />
+	<meta property="og:description" content="This article has purpose to demonstrate the way of reasoning when algorithm analysis comes for programs written in functional programming paradigm. I will give some examples in Haskell to demonstrate methodology and also explain some core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic …" />
+	<meta name="description" content="This article has purpose to demonstrate the way of reasoning when algorithm analysis comes for programs written in functional programming paradigm. I will give some examples in Haskell to demonstrate methodology and also explain some core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Algorithm analysis in functional programming</h1>
+			<p>This article has purpose to demonstrate the way of reasoning when algorithm analysis comes for programs written in 
+functional programming paradigm. I will give some examples in Haskell to demonstrate methodology and also explain some
+core theorems in algorithm analysis. Here I will focus especially to time analysis in asymptotic manner which is when 
+we take limit where size of input goes to infinity. </p>
+<h1>List comprehension</h1>
+<p>First let's start by simple things. List comprehension is a way to define new list in terms of existing one. It is similar to what 
+you can see in math. For example the following list:</p>
+<div class="highlight"><pre><span></span><code><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="o">^</span><span class="m">2</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p">[</span><span class="m">1</span><span class="kc">..10</span><span class="p">]]</span>
+</code></pre></div>
+
+<p>is a list of squares from 1 to 10 (it is list [1,4,9, ..., 100])</p>
+<p>List comprehension is done in O(n) time. Another example is finding prime numbers:</p>
+<div class="highlight"><pre><span></span><code><span class="n">primes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[</span><span class="n">x</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="err">[</span><span class="mf">1..100</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="err">[</span><span class="n">y</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="err">[</span><span class="mf">2.</span><span class="p">.</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n n-Quoted">`mod`</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="err">[]]</span>
+</code></pre></div>
+
+<p>This is list of primes from 1 to 100. Let's determine what time does it take to find prime numbers from 1 to n using this method. First 
+we need to generate list of n numbers and for each to check is list [y|y&lt;-[2..x-1], x <code>mod</code> y == 0] empty. To generate this second
+list we need to check x elements. This yields formula: 1 + 2 + ... + n which is asymptotically equal to O(n^2).</p>
+<p>Here you can see that filtering does not lower number of operations since we have to perform them anyway. </p>
+<h1>Recursion</h1>
+<p>Analysis of recursive functions is not the same as in imperative programming. In imperative programming every call to 
+function is executed while in functional programming, call to function with specific parameters is executed only once! </p>
+<p>We can check that in the following example:</p>
+<div class="highlight"><pre><span></span><code><span class="n">fact</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span>
+<span class="n">fact</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="n">fact</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">fact</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<p>so if we calculate fact 100 and call it again, or call fact 99 we will get result immediately. This is because in functional 
+programming, function always returns the same result when called with the same parameters so this can be cached. This 
+is good for us when worrying about time but may be bad if we worry about space. This complicates our time analysis 
+For example, consider Fibonacci number generator:</p>
+<div class="highlight"><pre><span></span><code>fib = 0 = 1
+fib 1 = 1 
+fib n = fib (n-1) + fib (n-2)
+</code></pre></div>
+
+<p>if we apply our analysis and know that results are cached, we get total execution time of O(n) since values won't be computed twice. </p>
+<h1>Operations on lists</h1>
+<p>We will have to consider some operations for list and to be aware of their time performance. The most used 
+operation is adding to the head of list: x:xs is a new list with its head x and tail xs. This operation 
+takes constant time since Haskell implements lists as single-linked and saves pointer only to the head of list. 
+We are not copying whole list, we are just returning new head of a list. </p>
+<p>We using concatenation with ++, then we have O(n) complexity and explanation is that lists are single-linked and we have
+to traverse list and make copy of elements to be able to create concatenated version. </p>
+<p>Operator !! which will give n-th element in a list takes also O(n) time since it is property of a list. </p>
+<h1>Quick sort example</h1>
+<p>Let's do the analysis for our quick sort example:</p>
+<div class="highlight"><pre><span></span><code><span class="n">qsort</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">Int</span><span class="o">]</span>
+<span class="n">qsort</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[]</span>
+<span class="n">qsort</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">qsort</span><span class="w"> </span><span class="o">[</span><span class="n">x | x&lt;-l, x &lt; y</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="o">[</span><span class="n">y</span><span class="o">]</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="p">(</span><span class="n">qsort</span><span class="w"> </span><span class="o">[</span><span class="n">x | x&lt;-l, x&gt;y</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="n">l</span><span class="p">)</span>
+</code></pre></div>
+
+<p>first we will do list comprehension for left and right part and it takes O(n) time and then we will merge results of sorting individual parts which also takes O(n) time. For sorting both sides we need 2T(n/2) time if we assume that left and right sides are approximately equal. Now we have formula:</p>
+<div class="highlight"><pre><span></span><code>T(n) = 2T(n/2) + O(n)
+</code></pre></div>
+
+<p>so by Akra-Bazzi theorem we conclude that T(n) = O(nlog(n)).</p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-01-16T23:15:00+01:00" pubdate>Tue 16 January 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

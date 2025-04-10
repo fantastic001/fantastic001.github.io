@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Mako A-Z - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Mako A-Z" />
+	<meta name="date" content="2018-02-09 15:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-02-09 15:15:00+01:00" />
+	<meta property="og:title" content="Mako A-Z" />
+	<meta property="og:url" content="/2018-02-09-mako-a-z.html" />
+	<meta property="og:description" content="This article explains all Mako's functionality which is present in current version of time of this article. For introduction what is Mako and some basics, see this. This article is continuation of article mentioned above so I recommend you to read above article first if you haven't used Mako earlier …" />
+	<meta name="description" content="This article explains all Mako's functionality which is present in current version of time of this article. For introduction what is Mako and some basics, see this. This article is continuation of article mentioned above so I recommend you to read above article first if you haven't used Mako earlier …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Mako A-Z</h1>
+			<p>This article explains all Mako's functionality which is present in current version of time of this article. For introduction
+what is Mako and some basics, see <a href="http://fantastic001.github.io/organization/mako/2017/07/29/mako.html">this</a>. </p>
+<p>This article is continuation of article mentioned above so I recommend you to read above article first if you haven't used Mako 
+earlier. </p>
+<h1>Schedules</h1>
+<p>For schedules to work, you will have to create needed projects and subprojects inside them. Schedule is basically your weekly
+plan of what to do during next week. To create new schedule, just run:</p>
+<div class="highlight"><pre><span></span><code>mako schedule new
+</code></pre></div>
+
+<p>to show lastly created schedule, just run:</p>
+<div class="highlight"><pre><span></span><code>mako schedule
+</code></pre></div>
+
+<p>Now you will see that our schedule is empty, to add entry in schedule you can run the following command:</p>
+<div class="highlight"><pre><span></span><code>mako schedule add 1 15 2 myproject mysubproject
+</code></pre></div>
+
+<p>First number represents day in a week (1=Monday, 7=Sunday), second number represents starting time of task (15h or 3PM) and 
+last number represents task duration - how long you plan doing this activity. Then you have to specify project and subproject. </p>
+<p>Now you can keep making your schedule. When week ends and you want new schedule, just run <code>mako schedule new</code> and you'll get new empty schedule. If you've made mistake during data entry into schedule, you can delete entries:</p>
+<div class="highlight"><pre><span></span><code>mako schedule remove 1 15 2
+</code></pre></div>
+
+<p>First you specify day, then starting point and then how many hours to clear. In this way, you can remove multiple entries for 
+different projects. </p>
+<p>You can see that we do not specify tasks in schedule entries, just project and subproject. This is because Mako will 
+give us ability to see what tasks we need to do today, it will look into schedule, see what projects and subprojects are scheduled, see undone tasks for each of them, sort them by urgency and print them such that it respects the time we have given in schedule. 
+To use this functionality, just run:</p>
+<div class="highlight"><pre><span></span><code>mako today
+</code></pre></div>
+
+<p>and you'll get list of tasks for today. Mako won't increase spent time for tasks so you need to do it manually:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">mako</span><span class="w"> </span><span class="nv">project</span><span class="w"> </span><span class="nv">myproject</span><span class="w"> </span><span class="nv">subproject</span><span class="w"> </span><span class="nv">mysubproject</span><span class="w"> </span><span class="nv">task</span><span class="w"> </span><span class="s2">&quot;task description&quot;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">&lt;</span><span class="nv">NUM</span><span class="w"> </span><span class="nv">HOURS</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<h1>Schedule conditions</h1>
+<p>Schedule conditions is list of conditions to be satisfied for schedule to be correct. These conditions we can specify ourselves.
+For example, we can add condition to forbid adding entries on Sunday (so we can rest of work) or not to add specific project 
+during some time period or to some project has to be in some time period (for example, work hours or university or important meetings).</p>
+<p>Every condition is one JSON file in <code>~/.mako/db/Schedule conditions/</code> (or different path if you specify different database path, this is default). Every JSON file is JSON-encoded data with following fields:</p>
+<ul>
+<li>description - description of condition</li>
+<li><code>project_name</code> - specifies project name for which condition is applied</li>
+<li><code>subproject_name</code> - specified subproject name for which condition is applied</li>
+</ul>
+<p>These are required fields for every condition, additional, optional fields are:</p>
+<ul>
+<li><code>allowed_days</code> - days in which project/subproject pair can be added, defaults to [1,...,7]</li>
+<li><code>min_start_by_day</code> - minimal time when entry can start in schedule for every day, defaults to [0,0,0,0,0,0,0] - it can start every day after 0AM.</li>
+<li><code>max_start_by_day</code> - maximal time in day when project can start, default to (23, 23, ..., 23) </li>
+<li><code>min_duration</code> - minimal amount of hours for entry in schedule to fill, defaults to 0</li>
+<li><code>max_duration</code> - maximal amount of hours for entry to fill, defaults to 23</li>
+<li><code>allowed_date</code> - allowed dates when entry can be used in schedule, default to (1, ..., 31)</li>
+</ul>
+<p>For example, to limit yourself to cannot add work hours on weekends:</p>
+<div class="highlight"><pre><span></span><code>{
+    &quot;description&quot;: &quot;Do not work on weekends&quot;,
+    &quot;project_name&quot;: &quot;Work&quot;,
+    &quot;subproject_name&quot;: &quot;UpWork&quot;,
+    &quot;allowed_days&quot;: [1,2,3,4,5]
+}
+</code></pre></div>
+
+<p>When you add new condition, it is applied to all future schedules (not current one), so let's make new schedule:</p>
+<div class="highlight"><pre><span></span><code>mako schedule new
+</code></pre></div>
+
+<p>Now you'll see your condition is listed. Let's try to add work to weekend</p>
+<div class="highlight"><pre><span></span><code>mako schedule add 6 12 4 Work Upwork
+</code></pre></div>
+
+<p>Mako will output that condition is not satisfied and will output all descriptions of unsatisfied conditions. </p>
+<h1>Metrics and progress</h1>
+<p>Mako enables you to measure some metrics and track your progress. You have to specify your metrics in <code>~/.mako/db/Measurements</code>. 
+For every metric, you have to create one directory and create <code>measure.json</code> file. For example, the following structure:</p>
+<div class="highlight"><pre><span></span><code>.
+./Notes size
+./Notes size/measure.json
+</code></pre></div>
+
+<p>We create <code>measure.json</code> like JSON-encoded data with the following required fields:</p>
+<ul>
+<li><code>id</code> - unique identifier for metric, it si recommended to be without spaces </li>
+<li><code>action</code> - measurement method to use</li>
+</ul>
+<p>Action can be one of the following and every has its own parameters:</p>
+<ul>
+<li><code>filesystem.directory.size</code> - Measures the size of directory in megabytes, requires <code>path</code> parameter which is path of directory which size is being measured </li>
+<li><code>filesystem.file.lineCount</code> - requires <code>path</code> and computes number of lines in particular file </li>
+<li><code>org.sections.done.count</code> - requires <code>path</code> parameter which is path to .org file, action computes number of DONE sections in file</li>
+<li><code>org.sections.count</code> - requires <code>path</code> and computes number of sections in .org file </li>
+<li><code>os.script</code> - measurement based on output of executing some script. Requires parameters: <code>path</code> - path to the script, <code>interpreter</code> - interpreter to run script with (default: sh), <code>result_as</code> - path to file where result is stored (stdout to take output as result), <code>args</code> - string which represents arguments to script, it is specified like you would pass arguments in command-line. </li>
+<li><code>table.entry.count</code> - counts entries in a given table. Parameters: <code>table_name</code> - name of Mako table, <code>filter</code> - specified filter which is used to count only entries where this string is included.</li>
+</ul>
+<p>To show all metrics in database, run:</p>
+<div class="highlight"><pre><span></span><code>mako metrics
+</code></pre></div>
+
+<p>To run all measurement, run:</p>
+<div class="highlight"><pre><span></span><code>mako measure
+</code></pre></div>
+
+<h1>Tables</h1>
+<p>Tables are a method to store your custom notes and data in tables. It is like small database which comes with Mako. To create table run:</p>
+<div class="highlight"><pre><span></span><code>mako tables new mytable &quot;A|B|C&quot;
+</code></pre></div>
+
+<p>So you have to specify table name and its header, every column is separated by '|'.</p>
+<p>To show table, run:</p>
+<div class="highlight"><pre><span></span><code>mako table mytable
+</code></pre></div>
+
+<p>and you'll see empty table, to add an entry to it, run:</p>
+<div class="highlight"><pre><span></span><code>mako table mytable add &quot;1|2|3&quot;
+</code></pre></div>
+
+<p>so you basically separate different columns of your entry with pipeline like you do when you create table. You can filter table 
+when you want to search for something:</p>
+<div class="highlight"><pre><span></span><code>mako table mytable filter &quot;2&quot;
+</code></pre></div>
+
+<p>which will output only entries where at least one column contains specified string. </p>
+<p>In tables you can keep track of something important to you and then measure how many things you have done by using metric which counts entries in table. </p>
+<p>Entries in table are shortened such that it fills screen nice, you can show whole entry by using:</p>
+<div class="highlight"><pre><span></span><code>mako table mytable entry 1
+</code></pre></div>
+
+<p>here 1 is number of entry which you can get when you are showing table with <code>mako table mytable</code>.</p>
+<p>To delete entry:</p>
+<div class="highlight"><pre><span></span><code>mako table mytable entry 1 delete
+</code></pre></div>
+
+<p>To update entry:</p>
+<div class="highlight"><pre><span></span><code>mako table mytable entry 1 update &quot;column 1|column 2|column 3&quot;.
+</code></pre></div>
+
+<h1>Reporting system</h1>
+<p>Mako can make reports on various topics. At this time, two kinds of reports are supported: monthly and quarterly reports. These reports
+show some statistics about tasks and projects in general. To generate monthly report, run:</p>
+<div class="highlight"><pre><span></span><code>mako reports generate monthly 2018 1
+</code></pre></div>
+
+<p>where you specify year and month for which you want statistics. </p>
+<p>For quarter reports, run:</p>
+<div class="highlight"><pre><span></span><code>mako reports generate quarterly 2018 1
+</code></pre></div>
+
+<p>to generate statistics for the first quarter in 2018. </p>
+<p>To list reports you can do:</p>
+<div class="highlight"><pre><span></span><code>mako reports
+</code></pre></div>
+
+<p>and to show particular report, run:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">mako</span><span class="w"> </span><span class="nv">reports</span><span class="w"> </span><span class="k">show</span><span class="w"> </span><span class="nv">reportName</span>
+</code></pre></div>
+
+<h1>Exporting/importing database to/from JSON</h1>
+<p>Mako can export its whole database in one json file which you can easily transfer over devices or upload somewhere. For example, you can export whole database and then encrypt it and save to cloud for backup. It can also import database from json.</p>
+<p>To export database:</p>
+<div class="highlight"><pre><span></span><code><span class="n">mako</span><span class="w"> </span><span class="n">database</span><span class="w"> </span><span class="k">export</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="n">mydb</span><span class="o">.</span><span class="n">json</span>
+</code></pre></div>
+
+<p>or to import database:</p>
+<div class="highlight"><pre><span></span><code><span class="n">mako</span><span class="w"> </span><span class="n">database</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="n">mydb</span><span class="o">.</span><span class="n">json</span>
+</code></pre></div>
+
+<h1>Importing data from Taskwarrior</h1>
+<p>You can import data from taskwarrior with:</p>
+<div class="highlight"><pre><span></span><code><span class="n">mako</span><span class="w"> </span><span class="n">database</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="nn">taskwarrior</span><span class="w"> </span><span class="o">~/.</span><span class="n">task</span>
+</code></pre></div>
+
+<p>Here just note that taskwarrior is not as powerful as Mako and is not strict as Mako so you can end up with additional work to 
+fix some things manually. </p>
+<h1>What to expect in future releases</h1>
+<p>In future versions, these things are planned to be implemented:</p>
+<ul>
+<li>makoc - curses frontend for Mako (it is partially done now)</li>
+<li>making new schedules from templates </li>
+<li>automatic sync to cloud with encryption </li>
+<li>filter expressions for filtering table entries, like SQL syntax</li>
+<li>support for importing schedules from Libreoffice calc documents </li>
+<li>Web server to access mako from other devices to your computer. </li>
+</ul>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-02-09T15:15:00+01:00" pubdate>Fri 09 February 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

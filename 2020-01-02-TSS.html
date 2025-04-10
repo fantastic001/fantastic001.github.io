@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Introduction to TSS - small tool for generating source code from templates - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Introduction to TSS - small tool for generating source code from templates" />
+	<meta name="date" content="2020-01-02 15:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2020-01-02 15:15:00+01:00" />
+	<meta property="og:title" content="Introduction to TSS - small tool for generating source code from templates" />
+	<meta property="og:url" content="/2020-01-02-TSS.html" />
+	<meta property="og:description" content="Sometimes, working with the code involves a lot of boilerplate snippets and source files. This often reduces creativity in development and causes developer to think more about framework API or language syntax rather than to think more about the problem they are trying to solve. TSS is tool which enables …" />
+	<meta name="description" content="Sometimes, working with the code involves a lot of boilerplate snippets and source files. This often reduces creativity in development and causes developer to think more about framework API or language syntax rather than to think more about the problem they are trying to solve. TSS is tool which enables …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Introduction to TSS - small tool for generating source code from templates</h1>
+			<p>Sometimes, working with the code involves a lot of boilerplate snippets and source files. This often reduces creativity in development 
+and causes developer to think more about framework API or language syntax rather than to think more about the problem they are trying to solve. </p>
+<p>TSS is tool which enables creation and usage of various templates for the code. It enables parametrized types which means a greater scope of possible boilerplate snippets
+can be reused. For instance, you can create template class and parametrize its name and fields in template. </p>
+<h1>Installation</h1>
+<p>TSS can be installed by cloning this repository or via pip:</p>
+<div class="highlight"><pre><span></span><code>pip install tss
+</code></pre></div>
+
+<p>or, if you have downloaded source code from repository:</p>
+<div class="highlight"><pre><span></span><code>python setup.py install
+</code></pre></div>
+
+<h1>basic usage</h1>
+<p>So, let's take a look how to reuse existing templates. TSS supports system of multiple template sources. In such a way, you can 
+download multiple set of existing templates from third parties and always keep track of where they come from. </p>
+<p>There is default set of templates provided by this source code in templates directory, to add it to TSS use:</p>
+<div class="highlight"><pre><span></span><code>tss remote add default ./templates
+</code></pre></div>
+
+<p>first parameter after "remote add" command is name of source which can be whatever you want and second one is path to template collection. </p>
+<p>Now, we can create simple java class from our template collection:</p>
+<div class="highlight"><pre><span></span><code>tss create java/class
+</code></pre></div>
+
+<p>You should get editor opened with special settings file for you to fill in. When you set all parameters, you can save the file and close the editor and you will get new java class file created in directory in which you invoked tss command.</p>
+<p>Now, let's investigate further file which is opened in your editor. First of all, there are variables which you can set and every variable has its type. For instance, 
+you can see <code>name : string = "MyClass"</code> which means variable name is set to value "MyClass" and is of type string. As user of template, you should never change variable names and their types, only their values. In this manner, you are able to set parameters used in template. For instance, in our case, we have name of the class
+which we can set. </p>
+<p>There are 3 fundamental types: string, integer and boolean. </p>
+<p>There are also complex types like dictionaries and lists. If you see type like <code>[string]</code> it means this variable is list of strings. You should set it like this:</p>
+<div class="highlight"><pre><span></span><code><span class="n">SomeParameter</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="o">[</span><span class="n">string</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;StringA&quot;, &quot;StringB&quot;, &quot;StringC&quot;</span><span class="o">]</span>
+</code></pre></div>
+
+<p>also, we you see <code>{a : string, b : string}</code> it means it is dictionary with variables a and b and both of them are strings. </p>
+<p>Common thing to see is list of dictionaries. You can also see in our java/class example where we can define fields of the class. For defining dictionary values, you can use syntax: <code>(a="StringA", b="StringB")</code>.</p>
+<p>In our java class example, we can define fields by specifying field name and type. </p>
+<h1>Creating your own templates</h1>
+<p>All source files are written in Jinja2 template system. You can read more about Jinja2 <a href="https://jinja.palletsprojects.com/en/2.10.x/">here</a>.</p>
+<p>First of all, you will need to make your template collection. This is normal directory on your file system. Then, you should create directory which is name of language used and then inside it directory with name of your template. Example would be:</p>
+<div class="highlight"><pre><span></span><code>- mytemplates 
+|- java
+|-|- mytemplate
+</code></pre></div>
+
+<p>Template has to contain file named <code>params.tps</code>. This file has syntax you already saw while creating code from template using <code>tss create</code>.</p>
+<p>All other files are part of template content and will be used to generate code. You can reference  variables using jinja2 syntax. For instance, you can see how java/class template looks like in templates directory.</p>
+<p>As you can see, we can use all jinja2 capabilities including loops and branching as well.</p>
+<p>You can also parametrize names of files and directories inside the template. Just insert triple underscores before and after variable name. For instance, file containing above content can be named <code>___name___.java</code> and TSS will rename it to name specified in <code>name</code> variable during code generation.</p>
+<p>If at least one variable in file name is unspecified or empty, file won't be created. </p>
+<p>NOTE: do not forget to add your template collection to TSS using <code>tss remote add &lt;NAME&gt; &lt;PATH&gt;</code> command.</p>
+<h1>Conclusion</h1>
+<p>TSS can be used to generate code boilerplate for projects as well as for generating starting point for various documents (LaTeX, markdown etc...).</p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2020-01-02T15:15:00+01:00" pubdate>Thu 02 January 2020</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

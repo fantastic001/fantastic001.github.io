@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>C++ Value categories - making your constructors time and memory optimal - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="C++ Value categories - making your constructors time and memory optimal" />
+	<meta name="date" content="2019-11-17 15:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2019-11-17 15:15:00+01:00" />
+	<meta property="og:title" content="C++ Value categories - making your constructors time and memory optimal" />
+	<meta property="og:url" content="/2019-11-17-cpp-value-categories.html" />
+	<meta property="og:description" content="Since C++11, a lot of effort is invested in optimizing code for performance. The bottleneck was always copying stuff around and making temporary objects. Since we do not want to come back to CC, in C++11 there is functionality to distinguish if we are passing temporary object or …" />
+	<meta name="description" content="Since C++11, a lot of effort is invested in optimizing code for performance. The bottleneck was always copying stuff around and making temporary objects. Since we do not want to come back to CC, in C++11 there is functionality to distinguish if we are passing temporary object or …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>C++ Value categories - making your constructors time and memory optimal</h1>
+			<p>Since C++11, a lot of effort is invested in optimizing code for performance. The bottleneck was always copying stuff around and making temporary objects. Since we do not want to come back to CC, in C++11 there is functionality to distinguish if we are passing temporary object or object we will use later. </p>
+<p>As you can see, it is important to understand that we are not concerned about parameter type in function but also about if it is temporary object or not. </p>
+<p>For this reason, there is concept of value category. Value categories existed long before C++ came to this world, one cannot use everything on left-hand side of assignment operator. For instance, the following code in C will be semantically okay:</p>
+<div class="highlight"><pre><span></span><code>int a; 
+a = 5;
+</code></pre></div>
+
+<p>"a" is variable of type int, operator <code>=</code> expects an int on left and an int on right hand side. On the other side, the following code will produce compile error:</p>
+<div class="highlight"><pre><span></span><code>int a; 
+5 = a;
+</code></pre></div>
+
+<p>Type semantics are okay here as well: two ints on both sides. The problem is that value category differs. Variable <code>a</code> is called lvalue while number 5 is called rvalue. When we are using operator "=", we have to put lvalue on left hand side. </p>
+<h1>Value categories in C++</h1>
+<p>In C++, there is huge difference to C. In C, we had two value categories: lvalue and rvalue. These are categories which specify what kind of values can be on left-hand side of assignment operator (and on right hand side as well) and what can be on right-hand side only. </p>
+<p>In C++, we have three primitive value categories:</p>
+<ol>
+<li>lvalue (same as in C)</li>
+<li>prvalue (primitive rvalue)</li>
+<li>xvalue (eXpiring value) - used for temporary objects which will be deleted very soon (most probably in the next statement).</li>
+</ol>
+<p>Now, there are some generalizations:</p>
+<ol>
+<li>rvalue = prvalue or xvalue</li>
+<li>glvalue(i.e. generalized lvalue) = lvalue or xvalue </li>
+</ol>
+<p>So, xvalue is rvalue and glvalue at the same time. </p>
+<p>So, lvalue is everything which is addressable. When you want to know if something is lvalue, ask yourself if you can get address of that object. For instance, variables are lvalues because we can get address of them while <code>5</code> is not lvalue since we cannot get address of it in memory (it is not explicitly stored in memory).</p>
+<p>The tricky part is the following: string constants are lvalues! Same rule applied: we can get address of them since they are stored in memory even though they are not variables. </p>
+<p>If we get address of lvalue, it is prvalue since that address is not stored. If we store that address to pointer variable, then pointer variable is lvalue, of course. </p>
+<p>Also, when using <code>new</code> operator for memory allocation, it is stored in memory (we have just allocated space for it) but we cannot reference it unless we save it to variable. So, what is value category of expression with <code>new</code> operator? It is stored in memory temporally, so it is xvalue. </p>
+<p>everything else is prvalue. </p>
+<p>Attention! <code>this</code> pointer is also prvalue, even though it is variable. The reason for this is it is stored in register on most architectures rather then in memory, so address of it cannot be read. </p>
+<h1>Telling functions which value categories are permitted</h1>
+<p>Since some expression has no only type but type and value category as a pair, we are able to say what type and value category of parameter has to be. </p>
+<h2>lvalue references</h2>
+<p>If we want to permit only lvalues, we can make function with <code>&amp;</code> added to its parameter to tell it can receive only lvalues:</p>
+<div class="highlight"><pre><span></span><code><span class="nb nb-Type">int</span><span class="w"> </span><span class="n">my_function</span><span class="p">(</span><span class="nb nb-Type">int</span><span class="o">&amp;</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">changed</span><span class="w"> </span><span class="n">also</span><span class="w"> </span><span class="n">outside</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">scope</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">function</span><span class="p">,</span><span class="w"> </span><span class="n">reference</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">variable</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">copied</span><span class="w"> </span><span class="n">instead</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">whole</span><span class="w"> </span><span class="n">value</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>So this behaves like raw pointers in C. </p>
+<p>Also, we can assign some variable to lvalue references as well:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">std</span><span class="p">::</span><span class="nd">string</span><span class="w"> </span><span class="nt">mystr</span><span class="o">(</span><span class="s2">&quot;my string&quot;</span><span class="o">);</span>
+<span class="nt">std</span><span class="p">::</span><span class="nd">string</span><span class="o">&amp;</span><span class="w"> </span><span class="nt">ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">mystr</span><span class="o">;</span>
+</code></pre></div>
+
+<h2>Const references</h2>
+<p>If we do not want to copy whole value (like we did in lvalue references) but still want to be able to pass rvalues, we can make our lvalue reference constant. That means we won't modify it inside function (if we do, we will get compile error):</p>
+<div class="highlight"><pre><span></span><code><span class="nc">int</span><span class="w"> </span><span class="n">count_spaces</span><span class="p">(</span><span class="n">const</span><span class="w"> </span><span class="nl">std</span><span class="p">:</span><span class="err">:</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="nf">str</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="nf">str</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nf">str</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="w"> </span><span class="n">c</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<h2>rvalue references</h2>
+<p>Now, we can make function which can get only rvalues. This is introduces in C++11. This is important because sometimes we want to distinguish between lvalues and rvalues. </p>
+<div class="highlight"><pre><span></span><code><span class="nt">std</span><span class="p">::</span><span class="nd">string</span><span class="o">&amp;</span><span class="w"> </span><span class="nt">make_copy</span><span class="o">(</span><span class="nt">std</span><span class="p">::</span><span class="nd">string</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nt">str</span><span class="o">)</span><span class="w"> </span>
+<span class="p">{</span>
+<span class="w">    </span><span class="err">return</span><span class="w"> </span><span class="err">str</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">std</span><span class="p">::</span><span class="nd">string</span><span class="o">&amp;</span><span class="w"> </span><span class="nt">make_copy</span><span class="o">(</span><span class="nt">std</span><span class="p">::</span><span class="nd">string</span><span class="o">&amp;</span><span class="w"> </span><span class="nt">str</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="p">:</span><span class="o">:</span><span class="n">string</span><span class="o">*</span><span class="w"> </span><span class="n">str2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="nf">string</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="w">    </span><span class="err">return</span><span class="w"> </span><span class="err">*str2</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>old-fashioned copy way</h2>
+<p>And, finally, we have old-fashioned way with copying, we copy whole value and as such, our function can take lvalues and rvalues and value will be copied:</p>
+<div class="highlight"><pre><span></span><code>int copy_function(sstd::string str) 
+{
+    // .. 
+}
+</code></pre></div>
+
+<h1>move semantics for constructors</h1>
+<p>Now, as we can have different implementations of the same function for rvalue and lvalue. This means we can have constructors which do copy (in case lvalue is received) and constructors which do move (in case rvalue is received). </p>
+<div class="highlight"><pre><span></span><code><span class="nv">MyClass</span>::<span class="nv">MyClass</span><span class="ss">(</span><span class="nv">MyClass</span><span class="o">&amp;</span><span class="w"> </span><span class="nv">other</span><span class="ss">)</span><span class="w"> </span>
+{
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nv">copy</span><span class="w"> </span><span class="nv">here</span>
+}
+<span class="nv">MyClass</span>::<span class="nv">MyClass</span><span class="ss">(</span><span class="nv">MyClass</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">other</span><span class="ss">)</span><span class="w"> </span>{
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="nv">just</span><span class="w"> </span><span class="nv">move</span><span class="w"> </span><span class="nv">pointers</span><span class="w"> </span><span class="nv">here</span>
+}
+</code></pre></div>
+
+<p>Now, what if we want to move existing, already stored in memory, variable? If we just pass it, it will be passed as lvalue and hence copy constructor will be called. How to force move? Well, we need to cast it to rvalue. Here, <code>std::move</code> is useful function, it receives lvalue reference and converts it to lvalue reference:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">MyClass</span><span class="w"> </span><span class="nt">obj</span><span class="o">;</span>
+<span class="o">//</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nt">use</span><span class="w"> </span><span class="nt">obj</span><span class="w"> </span>
+<span class="nt">MyClass</span><span class="w"> </span><span class="nt">obj2</span><span class="o">(</span><span class="nt">std</span><span class="p">::</span><span class="nd">move</span><span class="o">(</span><span class="nt">obj</span><span class="o">));</span>
+<span class="o">//</span><span class="w"> </span><span class="nt">now</span><span class="w"> </span><span class="nt">obj</span><span class="w"> </span><span class="nt">cannot</span><span class="w"> </span><span class="nt">be</span><span class="w"> </span><span class="nt">used</span><span class="w"> </span><span class="nt">anymore</span>
+</code></pre></div>
+
+<h1>how std::move works</h1>
+<p><code>std::move</code> is function which heavily abuses meta programming capabilities of C++. In compile time, it casts passed object to rvalue reference of the same type. It first removes reference with <code>std::remove_reference</code> meta function and adds <code>&amp;&amp;</code> to type and returns casted value. </p>
+<h1>std::forward explained</h1>
+<p>Since, when we use parameters in a function (whatever value category it is passed as), maybe we want to forward that parameter to another function and, if we just forward it as normal argument, we will always pass it as lvalue. Now, we need to cast it to value category based on which parameter it was in our parameter list. We can do it manually or we can use <code>std::forward</code> to do it for us. So, like std::move converts lvalue to rvalues, std::forward will convert lvalues to anything it was before (value category of argument).</p>
+<h1>Conclusion</h1>
+<p>In conclusion, it is important to understand value categories in C++ since it will enable you to write more efficient code and make better performance related decisions. Use move semantics wherever possible. </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2019-11-17T15:15:00+01:00" pubdate>Sun 17 November 2019</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

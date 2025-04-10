@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>SSH reversni tunel - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="SSH reversni tunel" />
+	<meta name="date" content="2017-05-10 23:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2017-05-10 23:15:00+01:00" />
+	<meta property="og:title" content="SSH reversni tunel" />
+	<meta property="og:url" content="/2017-05-10-ssh-tunnel.html" />
+	<meta property="og:description" content="Ovaj članak objašnjava kako podesiti reversni SSH tunel i time omogućiti forvardovanje portova preko mreže. Ovo je izuzetno korisno iz dva razloga: Enkripcija neenkriptovanog protokola Zaobilaženje NAT-a Uzmimo za primer da želimo da pošaljemo poruku računaru A sa računara B. Računar A je iza NAT-a koji brani sve konekcije koje …" />
+	<meta name="description" content="Ovaj članak objašnjava kako podesiti reversni SSH tunel i time omogućiti forvardovanje portova preko mreže. Ovo je izuzetno korisno iz dva razloga: Enkripcija neenkriptovanog protokola Zaobilaženje NAT-a Uzmimo za primer da želimo da pošaljemo poruku računaru A sa računara B. Računar A je iza NAT-a koji brani sve konekcije koje …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>SSH reversni tunel</h1>
+			<p>Ovaj članak objašnjava kako podesiti reversni SSH tunel i time omogućiti forvardovanje portova preko mreže. Ovo je 
+izuzetno korisno iz dva razloga:</p>
+<ol>
+<li>Enkripcija neenkriptovanog protokola</li>
+<li>Zaobilaženje NAT-a </li>
+</ol>
+<p>Uzmimo za primer da želimo da pošaljemo poruku računaru A sa računara B. Računar A je iza NAT-a koji brani sve konekcije koje počinju sa porukom od B do A ali ne rani konekcije koje su inicijalizovane sa porukom od A do B. </p>
+<p>Ovo se rešava tako što se računaru B od računara A pristupi preko SSH i uradi se mapiranje portova. </p>
+<p>Primer ovoga je dat sledećom linijom:</p>
+<div class="highlight"><pre><span></span><code><span class="n">ssh</span><span class="w"> </span><span class="o">-</span><span class="n">fN</span><span class="w"> </span><span class="o">-</span><span class="n">R</span><span class="w"> </span><span class="mi">7000</span><span class="err">:</span><span class="nl">localhost</span><span class="p">:</span><span class="mi">50</span><span class="w"> </span><span class="n">username</span><span class="nv">@B</span><span class="o">-</span><span class="n">ip</span>
+</code></pre></div>
+
+<p>Sada sve što se pošalje na port 7000 na računaru B, biće prosleđeno računaru A na port 50.</p>
+<p>Na primer, da omogućimo SSH konekciju na računar A na port 22 sa porta 7000 možemo uraditi:</p>
+<div class="highlight"><pre><span></span><code><span class="n">ssh</span><span class="w"> </span><span class="o">-</span><span class="n">fN</span><span class="w"> </span><span class="o">-</span><span class="n">R</span><span class="w"> </span><span class="mi">7000</span><span class="err">:</span><span class="nl">localhost</span><span class="p">:</span><span class="mi">22</span><span class="w"> </span><span class="n">username</span><span class="nv">@B</span><span class="o">-</span><span class="n">ip</span>
+</code></pre></div>
+
+<p>I sada na računaru B treba izvršiti</p>
+<div class="highlight"><pre><span></span><code><span class="n">ssh</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w"> </span><span class="mi">22</span><span class="w"> </span><span class="n">username</span><span class="nv">@localhost</span>
+</code></pre></div>
+
+<p>Pored svega ovoga, treba obratiti pažnju da li je mapiranje portova preko SSH odobreno u sshd.conf. </p>
+<p>Ovim putem zaobilazimo NAT + dobijamo enkriptovanu komunikaciju.</p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2017-05-10T23:15:00+01:00" pubdate>Wed 10 May 2017</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

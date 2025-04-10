@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Instant API - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Instant API" />
+	<meta name="date" content="2019-10-05 12:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2019-10-05 12:15:00+01:00" />
+	<meta property="og:title" content="Instant API" />
+	<meta property="og:url" content="/2019-10-05-instant-api.html" />
+	<meta property="og:description" content="Today, we live in world of micro services. Now, it is important to make your application accessible to other applications more than ever. The problem is that this task is very often easier said than done. We often want to expose some kind of interface to our application. This is …" />
+	<meta name="description" content="Today, we live in world of micro services. Now, it is important to make your application accessible to other applications more than ever. The problem is that this task is very often easier said than done. We often want to expose some kind of interface to our application. This is …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Instant API</h1>
+			<p>Today, we live in world of micro services. Now, it is important to make your application accessible to other applications more than ever. The problem is that this task is 
+very often easier said than done. We often want to expose some kind of interface to our application. This is usually done using HTTP protocol because there are lot of libraries 
+for making HTTP communication easy. This article is about Python library I've made to ease this process. The library is called Instant API and you can find it <a href="https://gitlab.com/fantastic001/InstantAPI">here</a>. </p>
+<p>The idea is to build your API by adding handlers. A handler is some endpoint (actually, it is subset of endpoints in your API) which handles specific type of request. For instance, you can have handler which will handle all endpoints on <code>/myhandler/</code> path like <code>/myhandler/A</code> , <code>/myhandler/B/123</code> etc...</p>
+<p>Your API has to have at least one, default handler. Default handler will handle all subpaths that are not handled by some other handler. </p>
+<p>Another thing is type of objects which Instant API uses. These objects are called CloudObjects and you can construct them in Python very easily: </p>
+<div class="highlight"><pre><span></span><code>myobject = CloudObject(name=&quot;somename&quot;, age=25)
+</code></pre></div>
+
+<p>As you can see, these objects are like dicts. You can specify whatever fields to them. You can get particular field by accessing its attributes:</p>
+<div class="highlight"><pre><span></span><code>print(myobject.name)
+</code></pre></div>
+
+<h1>Example with simple server with simple file system handler</h1>
+<p>Here is an example of API creation in Python with one default handler: FSHandler. This handler will handle GET requests which will get content of a file and POST request which will handle writing to file. Since we are working with CloudObject objects, file created will be JSON serialized representation of object.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">InstantAPI.http</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="n">HTTPServer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">InsttantAPI.handlers</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">InstantAPI</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="n">CloudServer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="n">cloud</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CloudServer</span><span class="p">(</span><span class="n">FSHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="w"> </span><span class="n">handlers</span><span class="o">=</span><span class="p">[])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running server on port 8080&quot;</span><span class="p">)</span>
+<span class="n">HTTPServer</span><span class="p">(</span><span class="n">cloud</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">)</span><span class="o">.</span><span class="n">serve</span><span class="p">()</span>
+</code></pre></div>
+
+<p>As simple as that. Endpoint for FSHandler is <code>/data/</code> so you can try it out with curl: </p>
+<div class="highlight"><pre><span></span><code>curl -X POST -d &#39;{&quot;name&quot;: &quot;John&quot;}&#39; &quot;localhost:8080/data/john&quot;
+</code></pre></div>
+
+<p>and you will see file created in directory you specified as first argument to your server (root path where files are served).</p>
+<p>Another application can watch for file changes and you will have communication between apps. </p>
+<h1>Another example with two handlers</h1>
+<p>This is example where we have default handler FSHandler and TimeHandler on endpoint <code>/time</code> which will return current time. </p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">InstantAPI.http</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="n">HTTPServer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">InsttantAPI.handlers</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">InstantAPI</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="n">CloudServer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="n">cloud</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CloudServer</span><span class="p">(</span><span class="n">FSHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="w"> </span><span class="n">handlers</span><span class="o">=</span><span class="p">[</span><span class="n">TimeHandler</span><span class="p">()])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running server on port 8080&quot;</span><span class="p">)</span>
+<span class="n">HTTPServer</span><span class="p">(</span><span class="n">cloud</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">)</span><span class="o">.</span><span class="n">serve</span><span class="p">()</span>
+</code></pre></div>
+
+<p>you can try it out with curl:</p>
+<div class="highlight"><pre><span></span><code>curl -X GET localhost:8080/time
+</code></pre></div>
+
+<p>and you will get something like:</p>
+<div class="highlight"><pre><span></span><code>{&quot;time&quot;: &quot;2019-10-05 13:22:03.206878&quot;}
+</code></pre></div>
+
+<h1>Current state and extensions</h1>
+<p>Right now, there are only 4 implemented handlers: FSHandler, TimeHandler, ObjectHandler (handles objects in SQLite db) and JWTHandler (handles authorization). </p>
+<p>You can implement your own handler by inheriting CloudHandler class and implementing handle and handlePut functions. </p>
+<div class="highlight"><pre><span></span><code>def handlle(self, path, state={})
+def handlePut(self, path, state={}, obj=CloudObject())
+</code></pre></div>
+
+<p>These functions will be called on POST and GET requests. You will also need to set <code>HANDLES</code> field in your class and put there string with which your handler is 
+identified when parsing endpoint path. For instance:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="n">MyHandler</span>(<span class="n">ClooudHandler</span>):
+
+    <span class="n">HANDLES</span> = <span class="s">&quot;myhandler&quot;</span>
+    <span class="n">def</span> <span class="n">handlle</span>(<span class="nb">self</span>, <span class="nb">path</span>, <span class="k">state</span>={}):
+        <span class="k">return</span> <span class="n">CloudObject</span>()
+    <span class="n">def</span> <span class="n">handlePut</span>(<span class="nb">self</span>, <span class="nb">path</span>, <span class="k">state</span>={}, <span class="n">obj</span>=<span class="n">CloudObject</span>()):
+        <span class="nb">pass</span>
+</code></pre></div>
+
+<p>will be called on all paths starting with <code>/myhandler/</code>.</p>
+<p>You can see source code of existing handlers how are they implemented.</p>
+<h1>What is state parameter?</h1>
+<p>When you are initializing CloudServer, in its constructor, you are able to pass state parameter which will be passed to all handlers. This way, handlers can communicate 
+with each other using this state mechanism. State can be CloudObject too.</p>
+<h1>Conclusion</h1>
+<p>In the future, more handlers will be implemented to minimize need to implementing extended handlers. Also, some kind of composition will be available such that it will be possible to combine small handlers into one complex handler.</p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2019-10-05T12:15:00+01:00" pubdate>Sat 05 October 2019</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

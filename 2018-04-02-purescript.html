@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Purescript - a nice path to web - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Purescript - a nice path to web" />
+	<meta name="date" content="2018-04-02 23:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-04-02 23:15:00+01:00" />
+	<meta property="og:title" content="Purescript - a nice path to web" />
+	<meta property="og:url" content="/2018-04-02-purescript.html" />
+	<meta property="og:description" content="Recently I have been playing with Haskell and functional programming. I've found a nice Haskell-like language which compiles to Javascript which means it is very suitable for web. It is PureScript and you can easily set up project with pulp and run it. It can be used to develop backend …" />
+	<meta name="description" content="Recently I have been playing with Haskell and functional programming. I've found a nice Haskell-like language which compiles to Javascript which means it is very suitable for web. It is PureScript and you can easily set up project with pulp and run it. It can be used to develop backend …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Purescript - a nice path to web</h1>
+			<p>Recently I have been playing with Haskell and functional programming. I've found a nice Haskell-like language which compiles to Javascript which means 
+it is very suitable for web. It is PureScript and you can easily set up project with pulp and run it. It can be used to develop backend part or frontend part. </p>
+<h1>Installation of tools</h1>
+<p>Tools needed for purescript project can be installed via npm:</p>
+<div class="highlight"><pre><span></span><code>npm install pulp purescript bower
+</code></pre></div>
+
+<p>Most of purescript packages can be installed with bower, for example AFF library:</p>
+<div class="highlight"><pre><span></span><code>bower install purescript-aff
+</code></pre></div>
+
+<p>pulp is PureScript's equivalent of gulp and it is used to run, build and initialize project. It can be also used to generate javascript code which can be 
+linked to HTML. </p>
+<p>After installation, you should add pulp to path:</p>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">PATH</span><span class="o">=</span><span class="s2">&quot;$PATH:node_modules/.bin/&quot;</span>
+</code></pre></div>
+
+<p>Now you can initialize project:</p>
+<div class="highlight"><pre><span></span><code>pulp init
+</code></pre></div>
+
+<p>To generate JS file:</p>
+<div class="highlight"><pre><span></span><code>pulp browserify -t script.js
+</code></pre></div>
+
+<p>To build project and run:</p>
+<div class="highlight"><pre><span></span><code>pulp run
+</code></pre></div>
+
+<p>To launch REPL with project's environment:</p>
+<div class="highlight"><pre><span></span><code>pulp repl
+</code></pre></div>
+
+<p>===Learning PureScript===</p>
+<p>If you know Haskell you will easily understand PS, just see <a href="https://github.com/purescript/documentation/blob/master/language/Differences-from-Haskell.md">what is different</a>.</p>
+<p>===Building UI with PS===</p>
+<p>There's nice module for PureScript where you can easily build reactive UIs. It is called Halogen and <a href="https://github.com/slamdata/purescript-halogen/tree/master/docs">here</a> you can reed guide to it. </p>
+<p>===Building backend===</p>
+<p>There is wrapper around node-express for purescript and <a href="https://abhinavsarkar.net/posts/ps-simple-rest-service/">here</a> is simple guide to it. </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-04-02T23:15:00+01:00" pubdate>Mon 02 April 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

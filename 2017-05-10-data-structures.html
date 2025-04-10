@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Neke strukture podataka - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Neke strukture podataka" />
+	<meta name="date" content="2017-05-10 18:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2017-05-10 18:15:00+01:00" />
+	<meta property="og:title" content="Neke strukture podataka" />
+	<meta property="og:url" content="/2017-05-10-data-structures.html" />
+	<meta property="og:description" content="U ovom članku ću dati pregled nekih struktura podataka čije razumevanje je dosta važno za razumevanje algoritama i uopšteno za razumevanje dosta principa u računarstvu. Treba napomenuti da je dosta nabrojanih struktura opisano ovde. Za svaku strukturu je bitno znati koliko vremenski "koštaju" određene operacije. Ovo znači koliko vremenski traje …" />
+	<meta name="description" content="U ovom članku ću dati pregled nekih struktura podataka čije razumevanje je dosta važno za razumevanje algoritama i uopšteno za razumevanje dosta principa u računarstvu. Treba napomenuti da je dosta nabrojanih struktura opisano ovde. Za svaku strukturu je bitno znati koliko vremenski "koštaju" određene operacije. Ovo znači koliko vremenski traje …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Neke strukture podataka</h1>
+			<p>U ovom članku ću dati pregled nekih struktura podataka čije razumevanje je dosta važno za razumevanje algoritama i uopšteno za razumevanje dosta principa u računarstvu. Treba napomenuti da je dosta nabrojanih struktura opisano <a href="https://github.com/fantastic001/alg-implementations">ovde</a>.</p>
+<p>Za svaku strukturu je bitno znati koliko vremenski "koštaju" određene operacije. Ovo znači koliko vremenski traje određena implementacija da se izvrši. Naravno, vreme izvršavanja zavisi od mnogih faktora. Na primer, ako se pored naše aplikacije izvršava još neka aplikacija sasvim je jasno da CU neće operaciju izvršiti jednako brzo kao i kada bi se samo ta operacija izvršavala. Zbog ovoga, za opisivanje vremena se koristi <a href="https://en.wikipedia.org/wiki/Big_O_notation">O-notacija</a>..</p>
+<p>Pa da krenemo....</p>
+<p>Lista</p>
+<p><img alt="Lista" src="https://en.wikipedia.org/wiki/File:Doubly-linked-list.svg"></p>
+<p>Lista se sadrži od struktura (čvorova) gde svaki čvor ima u sebi vrednost koju čuva i pokazivač na sledeći čvor u listi. Pored ovoga, čvor može imati i pokazivač na prethodni čvor u listi i tada je lista dvostruko povezana. </p>
+<p>Implementacija čvora u programskom jeziku C bi izgledala ovako: </p>
+<div class="highlight"><pre><span></span><code><span class="nx">typedef</span><span class="w"> </span><span class="nx">int</span><span class="w"> </span><span class="nx">TYPE</span><span class="p">;</span>
+<span class="nx">typedef</span><span class="w"> </span><span class="nx">struct</span><span class="w"> </span><span class="nx">node_st</span><span class="w"> </span>
+<span class="p">{</span>
+<span class="w">    </span><span class="nx">TYPE</span><span class="w"> </span><span class="nx">val</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="nx">node_st</span><span class="w"> </span><span class="o">*</span><span class="nx">next</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">node_st</span><span class="o">*</span><span class="w"> </span><span class="nx">prev</span><span class="p">;</span><span class="w"> </span><span class="c1">// za dvostruko povezanu listu </span>
+<span class="p">}</span><span class="w"> </span><span class="nx">node</span><span class="p">;</span>
+</code></pre></div>
+
+<p>Ovde smo koristili celobrojni tip kao primer tipa koju vrednost čvora može da ima. U ovom primeru je lista zapravo lista celobrojnih elemenata.</p>
+<p>Lista podržava dodavanje elementa na kraj u O(1) vremenu, iteraciju kroz celu strukturu i pristupanje određenom 
+elementu u O(n) vremenu. Brisanje elementa se radi u O(1) ako nam je dat pokazivač na element koji treba da obrišemo
+ili u slučaju jednostruko povezane liste, pokazivač na prethodnika elementa koji treba obrisati. </p>
+<p>Stek </p>
+<p>Ova struktura ima u sebi pokazivač na gornji element i podržava samo tri operacije: push, pop i top. </p>
+<ol>
+<li>push: dodavanje elementa na stek;</li>
+<li>pop: brisanje elementa sa vrha steka i;</li>
+<li>top: pristupanje elementu sa vrha steka.</li>
+</ol>
+<p>Sve nabrojane operacije je moguće realizovati u O(1) vremenu. </p>
+<p>Red</p>
+<p>Ova struktura podržava dodavanje elemenata na početak reda, uklanjanje elemenata sa kraja reda i pristup elementima na krajevima i sve ove operacije se realizuju u O(1) vremenu.</p>
+<p>I stek i red se mogu implementirati preko lista. </p>
+<p>Pored ovih struktura postoje i još neke dosta značajne koje su zauzele ceo jedan tekst a to su: binarno stablo pretrage, hip, heš tabela i graf.</p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2017-05-10T18:15:00+01:00" pubdate>Wed 10 May 2017</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

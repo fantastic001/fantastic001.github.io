@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Parsing in Haskell - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Parsing in Haskell" />
+	<meta name="date" content="2018-05-07 22:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-05-07 22:15:00+01:00" />
+	<meta property="og:title" content="Parsing in Haskell" />
+	<meta property="og:url" content="/2018-05-07-parsing-in-haskell.html" />
+	<meta property="og:description" content="This article is going to explain some basic concepts in compiler design and to give practical implementation of lexical analysis and parsing in Haskell. Compiler design Every compiler consists of three main parts: lexical analysis parsing semantic analysis Lexical analysis is responsible for transforming string to list of tokens. Tokens …" />
+	<meta name="description" content="This article is going to explain some basic concepts in compiler design and to give practical implementation of lexical analysis and parsing in Haskell. Compiler design Every compiler consists of three main parts: lexical analysis parsing semantic analysis Lexical analysis is responsible for transforming string to list of tokens. Tokens …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Parsing in Haskell</h1>
+			<p>This article is going to explain some basic concepts in compiler design and to give practical implementation 
+of lexical analysis and parsing in Haskell. </p>
+<h1>Compiler design</h1>
+<p>Every compiler consists of three main parts:</p>
+<ol>
+<li>lexical analysis </li>
+<li>parsing </li>
+<li>semantic analysis </li>
+</ol>
+<p>Lexical analysis is responsible for transforming string to list of tokens. Tokens are meaningful objects such as numbers, string constants, identifiers, separators, operators etc. </p>
+<p>Parsing is responsible to take list of tokens and transform it to abstract syntax tree. This tree consists some form of meaning as its node and parameters as children. For example, root node is program node while its children are statement nodes. Every statement node contains children which meaning depends of type of statement. Let's say we have assignment statement, in its children we have one node for identifier and one node for expression. Expression node can be represented by its operator as parent and operands as children etc...</p>
+<p>Semantic analysis takes AST and understands meaning to make executable code. Semantic analysis will notify you that you cannot sum string and number. It also does type checking and various things. Semantic analysis is also responsible for keeping track of variables, global, local scopes etc... </p>
+<p>In this article, it will be explained how parsing is done in Haskell using monads. We will assume that we can generate list of tokens from lexical analysis. This will be our input to parser. This list is list of Token type defined like this: </p>
+<div class="highlight"><pre><span></span><code><span class="nv">data</span><span class="w"> </span><span class="nv">Token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Identifier</span><span class="w"> </span><span class="nv">String</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">KeyWord</span><span class="w"> </span><span class="nv">String</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">Number</span><span class="w"> </span><span class="nv">Int</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">StringConstant</span><span class="w"> </span><span class="nv">String</span><span class="w"> </span><span class="o">|</span><span class="w"> </span>
+<span class="w">        </span><span class="nv">PlusOperator</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">MinusOperator</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">DivisionOperator</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">MultiplicationOperator</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">OpenP</span><span class="w"> </span><span class="o">|</span><span class="w"> </span>
+<span class="w">        </span><span class="nv">ClosedP</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">Comma</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">Space</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">AssignmentOperator</span><span class="w"> </span><span class="o">|</span>
+<span class="w">        </span><span class="nv">OpenScope</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">ClosedScope</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">ListBegin</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">ListEnd</span><span class="w"> </span><span class="nv">deriving</span><span class="w"> </span><span class="ss">(</span><span class="k">Show</span>,<span class="w"> </span><span class="nv">Eq</span><span class="ss">)</span>
+</code></pre></div>
+
+<p>then we need to make parser which will transform list of these tokens into abstract syntax tree. </p>
+<h1>Tree description</h1>
+<p>Tree is represented by its nodes which represent operation and operands as its children. For example if we have expression a + b<em>c it will be tree with node "+", left child will be identifier "a" and right child will be subtree "</em>" with left child identifier "b" and right child identifier "c". Another example is a+b+c, where we have "+" as root and identifier "a" as left child and another "+" subtree as right child.</p>
+<p>Let's take a look into simple definition of tree nodes for "+", "*", "-" and "/" operations. First of all, let's define them. We know that multiplication and division has priority over addition and subtraction. This means that multiplication and division is always subtree of addition and subtraction. Also, we know that brackets have priority over multiplication and division, so brackets (and expression in them) is always subtree of multiplication and division. For this reason, we will have three types of nodes because we have three levels of priority. </p>
+<p>When we are talking about addition and subtraction, we are talking about expression which has operator (+ or -) and two operands. One of them is multiplication and another is expression (because we want to have a+b+c). But what if we have only a*b? Then we need to enable that expression can be just one tiny multiplication.
+We also have to enable something like "-a" so we will have special kind of negative expression.</p>
+<p>Similar thing for term, term is either multiplication, division or just factor. </p>
+<p>Factor is just identifier, just number or expression inside brackets. </p>
+<p>To summarize, our definitions look liker this: </p>
+<div class="highlight"><pre><span></span><code>expression = term &quot;+&quot; expression | term &quot;-&quot; expression | term | &quot;-&quot; term
+term = factor &quot;*&quot; term | factor &quot;/&quot; term | factor 
+factor = identifier | number | &quot;(&quot; expression &quot;)&quot;
+</code></pre></div>
+
+<p>Let's translate this into Haskell code: </p>
+<div class="highlight"><pre><span></span><code><span class="nv">data</span><span class="w"> </span><span class="nv">Factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">JustNumber</span><span class="w"> </span><span class="nv">Int</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">JustIdentifier</span><span class="w"> </span><span class="nv">String</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">FactorExpression</span><span class="w"> </span><span class="nv">Expression</span><span class="w"> </span><span class="nv">deriving</span><span class="w"> </span><span class="ss">(</span><span class="k">Show</span><span class="ss">)</span>
+<span class="nv">data</span><span class="w"> </span><span class="nv">Term</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MultiplicationTerm</span><span class="w"> </span><span class="nv">Factor</span><span class="w"> </span><span class="nv">Term</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">DivisionTerm</span><span class="w"> </span><span class="nv">Factor</span><span class="w"> </span><span class="nv">Term</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">JustFactor</span><span class="w"> </span><span class="nv">Factor</span><span class="w"> </span><span class="nv">deriving</span><span class="w"> </span><span class="ss">(</span><span class="k">Show</span><span class="ss">)</span>
+<span class="nv">data</span><span class="w"> </span><span class="nv">Expression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SumExpression</span><span class="w"> </span><span class="nv">Term</span><span class="w"> </span><span class="nv">Expression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">DifferenceExpression</span><span class="w"> </span><span class="nv">Term</span><span class="w"> </span><span class="nv">Expression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">JustTerm</span><span class="w"> </span><span class="nv">Term</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">NegativeTerm</span><span class="w"> </span><span class="nv">Term</span><span class="w">  </span><span class="o">|</span>
+</code></pre></div>
+
+<h1>Monadic parsing</h1>
+<p>Let's assume that we need to parse somehow given list of tokens. What should that operation return? It should return given tree node and the rest of tokens which are not parser. We can model this as state monad where state is list of tokens and output is resulting tree node or something else which we will discuss soon. </p>
+<p>Let's define result of parsing as something that returns result and list of remaining tokens to be parsed or some kind of error: </p>
+<div class="highlight"><pre><span></span><code><span class="n">type</span><span class="w"> </span><span class="n">LineNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span>
+<span class="k">data</span><span class="w"> </span><span class="n">ParseResult</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ParseResult</span><span class="w"> </span><span class="o">[</span><span class="n">Token</span><span class="o">]</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">ParseError</span><span class="w"> </span><span class="n">LineNumber</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">deriving</span><span class="w"> </span><span class="p">(</span><span class="n">Show</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Now we can make Parse monad which will represent computation of parsing:</p>
+<div class="highlight"><pre><span></span><code><span class="k">data</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="p">(</span><span class="o">[</span><span class="n">Token</span><span class="o">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">ParseResult</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+
+<span class="n">instance</span><span class="w"> </span><span class="n">Functor</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="k">where</span><span class="w"> </span>
+<span class="w">    </span><span class="n">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="k">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">        </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">action</span><span class="w"> </span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span>
+
+<span class="n">instance</span><span class="w"> </span><span class="n">Applicative</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="k">where</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span><span class="w"> </span><span class="n">af</span><span class="w"> </span><span class="k">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">        </span><span class="n">f</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">af</span><span class="w"> </span>
+<span class="w">        </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">action</span><span class="w"> </span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span>
+<span class="w">    </span><span class="n">pure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">return</span>
+
+<span class="n">instance</span><span class="w"> </span><span class="n">Monad</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="k">where</span><span class="w"> </span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="err">\</span><span class="n">tokens</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">ParseResult</span><span class="w"> </span><span class="n">tokens</span><span class="w"> </span><span class="n">x</span>
+<span class="w">    </span><span class="p">(</span><span class="nf">Parse</span><span class="w"> </span><span class="n">run</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="err">\</span><span class="n">tokens</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">tokens</span><span class="w"> </span><span class="k">of</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="n">ParseResult</span><span class="w"> </span><span class="n">tokens</span><span class="s1">&#39; x) -&gt; let (Parse run&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="n">run</span><span class="s1">&#39; tokens&#39;</span><span class="w"> </span><span class="k">of</span><span class="w"> </span>
+<span class="w">            </span><span class="p">(</span><span class="n">ParseError</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">ParseError</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="n">m</span><span class="w"> </span>
+<span class="w">            </span><span class="n">res</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">res</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="n">ParseError</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">ParseError</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="n">m</span>
+</code></pre></div>
+
+<p>This is a little modified state monad which handles errors inside its run method. </p>
+<h1>Parsing</h1>
+<p>Now, how parsing is done? Well, when you see definitions of nodes above, we can use them to easily implement parsing. For now, let's define two functions: </p>
+<div class="highlight"><pre><span></span><code><span class="n">getToken</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="kt">Token</span><span class="w"> </span>
+<span class="n">getToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="err">\</span><span class="n">tokens</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">tokens</span><span class="w"> </span><span class="kr">of</span><span class="w"> </span>
+<span class="w">    </span><span class="p">[]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">ParseError</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="s">&quot;Cannot take token&quot;</span>
+<span class="w">    </span><span class="n">t</span><span class="o">:</span><span class="n">ts</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">ParseResult</span><span class="w"> </span><span class="p">(</span><span class="n">t</span><span class="o">:</span><span class="n">ts</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</code></pre></div>
+
+<p>This function represents computation which returns current token as result and does not change state of tokens (this token remains in list of tokens).</p>
+<p>Another function is expect which will return parsing error if given token does not exist in list. If it exists, it will remove that token from list of tokens. You can see this function by other names in other articles or literature, for example they call it "eat" somewhere because it "eats" token if it exists. </p>
+<div class="highlight"><pre><span></span><code><span class="n">expect</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="kt">Token</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="kt">Token</span>
+<span class="n">expect</span><span class="w"> </span><span class="kt">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="err">\</span><span class="n">tokens</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">tokens</span><span class="w"> </span><span class="kr">of</span><span class="w"> </span>
+<span class="w">    </span><span class="p">[]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">ParseError</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="s">&quot;Expected token but no such token found&quot;</span>
+<span class="w">    </span><span class="n">t</span><span class="o">:</span><span class="n">ts</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nf">if</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kt">token</span><span class="w"> </span><span class="n">then</span><span class="w"> </span><span class="n">ParseResult</span><span class="w"> </span><span class="n">ts</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="n">ParseError</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="s">&quot;Expected token &quot;</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="p">(</span><span class="n">show</span><span class="w"> </span><span class="kr">token</span><span class="p">)</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="s">&quot; but &quot;</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="p">(</span><span class="n">show</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="s">&quot;found&quot;</span>
+</code></pre></div>
+
+<p>Also, for outputting errors during parsing, we will have some simple function which always returns error with given message: </p>
+<div class="highlight"><pre><span></span><code><span class="n">cerror</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="n">a</span>
+<span class="n">cerror</span><span class="w"> </span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="err">\</span><span class="kt">token</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">ParseError</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">msg</span>
+</code></pre></div>
+
+<p>Now, parsing can be done easily from definitions of tree nodes. For example, let's start with factor parsing: </p>
+<div class="highlight"><pre><span></span><code><span class="n">factor</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">Parse</span><span class="w"> </span><span class="n">Factor</span><span class="w"> </span>
+<span class="n">factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">    </span><span class="n">t</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">getToken</span><span class="w"> </span>
+<span class="w">    </span><span class="n">case</span><span class="w"> </span><span class="n">getToken</span><span class="w"> </span><span class="nf">of </span>
+<span class="nf">        </span><span class="p">(</span><span class="n">OpenP</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">            </span><span class="n">expect</span><span class="w"> </span><span class="n">OpenP</span>
+<span class="w">            </span><span class="n">expr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">expression</span><span class="w"> </span>
+<span class="w">            </span><span class="n">expect</span><span class="w"> </span><span class="n">ClosedP</span>
+<span class="w">            </span><span class="n">return</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">FactorExpression</span><span class="w"> </span><span class="nf">expr</span>
+<span class="nf">        </span><span class="p">(</span><span class="n">Identifier</span><span class="w"> </span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">            </span><span class="nf">expect </span><span class="p">(</span><span class="n">Identifier</span><span class="w"> </span><span class="n">name</span><span class="p">)</span>
+<span class="w">            </span><span class="n">return</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">JustIdentifier</span><span class="w"> </span><span class="nf">name </span>
+<span class="nf">        </span><span class="p">(</span><span class="n">Number</span><span class="w"> </span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">            </span><span class="nf">expect </span><span class="p">(</span><span class="n">Number</span><span class="w"> </span><span class="n">num</span><span class="p">)</span>
+<span class="w">            </span><span class="n">return</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">JustNumber</span><span class="w"> </span><span class="n">num</span>
+<span class="w">        </span>_<span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">cerror</span><span class="w"> </span><span class="s">&quot;Cannot parse factor&quot;</span>
+</code></pre></div>
+
+<p>What did we do? Well, we got current token and checked for various possibilities and then handled these possibilities. If nothing is satisfied, we output error. 
+You can see how we use expression method (which we will implement later) to easily parse expression inside brackets. We just need to follow our definitions above. </p>
+<p>Let's implement term parsing:</p>
+<div class="highlight"><pre><span></span><code><span class="n">term</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">    </span><span class="n">f</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">factor</span>
+<span class="w">    </span><span class="n">t</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">getToken</span>
+<span class="w">    </span><span class="n">case</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="nf">of </span>
+<span class="nf">        </span><span class="p">(</span><span class="n">MultiplicationOperator</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">            </span><span class="n">expect</span><span class="w"> </span><span class="n">MultiplicationOperator</span><span class="w"> </span>
+<span class="w">            </span><span class="n">tt</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">term</span><span class="w"> </span>
+<span class="w">            </span><span class="n">return</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">MultiplicationTerm</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="nf">tt</span>
+<span class="nf">        </span><span class="p">(</span><span class="n">DivisionOperator</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">            </span><span class="n">expect</span><span class="w"> </span><span class="n">DivisionOperator</span><span class="w"> </span>
+<span class="w">            </span><span class="n">tt</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">term</span><span class="w"> </span>
+<span class="w">            </span><span class="n">return</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">DivisionTerm</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">tt</span>
+<span class="w">        </span>_<span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">return</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">JustFactor</span><span class="w"> </span><span class="n">f</span>
+</code></pre></div>
+
+<p>and for expression:</p>
+<div class="highlight"><pre><span></span><code><span class="n">expression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">    </span><span class="n">t</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">getToken</span><span class="w"> </span>
+<span class="w">    </span><span class="n">case</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="n">of</span><span class="w"> </span>
+<span class="w">        </span><span class="n">MinusOperator</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">            </span><span class="n">expect</span><span class="w"> </span><span class="n">MinusOperator</span><span class="w"> </span>
+<span class="w">            </span><span class="n">expr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">expression</span><span class="w"> </span>
+<span class="w">            </span><span class="n">return</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">NegativeExpression</span><span class="w"> </span><span class="n">expr</span>
+<span class="w">        </span>_<span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">            </span><span class="n">t1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">term</span><span class="w"> </span>
+<span class="w">            </span><span class="n">operator</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">getToken</span><span class="w"> </span>
+<span class="w">            </span><span class="n">case</span><span class="w"> </span><span class="n">operator</span><span class="w"> </span><span class="n">of</span><span class="w"> </span>
+<span class="w">                </span><span class="n">PlusOperator</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">expect</span><span class="w"> </span><span class="n">PlusOperator</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">expr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">expression</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">return</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">SumExpression</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">expr</span>
+<span class="w">                </span><span class="n">MinusOperator</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">expect</span><span class="w"> </span><span class="n">MinusOperator</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">expr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">expression</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">return</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">DifferenceExpression</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">expr</span>
+<span class="w">                </span>_<span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">return</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">JustTerm</span><span class="w"> </span><span class="n">t1</span>
+</code></pre></div>
+
+<h1>Conclusion</h1>
+<p>So, as you can see, parsing can be very easily implemented in Haskell Extensions to additional syntax and grammar can be easily done through adding more methods and tree nodes. </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-05-07T22:15:00+01:00" pubdate>Mon 07 May 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

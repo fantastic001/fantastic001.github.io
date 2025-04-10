@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Introduction to computing with CUDA - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Introduction to computing with CUDA" />
+	<meta name="date" content="2018-08-05 23:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-08-05 23:15:00+01:00" />
+	<meta property="og:title" content="Introduction to computing with CUDA" />
+	<meta property="og:url" content="/2018-08-05-cuda-intro.html" />
+	<meta property="og:description" content="Recently I have worked on fluid simulation project developed for CUDA-enabled GPU. Here I am going to explain what is CUDA and to introduce few concepts needed to start programming on GPU. What is CUDA? CUDA is API developed by NVIDIA to enable communication with its GPUs to use capabilities …" />
+	<meta name="description" content="Recently I have worked on fluid simulation project developed for CUDA-enabled GPU. Here I am going to explain what is CUDA and to introduce few concepts needed to start programming on GPU. What is CUDA? CUDA is API developed by NVIDIA to enable communication with its GPUs to use capabilities …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Introduction to computing with CUDA</h1>
+			<p>Recently I have worked on fluid simulation project developed for CUDA-enabled GPU. Here I am going to explain what is CUDA 
+and to introduce few concepts needed to start programming on GPU. </p>
+<h1>What is CUDA?</h1>
+<p>CUDA is API developed by NVIDIA to enable communication with its GPUs to use capabilities of their graphics cards to do 
+parallel computation. This is essence of GPGPU (General Purpose Graphics Processing Unit). Through CUDA API, it is possible to access 
+and send instructions to GPU and to access its memory. </p>
+<h1>Motivation</h1>
+<p>First of all, let's explain why we even need to use parallel computing to do something. For illustration, let's take 
+example of particle simulation. We need to simulate movements of huge number of particles in a physical system. Each particle 
+has to apply Newton's laws to itself and also to handle collisions with other particles in a system. For each particle to handle 
+collisions we need to do O(n) computations which gives as O(n^2) computations for whole simulation step. If we have 100000 particles, it becomes
+clear that we have a problem. Each simulation step has to be done in less than 1/30 of second such that we don't have lags in visualization. 
+Average CPU core can do 100000000 computations per second which means that our computation will take roughly 100 seconds per simulation step on single core. 
+Even if we parallelize computation to 8 cores, we still have speed of one simulation step per 12.5 seconds which is far more than our 1/30 second goal. </p>
+<p>How many cores do we need to make it under 1/30 second? Well, we would need 100 / (1/30) = 3000 cores. We do not have such CPU with 3000 cores today (and probably we will never have). Device with such greet parallel computing capabilities is GPU. It has at least 16000 cores that are capable of doing computation. 
+Now question arises, how can GPU have so many cores and CPU can't? Well, answer lies in a fact that GPU core has much smaller size of instructions. For instance, it does not support everything which CPU supports and hence needs more instructions to do something which CPU does in only one. Good news are that CUDA-enabled GPU can 
+do everything CPU can but some things can be slower and some things can be faster. </p>
+<p>Back to our example, clearly GPU can solve our problem. We can parallelize our system such that every GPU core gets some set of 
+particles and does computation on them. This computation is done in so-called "kernel function" which is function without return value and is 
+responsible to do computation per core. It stores its result in GPU memory which can be transferred to CPU later (or never).</p>
+<p>Additionally, in our example, we do not need to transfer data to CPU because we can do visualization already in GPU (good news: we do not lose time on transferring data to do OpenGL drawing for instance). </p>
+<h1>CUDA GPU architecture</h1>
+<p>GPU is divided into blocks where every block contains fixed number of cores. Set of blocks are contained in grid which is used by application. You can learn more about architecture <a href="http://www.nvidia.com/content/PDF/fermi_white_papers/NVIDIA_Fermi_Compute_Architecture_Whitepaper.pdf">here</a></p>
+<h1>Programming for CUDA-enabled devices</h1>
+<p>In this article, it will be presented how to program for CUDA in C++ but you can use other languages too, for instance <a href="http://hackage.haskell.org/package/accelerate">Haskell</a>.</p>
+<p>For C++ bindings, you will need nvcc (NVIDIA's C/C++ compiler) and CUDA framework installed. You can find all of these on NVIDIA's website as well as documentation on how to install it.</p>
+<p>I suggest to use CMake to build your programs because then you will not need to deal with nvcc directly and, trust me, your life will be easier, 
+On NVIDIA website you can find CMakeLists.txt for CUDA <a href="https://devblogs.nvidia.com/building-cuda-applications-cmake/">here</a>.</p>
+<p>So our first programs will begin as usual, with main function:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">int</span><span class="w"> </span><span class="nv">main</span><span class="ss">()</span><span class="w"> </span>
+{
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="c1">;</span>
+}
+</code></pre></div>
+
+<p>And now we will need to compile it:</p>
+<div class="highlight"><pre><span></span><code>cmake . 
+make
+</code></pre></div>
+
+<p>and we will get our result as normal. As you can see, nvcc compiles your programs as gcc does (oh well, nvcc calls gcc). </p>
+<p>Now let's add kernel function and see what new language features nvcc introduces. </p>
+<p>Let's make program for summing arrays, we will need to:</p>
+<ol>
+<li>make both arrays on CPU </li>
+<li>allocate memory on GPU for arrays </li>
+<li>transfer arrays to GPU </li>
+<li>allocate memory for result</li>
+<li>call computation </li>
+<li>transfer result back to CPU</li>
+</ol>
+<p>so let's start:</p>
+<p>Make both arrays on CPU</p>
+<p>Well, this is easy, we did that billion of times: </p>
+<div class="highlight"><pre><span></span><code><span class="nc">int</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">1000</span><span class="o">]</span><span class="p">;</span>
+<span class="nc">int</span><span class="w"> </span><span class="n">b</span><span class="o">[</span><span class="n">1000</span><span class="o">]</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="mi">1000</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span>
+<span class="err">{</span>
+<span class="w">    </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">    </span><span class="n">b</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">;</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>and we are done, next:</p>
+<p>Allocate memory on GPU for arrays</p>
+<p>For this we will use cudaMalloc. It works in a way that we provide it a pointer to pointer which will point to allocated memory on GPU. </p>
+<div class="highlight"><pre><span></span><code>int *cuda_a, <span class="gs">*cuda_b;</span>
+<span class="gs">cudaMalloc(&amp;cuda_a, sizeof(int) *</span> 1000);
+cudaMalloc(&amp;cuda_b, sizeof(int) * 1000);
+</code></pre></div>
+
+<p>After this, these pointers will point to data in GPU memory so do not try to dereference them on CPU (for instance, you cannot print their content in main function).
+You will be able to access them in kernel function because it executes on GPU. </p>
+<p>Well, how can we transfer data to them if we cannot access them? </p>
+<p>Transfer data to GPU</p>
+<p>Transferring is done through cudaMemcpy function. It is used to transfer data from CPU to GPU and vice versa. </p>
+<p>The first argument to cudaMemcpy is always destination, then source, then size of content and last argument is flag. Flag determines do we need to 
+transfer to GPU or from GPU and can be: cudaMemcpyHostToDevice or cudaMemcpyDeviceToHost.</p>
+<p>Here we want to transfer from CPU too GPU so we will do:</p>
+<div class="highlight"><pre><span></span><code>cudaMemcpy(cuda_a, a, sizeof(int) <span class="gs">* 1000, cudaMemcpyHostToDevice);</span>
+<span class="gs">cudaMemcpy(cuda_b, b, sizeof(int) *</span> 1000, cudaMemcpyHostToDevice);
+</code></pre></div>
+
+<p>Allocating memory for result</p>
+<p>Process is same ass before, we just use cudaMalloc:</p>
+<div class="highlight"><pre><span></span><code>int res[1000]; 
+int <span class="gs">*cuda_res;</span>
+<span class="gs">cudaMalloc(&amp;cuda_res, sizeof(int) *</span> 1000);
+</code></pre></div>
+
+<p>Creating and calling kernel function</p>
+<p>For our sum computation, we will need kernel function. Kernel function is function which is called in parallel. Since we provide two arrays to it, this means that every core will compute small portion of result: </p>
+<div class="highlight"><pre><span></span><code><span class="n">__global__</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="nc">int</span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="o">*</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="w"> </span>
+<span class="err">{</span>
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+<span class="w">    </span><span class="n">res</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>you can notice that we have used <code>__globall__</code> macro which tells nvcc that this function is kernel function which means is executed on GPU but called from CPU. We also can use <code>__device__</code> and <code>__host__</code> macros to represent functions on GPU and CPU-only. </p>
+<p>Now we can call this function from main:</p>
+<div class="highlight"><pre><span></span><code>sum&lt;&lt;&lt;4,250&gt;&gt;&gt;(cuda_a, cuda_b, cuda_res);
+</code></pre></div>
+
+<p>First number in this &lt;&lt;&lt; ... &gt;&gt;&gt; block is number of blocks used and second is number of threads used. Problem with this kernel function is that, if we change number of blocks or threads per block, it won't be correct anymore, for instance 1,256 won't work because it will populate only first 256 elements. To solve this, we can use block-stride loop like this:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="mi">1000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">gridDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">)</span><span class="w"> </span>
+<span class="err">{</span>
+<span class="w">    </span><span class="n">res</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>and this is very common pattern to use. </p>
+<p>Synchronization</p>
+<p>After we call kernel function, CPU will continue its execution because kernel is executing on GPU, so we need to wait until kernel function finishes because our next steps depend on result of GPU computation. We can use synchronization for that, after kernel function call:</p>
+<div class="highlight"><pre><span></span><code>cudaDeviceSynchronize();
+</code></pre></div>
+
+<p>and this function will block until kernel finishes. </p>
+<p>Transferring result back to CPU</p>
+<p>To transfer result back to CPU we use cudaMemcpy and cudaMemcpyDeviceToHost like this:</p>
+<div class="highlight"><pre><span></span><code>cudaMemcpy(res, cuda_res, sizeof(int) * 1000, cudaMemcpyDeviceToHost);
+</code></pre></div>
+
+<p>Now we can print result or do whatever we want with it. </p>
+<h1>Best practices</h1>
+<p>Now when we know how CUDA works, let's list some best practices for it. First of all, if possible, try to maintain data on GPU as long as possible and do data transfers as few as possible because data transfers are costly. Also, if-branching in GPU is very costly so try to avoid it as much as possible. </p>
+<p>If you want to have function which executes on CPU and GPU (<code>__host__ __device__``) then you can change its code if needed by investigating</code><strong>CUDA_ARCH</strong>` macro is defined. For instance:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#ifdef __CUDA_ARCH__</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span>
+<span class="cp">#else </span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">gridDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">)</span>
+<span class="cp">#endif </span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// code</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>Every CUDA call exposes some error info as its return value so here is the way how to catch it and print it:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#define cudaCatch(ans) { gpuAssert((ans), __FILE__, __LINE__); }</span>
+<span class="n">inline</span><span class="w"> </span><span class="nb nb-Type">void</span><span class="w"> </span><span class="n">gpuAssert</span><span class="p">(</span><span class="n">cudaError_t</span><span class="w"> </span><span class="n">code</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="nb">char</span><span class="w"> </span><span class="o">*</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="nb nb-Type">int</span><span class="w"> </span><span class="n">line</span><span class="p">,</span><span class="w"> </span><span class="nb nb-Type">bool</span><span class="w"> </span><span class="n">abort</span><span class="o">=</span><span class="bp">true</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">code</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">cudaSuccess</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">                </span><span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span><span class="s2">&quot;GPUassert: </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%d</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cudaGetErrorString</span><span class="p">(</span><span class="n">code</span><span class="p">),</span><span class="w"> </span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">abort</span><span class="p">)</span><span class="w"> </span><span class="n">exit</span><span class="p">(</span><span class="n">code</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>so you need to call cuda functions like this:</p>
+<div class="highlight"><pre><span></span><code>cudaCatch(cudaDeviceSynchronize());
+</code></pre></div>
+
+<p>and it will catch some errors if they exist and you will be notified on standard output. </p>
+<h1>When?</h1>
+<p>Now main question is when to use GPU paralelllization and when to stick to CPU? </p>
+<p>Well, I found that one of the best estimates is how many data transfers you do compared to computation. If ratio of these two is constant, then you are better of using CPU. 
+For instance, in our example we do computation of O(n) and do O(n) data transfers so we end up in O(1) ratio. In our previous example with particles, we do O(n^2) computation and O(n) data transfers so we end up in O(n) ratio. </p>
+<p>Sometimes it makes sense to parallelize even when you have constant ratio if that constant is big enough. Try to make code maintainable such that it does not need to 
+be big effort to parallelize code. </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-08-05T23:15:00+01:00" pubdate>Sun 05 August 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

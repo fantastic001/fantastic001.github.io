@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Emacs org-mode - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Emacs org-mode" />
+	<meta name="date" content="2017-11-01 21:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2017-11-01 21:15:00+01:00" />
+	<meta property="og:title" content="Emacs org-mode" />
+	<meta property="og:url" content="/2017-11-01-org-mode.html" />
+	<meta property="og:description" content="Već nekoliko godina koristim Emacs. Eto priznao sam. :D Ja sam Vim korisnik koji koristi Emacs. Emacs koristim samo u svrhu za koju ne koristim Vim a to je za sve ostalo što nije pisanje koda. Toliko ga koristim da sam napravio i Python biblioteku za parsiranje Emacs org dokumenata …" />
+	<meta name="description" content="Već nekoliko godina koristim Emacs. Eto priznao sam. :D Ja sam Vim korisnik koji koristi Emacs. Emacs koristim samo u svrhu za koju ne koristim Vim a to je za sve ostalo što nije pisanje koda. Toliko ga koristim da sam napravio i Python biblioteku za parsiranje Emacs org dokumenata …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Emacs org-mode</h1>
+			<p>Već nekoliko godina koristim Emacs. Eto priznao sam. :D Ja sam Vim korisnik koji koristi Emacs. Emacs koristim samo u svrhu za koju
+ne koristim Vim a to je za sve ostalo što nije pisanje koda. Toliko ga koristim da sam napravio i <a href="https://github.com/fantastic001/YAPyOrg">Python biblioteku</a> za parsiranje Emacs org dokumenata. Dakle, Emacs koristim prvenstveno za organizaciju i pisanje dokumenata. U tome mi pomaže <a href="http://orgmode.org/">Emacs org-mode</a>. Ovaj dodatak za Emacs je postao must-have na mom računaru. Bez ovoga ne idem nigde. Toliko je važno da hoću da sve što imam ima integraciju sa ovim. Plan mi je da i ovaj blog krenem da pišem u njemu. </p>
+<p>Dakle, šta je tu zanimljivo? Pa da krenemo... </p>
+<p>TODO liste</p>
+<p>Prva stvar koju možete videti kad ga uključite (napravite i otvorite .org fajl) je mogućnost da pravite lako TODO liste. Sintaksa je sledeća:</p>
+<div class="highlight"><pre><span></span><code><span class="k">*</span> TODO nešto
+</code></pre></div>
+
+<p>Ako pritisnete kombinaciju 'Control+t' stavka se markira kao DONE. Ako ponovo pritisnete datu kombinaciju stavka se briše pa ako opet pritisnete dobijate opet marker "TODO". Ako lupite alt+enter, dobijate novu stavku. Ove stavke su zapravo sekcije, ispod njih kada pišete vi 
+zapravo pišete sadržaj sekcije. Sekciju možete "sakriti" tako što se kursorom namestite na naslov sekcije (to sa zvezdicom) i kliknete <TAB>. </p>
+<p>Ako držite Alt i kliknete strelicu na desno, sekcija postaje podsekcija a na levo dižete nivo sekcije. </p>
+<p>Liste se prave sa znakom "+":</p>
+<div class="highlight"><pre><span></span><code>+ item 1 
++ item 2
+....
+</code></pre></div>
+
+<p>lupite alt+enter i dobijate novu stavku liste. </p>
+<p>U dokumentima možete pisati i matematičke formule uz pomoć LaTeX-a. Njih ogradite sa "$$", npr:</p>
+<div class="highlight"><pre><span></span><code><span class="p">$$</span><span class="w"> </span><span class="nv">a</span><span class="o">^</span><span class="mi">2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>\<span class="nv">int</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="nv">x</span><span class="p">)</span><span class="nv">dx</span><span class="w"> </span><span class="p">$$</span>
+</code></pre></div>
+
+<p>renderovanje formula se vrši sa Control+c pa onda Control+x pa pritisnete "l". </p>
+<p>Org-mode takođe podržava i export u različite formate, na primer u HTML. To možete uraditi tako što pritisnete Control+c Control+e.
+Izlazi vam prozor gde su vam dati tasteri koje treba pritisnuti za eksport u određeni format. </p>
+<p>Možete uključiti (navezati, "inkludovati") druga org-mode dokumenta pa će u eksportovanom delu biti eksportovano sve. Zgodno ako pišete veći dokument ili možda čak i knjigu. :) </p>
+<div class="highlight"><pre><span></span><code>#<span class="o">+</span><span class="k">INCLUDE</span>:<span class="w"> </span><span class="s2">&quot;putanja/do/fajla.org&quot;</span>
+</code></pre></div>
+
+<p>A da isključite sadržaj u eksportovanom dokumentu:</p>
+<div class="highlight"><pre><span></span><code>#+OPTIONS: toc:nil
+</code></pre></div>
+
+<p>Da u eksportovanom dokumentu matematičke formule snimite kao slike (zgodno za pretraživače koji imaju problema sa matematičkim formulama ili recimo za Kindl):</p>
+<div class="highlight"><pre><span></span><code>#+OPTIONS: tex:dvipng
+</code></pre></div>
+
+<p>Da otvorite blok za izvorni kod upišete "\&lt;s" pa lupite TAB i onda samo u nastavku upišete jezik koji hoćete, i bloku kad pozicionirate kursor i pritisnete Control+c pa onda ' (jednostruki navodnik), otvara  se prozor za pisanje koda, sa sve obojenom sintaksom datog jezika. :D Da zatvorite prozor i sačuvate kod, upotrebite istu kombinaciju tastera.</p>
+<p>Org-mode podržava i tabele sa sve mogućnošću pisanja formula i automatskog izračunavanja. </p>
+<p>Ovo su samo neki tips and tricks, za više info valja posetiti stranicu i zvaničnu dokumentaciju alata. </p>
+<p>Eto, napisao na brzinu tekstić, nahvalih ga lepo, sad je red da sami istražujete. Probajte i zavolećete ga. </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2017-11-01T21:15:00+01:00" pubdate>Wed 01 November 2017</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

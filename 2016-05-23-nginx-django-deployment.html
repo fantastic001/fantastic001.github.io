@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Deploying your web application based on REST API - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Deploying your web application based on REST API" />
+	<meta name="date" content="2016-05-23 00:02:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2016-05-23 00:02:00+01:00" />
+	<meta property="og:title" content="Deploying your web application based on REST API" />
+	<meta property="og:url" content="/2016-05-23-nginx-django-deployment.html" />
+	<meta property="og:description" content="Well, you have developed your first version of your super-mega-giga web app and you want to deploy it. Your application consists of two parts: API (backend) and your java-script code (frontend). In this article, I am going to explain how to deploy your API written in Django and your frontend …" />
+	<meta name="description" content="Well, you have developed your first version of your super-mega-giga web app and you want to deploy it. Your application consists of two parts: API (backend) and your java-script code (frontend). In this article, I am going to explain how to deploy your API written in Django and your frontend …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Deploying your web application based on REST API</h1>
+			<p>Well, you have developed your first version of your super-mega-giga web app and you want to deploy it. Your application consists of
+two parts: API (backend) and your java-script code (frontend). In this article, I am going to explain how to deploy your API
+written in Django and your frontend written in AngularJS with a little bit of help of NodeJS and npm. </p>
+<p>API deployment - Docker configuration</p>
+<p>It is good practice to use docker to isolate your environment for every app you are planning to use. We will set up 2 docker containers: one for Django app and one for database we use in our backend. </p>
+<p>When you have situation like this: to have more containers bound in some way, it is always recommended to use docker-compose to 
+easily manage your containers. </p>
+<p>First, we will make Dockerfile for our container serving our Django API</p>
+<p>Here is an example of Dockerfile to use:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">FROM</span><span class="w"> </span><span class="nx">python</span><span class="p">:</span><span class="m m-Double">3.4</span>
+<span class="nx">ENV</span><span class="w"> </span><span class="nx">PYTHONUNBUFFERED</span><span class="w"> </span><span class="mi">1</span>
+<span class="err">#</span><span class="w"> </span><span class="nx">ssh</span><span class="o">-</span><span class="nx">keygen</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">needed</span><span class="w"> </span><span class="nx">because</span><span class="w"> </span><span class="nx">some</span><span class="w"> </span><span class="nx">packages</span><span class="w"> </span><span class="nx">from</span><span class="w"> </span><span class="nx">requirements</span><span class="p">.</span><span class="nx">txt</span><span class="w"> </span><span class="nx">are</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="nx">available</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="nx">pypy</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="nx">are</span><span class="w"> </span><span class="nx">git</span><span class="w"> </span><span class="nx">cloned</span><span class="w"> </span><span class="nx">instead</span>
+<span class="nx">RUN</span><span class="w"> </span><span class="nx">ssh</span><span class="o">-</span><span class="nx">keygen</span><span class="w"> </span><span class="o">-</span><span class="nx">q</span><span class="w"> </span><span class="o">-</span><span class="nx">t</span><span class="w"> </span><span class="nx">rsa</span><span class="w"> </span><span class="o">-</span><span class="nx">N</span><span class="w"> </span><span class="err">&#39;&#39;</span><span class="w"> </span><span class="o">-</span><span class="nx">f</span><span class="w"> </span><span class="nx">id_rsa</span>
+<span class="nx">RUN</span><span class="w"> </span><span class="nx">apt</span><span class="o">-</span><span class="nx">get</span><span class="w"> </span><span class="nx">update</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">apt</span><span class="o">-</span><span class="nx">get</span><span class="w"> </span><span class="nx">install</span><span class="w"> </span><span class="nx">netcat</span><span class="w"> </span><span class="o">-</span><span class="nx">y</span>
+<span class="nx">RUN</span><span class="w"> </span><span class="nx">mkdir</span><span class="w"> </span><span class="o">/</span><span class="nx">code</span>
+<span class="nx">WORKDIR</span><span class="w"> </span><span class="o">/</span><span class="nx">code</span>
+<span class="nx">ADD</span><span class="w"> </span><span class="nx">requirements</span><span class="p">.</span><span class="nx">txt</span><span class="w"> </span><span class="o">/</span><span class="nx">code</span><span class="o">/</span>
+<span class="nx">ADD</span><span class="w"> </span><span class="nx">requirements</span><span class="o">-</span><span class="nx">dev</span><span class="p">.</span><span class="nx">txt</span><span class="w"> </span><span class="o">/</span><span class="nx">code</span><span class="o">/</span>
+<span class="nx">RUN</span><span class="w"> </span><span class="nx">pip</span><span class="w"> </span><span class="nx">install</span><span class="w"> </span><span class="o">-</span><span class="nx">r</span><span class="w"> </span><span class="nx">requirements</span><span class="p">.</span><span class="nx">txt</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">pip</span><span class="w"> </span><span class="nx">install</span><span class="w"> </span><span class="o">-</span><span class="nx">r</span><span class="w"> </span><span class="nx">requirements</span><span class="o">-</span><span class="nx">dev</span><span class="p">.</span><span class="nx">txt</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">pip</span><span class="w"> </span><span class="nx">install</span><span class="w"> </span><span class="nx">uwsgi</span>
+<span class="nx">ADD</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="o">/</span><span class="nx">code</span><span class="o">/</span>
+<span class="nx">RUN</span><span class="w"> </span><span class="nx">groupadd</span><span class="w"> </span><span class="o">-</span><span class="nx">r</span><span class="w"> </span><span class="nx">youruser</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">useradd</span><span class="w"> </span><span class="o">-</span><span class="nx">r</span><span class="w"> </span><span class="o">-</span><span class="nx">g</span><span class="w"> </span><span class="nx">youruser</span><span class="w"> </span><span class="nx">youruser</span>
+<span class="nx">USER</span><span class="w"> </span><span class="nx">youruser</span>
+</code></pre></div>
+
+<p>This image will download and install needed packages for deployment and install all libraries listed in requirements.txt as well as in
+requirements-dev.txt. Just list your dependencies by their name in Python package index. </p>
+<p>Now, you have to configure your docker-compose.yml:</p>
+<div class="highlight"><pre><span></span><code><span class="n">db</span><span class="o">:</span>
+<span class="w">    </span><span class="n">image</span><span class="o">:</span><span class="w"> </span><span class="n">postgres</span>
+<span class="n">web</span><span class="o">:</span>
+<span class="w">    </span><span class="n">build</span><span class="o">:</span><span class="w"> </span><span class="o">.</span>
+<span class="w">    </span><span class="n">command</span><span class="o">:</span><span class="w"> </span><span class="n">sh</span><span class="w"> </span><span class="n">bin</span><span class="o">/</span><span class="n">production</span><span class="o">.</span><span class="na">sh</span><span class="w"> </span><span class="mi">9005</span>
+<span class="w">    </span><span class="n">volumes</span><span class="o">:</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="o">.:/</span><span class="n">code</span>
+<span class="w">    </span><span class="n">ports</span><span class="o">:</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="s2">&quot;9005:9005&quot;</span>
+<span class="w">    </span><span class="n">links</span><span class="o">:</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="n">db</span>
+<span class="w">    </span><span class="n">environment</span><span class="o">:</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="n">DJANGO_SETTINGS_MODULE</span><span class="o">=</span><span class="n">project</span><span class="o">.</span><span class="na">settings_docker</span>
+</code></pre></div>
+
+<p>as you can see, we are listening to port 9005 and we run our production script. bin/production.sh script just runs uwsgi
+bound to specified port from the first argument to the script</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="ch">#!/bin/sh</span>
+
+python<span class="w"> </span>manage.py<span class="w"> </span>migrate<span class="w"> </span>--noinput
+python<span class="w"> </span>manage.py<span class="w"> </span>collectstatic
+uwsgi<span class="w"> </span>--chdir<span class="o">=</span>/code<span class="w"> </span>-s<span class="w"> </span><span class="m">0</span>.0.0.0:<span class="nv">$1</span><span class="w"> </span>--module<span class="o">=</span>project.wsgi:application
+</code></pre></div></td></tr></table></div>
+
+<p>And it's done! Just run your containers now:</p>
+<div class="highlight"><pre><span></span><code>docker-compose up
+</code></pre></div>
+
+<h1>Deploying API to NGinx</h1>
+<p>In your Nginx configuration, just add this location:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">location</span><span class="w"> </span><span class="o">/</span><span class="nt">api</span><span class="o">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="err">uwsgi_pass</span><span class="w"> </span><span class="err">127.0.0.1:9005</span><span class="p">;</span>
+<span class="w">    </span><span class="err">include</span><span class="w"> </span><span class="err">uwsgi_params</span><span class="p">;</span>
+<span class="w">    </span><span class="err">uwsgi_modifier1</span><span class="w"> </span><span class="err">30</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Make sure that all your API urls defined in urls.py begin with "/api/" </p>
+<p>For admin interface, you can do the same but for different location, "admin" instead of "api":</p>
+<div class="highlight"><pre><span></span><code><span class="nt">location</span><span class="w"> </span><span class="o">/</span><span class="nt">admin</span><span class="o">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="err">uwsgi_pass</span><span class="w"> </span><span class="err">127.0.0.1:9005</span><span class="p">;</span>
+<span class="w">    </span><span class="err">include</span><span class="w"> </span><span class="err">uwsgi_params</span><span class="p">;</span>
+<span class="w">    </span><span class="err">uwsgi_modifier1</span><span class="w"> </span><span class="err">30</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Also, you will have to serve your static files:</p>
+<div class="highlight"><pre><span></span><code>location /static/ {
+    alias /path/to/your/app/code/static/;
+}
+</code></pre></div>
+
+<h1>Deploying frontend</h1>
+<p>Frontend deployment with NPM is easy, first you have to set up your package.json properly:</p>
+<div class="highlight"><pre><span></span><code><span class="o">....</span>
+<span class="s2">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;build:js&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cp node_modules/jquery/dist/* app/dist/ &amp;&amp; browserify app/scripts/app.js &gt; app/dist/liberator.js&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;build:bootstrap&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cp -rv node_modules/bootstrap/dist/* app/dist/&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;build&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mkdir app/dist -p &amp;&amp; npm run build:js &amp;&amp; npm run build:bootstrap&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;clean&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rm -rfv dist/&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;lint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jshint **.js&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;prebuild&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npm run lint&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;watch&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;watch &#39;npm run build&#39; ./app/ --filter=watch_filter&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;serve&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http-server -p 9000 -a 0.0.0.0 ./app/&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;livereload&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;live-reload ./app/dist/ --port 9001&quot;</span>
+<span class="p">},</span>
+<span class="o">....</span>
+</code></pre></div>
+
+<p>And just run </p>
+<div class="highlight"><pre><span></span><code>npm run build
+</code></pre></div>
+
+<p>and your distribution will be held in app/ directory (where dist directory is located) so just configure NGinx to alias to that location:</p>
+<div class="highlight"><pre><span></span><code>location / {
+    alias /path/to/frontend/app/;
+}
+</code></pre></div>
+
+<p>And that's it! Restart NGinx and enjoy testing your app in production. :)</p>
+<p>If you have some suggestions or if you want to remind me on some issues, just fill comment form below. </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2016-05-23T00:02:00+01:00" pubdate>Mon 23 May 2016</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

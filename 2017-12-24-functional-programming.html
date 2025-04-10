@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>A bit of functional programming by example in Haskell - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="A bit of functional programming by example in Haskell" />
+	<meta name="date" content="2017-12-24 12:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2017-12-24 12:15:00+01:00" />
+	<meta property="og:title" content="A bit of functional programming by example in Haskell" />
+	<meta property="og:url" content="/2017-12-24-functional-programming.html" />
+	<meta property="og:description" content="Recently I've started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain …" />
+	<meta name="description" content="Recently I've started reading about functional programming. When you have been programming using OOP principles since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. As you are older and older, new experiences come hard to gain …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>A bit of functional programming by example in Haskell</h1>
+			<p>Recently I've started reading about functional programming. When you have been programming using OOP principles 
+since you were beginner, it sounds a little bit strange to change approach all the way around. It is scary and sometimes hard. 
+As you are older and older, new experiences come hard to gain. In this article I will try to make some clarifications about this 
+approach which starts to be a big deal in big software companies as well as startups. It was hard to me to change the way of thinking 
+so I am willing to make this process easier for you. I know you've been doing Java or c# for a long time. I know you know the 
+bad things in these languages. I know you are sick of OOP or you will eventually be sick of OOP. I will try to explain some pitfalls 
+of OOP first and then continue by explaining functional approach and how it solves all of that. I will give examples in Haskell 
+but you don't need to be familiar with Haskell to understand examples since they're pretty straightforward and I will give explanation
+for things which may seem strange.</p>
+<h1>Mutability, thread-safeness and history</h1>
+<p>First of all, functional programming is type of declarative programming which means that we explain what is something instead 
+of giving instructions step by step which is seen in imperative programming. 
+For example, in functional programming we say "factorial of n is n times factorial of n-1 where factorial of 0 is 1". In 
+imperative approach, we say how to compute factorial of n: "start with 1 and say result is 1 then increment counter to n and multiply result by counter and save it into result". Here you can see big difference in way of thinking. I personally think that declarative approach is much simpler.</p>
+<p>In above example you can see one important difference between these approaches. In declarative programming we define value only once. Translated in language you already know, think of this as using only constant variables instead of common variables which can change state later. This is called immutability which means "when defined once, cannot be changed later". Take a look at the following example of C code:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="w"> </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">));</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Our function f changes state of x by increasing it by one and returns previous state increased by one. For a moment let's 
+forget about this function definition and imagine we only see main function. What would you guess out of it? It seems logical 
+that f(x) is always equal to f(x) because mathematically it is logical to one function gives the same value for the same 
+parameters. Here we can see this is not the case. This program will output "6 7" which is not logical until we see definition
+of function. In functional approach this is not possible at all! In functional approach we cannot mutate state and function 
+will return the same output for the same input, ALWAYS! </p>
+<p>Now, you are probably asking why do we limit ourselves to not mutate objects? The answer is because we are undisciplined and 
+we need computers to limit us from making mistakes. It is always better to know you have bug when you read compile errors instead of 
+seeing end-user complains in bug tracker. </p>
+<p>Another reason why immutability is great is that your program is thread-safe. When you do not change state of anything, you do not have race conditions and your program can be parallelized easily. This starts to be more and more important since we are at saturation 
+of Moor's curve and the only way to make computers faster is by adding multiple cores and this can be used efficiently only
+if your program supports parallelism. </p>
+<p>Fun fact is that functional programming appeared before OOP. It appeared in 1950's and was introduced in Lisp developed in MIT. The reason why functional programming didn't survive was because, at that time, it was considered slow since architecture of computers didn't 
+agree with this concept. OOP seemed as logical approach and was designed for enterprise. Functional programming now is coming back since we have much faster computers and have requirements which fit with this approach (parallelism for instance).</p>
+<h1>Data-in, data out model</h1>
+<p>This model has a few principles which makes your code more functional, you can implement this approach even in your OOP
+code and make it more thread-safe. These are principles you should follow in your existing projects, no matter what language do you 
+use: </p>
+<ol>
+<li>Every function returns data </li>
+<li>For the same input, function always return the same output</li>
+<li>When the function is called many times with the same parameters, it ALWAYS returns the same outputs as it was called just once. </li>
+<li>Function does not depend on outer environment such as global variables, databases etc...</li>
+<li>Function does not modify its input. </li>
+</ol>
+<p>Even when you make OOP stuff, try avoiding changing state. For instance, avoid using setters in your class. You can implement your class such that it only has constructor and getter methods. If you want to use setter, setter has to return a new object with changed parameters, not change existing one. </p>
+<h1>Example: list in C</h1>
+<p>Let's take an example where we will implement list of integers in C.</p>
+<p>First we will define our list element structure: </p>
+<div class="highlight"><pre><span></span><code><span class="nx">typedef</span><span class="w"> </span><span class="nx">struct</span><span class="w"> </span><span class="nx">ListElem_t</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="nx">int</span><span class="w"> </span><span class="nx">value</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">struct</span><span class="w"> </span><span class="nx">ListElem_t</span><span class="o">*</span><span class="w"> </span><span class="nx">next</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="nx">ListElem</span><span class="p">;</span>
+</code></pre></div>
+
+<p>You can see that element hold its value and pointer to next element in a list. This pointer can be NULL which means there's 
+nothing after this element.</p>
+<p>Now let's create method that will reserve memory for our element and return instance of this element:</p>
+<div class="highlight"><pre><span></span><code>ListElem* create_element(int value, ListElem* next)
+{
+        ListElem* elem = (ListElem*) malloc(sizeof(ListElem));
+        elem-&gt;value = value;
+        elem-&gt;next = next;
+        return elem;
+}
+</code></pre></div>
+
+<p>What does this method do is basically reserving memory for our element structure, assigning value to the new element 
+from parameters and assigns next element to the element given as argument. At the end, it returns new instance of this element. </p>
+<p>Now we can create our List structure which basically has only pointer to the head of list: </p>
+<div class="highlight"><pre><span></span><code><span class="nx">typedef</span><span class="w"> </span><span class="nx">struct</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="nx">ListElem</span><span class="o">*</span><span class="w"> </span><span class="nx">head</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="nx">List</span><span class="p">;</span>
+</code></pre></div>
+
+<p>Now we will create function that, for a given list element, creates list with head assigned to the given list element: </p>
+<div class="highlight"><pre><span></span><code>List* create_list(ListElem* head)
+{
+        List* l = (List*) malloc(sizeof(List));
+        l-&gt;head = head;
+        return l;
+}
+</code></pre></div>
+
+<p>Nothing special so far, right? </p>
+<p>Now let's make push method which will add element to the begging of the list. This method will return a new instance of 
+list which will have head pointing to the new element while the remaining of the list is behind head so previous head will be next 
+element of new head. At the first it seems that we will need to copy whole list and add new element and return this new list. This 
+approach is inefficient. The good news are that we do not have to do that. We will need to make new element and new list instance 
+which has head pointing to the new element. Next pointer of new element will be just head of our list in arguments so we basically 
+do not copy anything. We can do this trick because immutability guarantees that elements of the list won't be changed in any time. </p>
+<div class="highlight"><pre><span></span><code>List* push(List* l, int value)
+{
+        return create_list(create_element(value, l-&gt;head));
+}
+</code></pre></div>
+
+<p>Now let's make function that will return new list but without head of a given list (i.e. tail of list):</p>
+<div class="highlight"><pre><span></span><code>List* tail(List* l)
+{
+        return create_list(l-&gt;head-&gt;next);
+}
+</code></pre></div>
+
+<p>If list is not empty, we simply create new list which has head of next element of head of our given list. 
+If list is empty, behaviour of tail is not defined so we will end up with segmentation fault (we will try de-referencing NULL pointer).</p>
+<p>For debugging purposes we will make print function.</p>
+<div class="highlight"><pre><span></span><code><span class="n">void</span><span class="w"> </span><span class="n">print</span><span class="p">(</span><span class="n">List</span><span class="o">*</span><span class="w"> </span><span class="n">l</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">l</span><span class="o">-&gt;</span><span class="n">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NULL</span><span class="p">)</span><span class="w"> </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">else</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">                </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="o">-&gt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">);</span>
+<span class="w">                </span><span class="n">print</span><span class="p">(</span><span class="n">tail</span><span class="p">(</span><span class="n">l</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>So now we can test our list in main:</p>
+<div class="highlight"><pre><span></span><code>int main() {
+        List <span class="gs">*l = create_list(NULL);</span>
+<span class="gs">        push(l, 5);</span>
+<span class="gs">        print(l);</span>
+<span class="gs">        List*</span> l2 = push(l, 5);
+        print(l2);
+
+        print(tail(l2));
+        print(push(l2, 10));
+        return 0;
+}
+</code></pre></div>
+
+<p>So you can see that when we add element in front of list, we assign this result to the new list since push returns new instance of 
+list where it has one additional element. </p>
+<h1>Introduction to Haskell</h1>
+<p>Haskell is purely functional programming language. This means that functions receive parameters, do not modify them and always return 
+result. This also means that function themselves are first class objects meaning that functions can be passed as parameters and 
+returned as result. </p>
+<p>Haskell can be interpreted and compiled. Commonly used compiler for Haskell on UNIX-based systems is ghc and file extension for 
+Haskell code is ".hs".</p>
+<p>Haskell is strongly typed language which means that types of data are known in compilation time before even running executable. 
+Types in Haskell must begin with upper case letter. To test examples, you can run interactive mode with ghci. </p>
+<p>Let's make our first function which takes a number and return square of that number.</p>
+<div class="highlight"><pre><span></span><code><span class="n">sq</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Int</span>
+<span class="n">sq</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="o">*</span><span class="n">x</span>
+</code></pre></div>
+
+<p>So we can run this in ghci like this:</p>
+<div class="highlight"><pre><span></span><code>ghci example.hs 
+&gt;&gt;&gt; sq 5 
+25
+&gt;&gt;&gt;
+</code></pre></div>
+
+<p>so you can see that we can call function and easily get result. We first declare function by specifying  what types of argument it receives and what type it returns. After that, we can define our function. </p>
+<p>Now let's define function that computes sum of two integers:</p>
+<div class="highlight"><pre><span></span><code><span class="n">add</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span>
+<span class="n">add</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="o">+</span><span class="n">b</span>
+</code></pre></div>
+
+<p>Here we have two parameters and result. The reason we declared function like above is that this declaration is actually not a function 
+with two parameters. In Haskell, functions can receive only one parameter and return only one result. Here we have function 
+which takes one integer and returns function which takes another integer which then returns their sum. </p>
+<p>This can be easily proven by passing only one parameter to the function:</p>
+<div class="highlight"><pre><span></span><code>inc = add 1
+</code></pre></div>
+
+<p>Now inc is function which takes one parameter and returns that parameter increased by one. For instance</p>
+<div class="highlight"><pre><span></span><code>inc 5
+</code></pre></div>
+
+<p>will return 6.</p>
+<h1>Lists</h1>
+<p>Lists in Haskell are implemented like we did above in C. They are simply single-linked lists.</p>
+<p>To define list:</p>
+<div class="highlight"><pre><span></span><code>l = [1,2,3]
+</code></pre></div>
+
+<p>to get head of the list you can simply do:</p>
+<div class="highlight"><pre><span></span><code>head l
+</code></pre></div>
+
+<p>to get tail of list:</p>
+<div class="highlight"><pre><span></span><code>tail l
+</code></pre></div>
+
+<p>you can do list concatenation which will merge two lists in a new list:</p>
+<div class="highlight"><pre><span></span><code>l = l1 ++ l2
+</code></pre></div>
+
+<p>to get list with new element added to the head (our push function):</p>
+<div class="highlight"><pre><span></span><code>l2 = 5 : l
+</code></pre></div>
+
+<p>To get list as range of numbers:</p>
+<div class="highlight"><pre><span></span><code>range = [1..10]
+</code></pre></div>
+
+<p>Now we get to interesting stuff: list comprehension! </p>
+<p>This is something you have already seen in math: you can define list by specifying its general element. For instance:</p>
+<div class="highlight"><pre><span></span><code><span class="n">squares</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p">[</span><span class="m">1</span><span class="kc">..10</span><span class="p">]]</span>
+</code></pre></div>
+
+<p>or you can add additional condition, for instance squares divisible by 3:</p>
+<div class="highlight"><pre><span></span><code><span class="n">squares</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="err">[</span><span class="mf">1..10</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="w"> </span><span class="n n-Quoted">`mod`</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">]</span>
+</code></pre></div>
+
+<p>or to define list of tuples which have property that their distance from (0,0) is less than 1:</p>
+<div class="highlight"><pre><span></span><code><span class="n">unitcircle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0.01</span><span class="kc">..10</span><span class="p">],</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p">[</span><span class="m">0</span><span class="p">,</span><span class="m">0.01</span><span class="kc">..10</span><span class="p">],</span><span class="w"> </span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="o">*</span><span class="n">y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">1</span><span class="p">]</span>
+</code></pre></div>
+
+<p>Note that I have specified step for our ranges for x and y as well. </p>
+<h1>Pattern matching</h1>
+<p>Something very useful in functional programming languages is pattern matching. Imagine you are trying to implement factorial. First you will check is parameter is zero. If it is, return 1, else return that number times factorial of number decreased by one. 
+In Haskell this checking can be easily written using pattern matching:</p>
+<div class="highlight"><pre><span></span><code><span class="n">fact</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Int</span>
+<span class="n">fact</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="n">fact</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">fact</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Pattern matching works in the following manner: it will check does arguments of function satisfy first condition, if yes, return given result, else go forward to next condition. </p>
+<p>For example the following function will return 1 if any of its two arguments is zero, 0 otherwise:</p>
+<div class="highlight"><pre><span></span><code><span class="n">anyzero</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Int</span>
+<span class="n">anyzero</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="n">anyzero</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="n">anyzero</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+</code></pre></div>
+
+<p>Some list functions </p>
+<div class="highlight"><pre><span></span><code><span class="n">mymap</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">a</span><span class="o">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">b</span><span class="o">]</span>
+<span class="n">mymap</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[]</span>
+<span class="n">mymap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="nl">x</span><span class="p">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="p">(</span><span class="n">mymap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">xs</span><span class="p">)</span>
+
+
+<span class="n">reduce</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">a</span><span class="o">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span>
+<span class="n">reduce</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">z</span><span class="w"> </span>
+<span class="n">reduce</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="p">(</span><span class="nl">x</span><span class="p">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reduce</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
+
+<span class="n">myfilter</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Bool</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">a</span><span class="o">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">a</span><span class="o">]</span>
+<span class="n">myfilter</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span>
+<span class="n">myfilter</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="nl">x</span><span class="p">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="p">(</span><span class="n">myfilter</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">myfilter</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">xs</span>
+
+<span class="o">*</span><span class="n">Main</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mymap</span><span class="w"> </span><span class="p">(</span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">[</span><span class="n">1,2,3</span><span class="o">]</span>
+<span class="o">[</span><span class="n">2,3,4</span><span class="o">]</span>
+<span class="o">*</span><span class="n">Main</span><span class="o">&gt;</span><span class="w"> </span><span class="k">filter</span><span class="w"> </span><span class="p">(</span><span class="err">\</span><span class="n">x</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="err">`</span><span class="k">mod</span><span class="err">`</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">[</span><span class="n">1,2,3,4,5,6</span><span class="o">]</span>
+<span class="o">[</span><span class="n">2,4,6</span><span class="o">]</span>
+<span class="o">*</span><span class="n">Main</span><span class="o">&gt;</span><span class="w"> </span><span class="n">reduce</span><span class="w"> </span><span class="p">(</span><span class="o">+</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">[</span><span class="n">1,2,3,4,5</span><span class="o">]</span>
+<span class="mi">15</span>
+<span class="o">*</span><span class="n">Main</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<h1>Some nice examples</h1>
+<p>Function which removes repeating elements</p>
+<div class="highlight"><pre><span></span><code><span class="n">norepeat</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="p">(</span><span class="n">Eq</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">a</span><span class="o">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">a</span><span class="o">]</span>
+<span class="n">norepeat</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span>
+<span class="n">norepeat</span><span class="w"> </span><span class="p">(</span><span class="nl">x</span><span class="p">:</span><span class="err">[]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">x</span><span class="o">]</span>
+<span class="n">norepeat</span><span class="w"> </span><span class="p">(</span><span class="nl">x</span><span class="p">:</span><span class="nl">y</span><span class="p">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">norepeat</span><span class="w"> </span><span class="p">(</span><span class="nl">x</span><span class="p">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="nl">x</span><span class="p">:(</span><span class="n">norepeat</span><span class="w"> </span><span class="p">(</span><span class="nl">y</span><span class="p">:</span><span class="n">xs</span><span class="p">))</span>
+
+<span class="o">*</span><span class="n">Main</span><span class="o">&gt;</span><span class="w"> </span><span class="n">norepeat</span><span class="w"> </span><span class="o">[</span><span class="n">1,1,2,5,5,6</span><span class="o">]</span>
+<span class="o">[</span><span class="n">1,2,5,6</span><span class="o">]</span>
+<span class="o">*</span><span class="n">Main</span><span class="o">&gt;</span><span class="w"> </span><span class="n">norepeat</span><span class="w"> </span><span class="o">[</span><span class="n">1,1,2,5,5,6, 6</span><span class="o">]</span>
+<span class="o">[</span><span class="n">1,2,5,6</span><span class="o">]</span>
+<span class="o">*</span><span class="n">Main</span><span class="o">&gt;</span><span class="w"> </span><span class="n">norepeat</span><span class="w"> </span><span class="o">[</span><span class="n">1,2,5,5,6, 6</span><span class="o">]</span>
+<span class="o">[</span><span class="n">1,2,5,6</span><span class="o">]</span>
+<span class="o">*</span><span class="n">Main</span><span class="o">&gt;</span><span class="w"> </span><span class="n">norepeat</span><span class="w"> </span><span class="o">[</span><span class="n">1,2,5</span><span class="o">]</span>
+<span class="o">[</span><span class="n">1,2,5</span><span class="o">]</span>
+<span class="o">*</span><span class="n">Main</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p>Quick sort </p>
+<div class="highlight"><pre><span></span><code><span class="n">qsort</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">Int</span><span class="o">]</span>
+<span class="n">qsort</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[]</span>
+<span class="n">qsort</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">qsort</span><span class="w"> </span><span class="o">[</span><span class="n">x | x&lt;-l, x &lt; y</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="o">[</span><span class="n">y</span><span class="o">]</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="p">(</span><span class="n">qsort</span><span class="w"> </span><span class="o">[</span><span class="n">x | x&lt;-l, x&gt;y</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="n">l</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Splitting string into words </p>
+<div class="highlight"><pre><span></span><code><span class="n">findFirstWord</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="o">[</span><span class="n">Char</span><span class="o">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="o">[</span><span class="n">Char</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="n">Char</span><span class="o">]</span><span class="p">)</span>
+<span class="n">findFirstWord</span><span class="w"> </span><span class="ss">&quot;&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;&quot;</span><span class="p">)</span>
+<span class="n">findFirstWord</span><span class="w"> </span><span class="ss">&quot; &quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;&quot;</span><span class="p">)</span>
+<span class="n">findFirstWord</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">let</span><span class="w"> </span><span class="p">(</span><span class="n">remaining</span><span class="p">,</span><span class="w"> </span><span class="n">others</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">findFirstWord</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">s</span>
+<span class="w">        </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="w"> </span><span class="n">s</span>
+<span class="w">    </span><span class="ow">in</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">remaining</span><span class="p">,</span><span class="w"> </span><span class="n">others</span><span class="p">)</span>
+
+<span class="n">split</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="o">[</span><span class="n">Char</span><span class="o">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">[Char</span><span class="o">]</span><span class="err">]</span>
+<span class="n">split</span><span class="w"> </span><span class="ss">&quot;&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[]</span>
+<span class="n">split</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">let</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">findFirstWord</span><span class="w"> </span><span class="n">s</span>
+<span class="w">          </span><span class="ow">in</span><span class="w"> </span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="p">(</span><span class="n">split</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+</code></pre></div>
+
+<p>String length </p>
+<div class="highlight"><pre><span></span><code><span class="n">strlen</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Int</span>
+<span class="n">strlen</span><span class="w"> </span><span class="n">s</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">otherwise</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">strlen</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">s</span><span class="p">)</span>
+</code></pre></div>
+
+<h1>Data types</h1>
+<p>We can define data types by specifying type name and its constructors. Let's take an example and make Zipper data type. This type
+is used mostly in editors. It is basically a list with focused element. You can go left or right and move focus around the list.</p>
+<div class="highlight"><pre><span></span><code><span class="k">data</span><span class="w"> </span><span class="n">Zipper</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Zip</span><span class="w"> </span><span class="o">[</span><span class="n">a</span><span class="o">]</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">[</span><span class="n">a</span><span class="o">]</span><span class="w"> </span><span class="n">deriving</span><span class="w"> </span><span class="p">(</span><span class="n">Show</span><span class="p">)</span>
+
+<span class="nf">right</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">Zipper</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Zipper</span><span class="w"> </span><span class="n">a</span>
+<span class="nf">right</span><span class="w"> </span><span class="p">(</span><span class="n">Zip</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="n">focus</span><span class="w"> </span><span class="err">[]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Zip</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="n">focus</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span>
+<span class="nf">right</span><span class="w"> </span><span class="p">(</span><span class="n">Zip</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="n">focus</span><span class="w"> </span><span class="n">r</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Zip</span><span class="w"> </span><span class="p">(</span><span class="nl">focus</span><span class="p">:</span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">tail</span><span class="w"> </span><span class="n">r</span><span class="p">)</span>
+
+
+<span class="nf">left</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">Zipper</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Zipper</span><span class="w"> </span><span class="n">a</span>
+<span class="nf">left</span><span class="w"> </span><span class="p">(</span><span class="n">Zip</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span><span class="n">focus</span><span class="w"> </span><span class="n">r</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Zip</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span><span class="n">focus</span><span class="w"> </span><span class="n">r</span>
+<span class="nf">left</span><span class="w"> </span><span class="p">(</span><span class="n">Zip</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="n">focus</span><span class="w"> </span><span class="n">r</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Zip</span><span class="w"> </span><span class="p">(</span><span class="n">tail</span><span class="w"> </span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nl">focus</span><span class="p">:</span><span class="n">r</span><span class="p">)</span>
+</code></pre></div>
+
+<p>now we can do the following:</p>
+<div class="highlight"><pre><span></span><code>*Main&gt; z = Zip [3, 2, 1] 4 [5, 6, 7]
+*Main&gt; right z 
+Zip [4,3,2,1] 5 [6,7]
+*Main&gt; left $ right z 
+Zip [3,2,1] 4 [5,6,7]
+*Main&gt; left $ left $ right z 
+Zip [2,1] 3 [4,5,6,7]
+*Main&gt; left $ left $ left $ right z 
+Zip [1] 2 [3,4,5,6,7]
+*Main&gt; left $ left $ left $ left $ right z 
+Zip [] 1 [2,3,4,5,6,7]
+*Main&gt; left $ left $ left $ left $ left $ right z 
+Zip [] 1 [2,3,4,5,6,7]
+*Main&gt;
+</code></pre></div>
+
+<p>Another example is binary tree node. Note that node can be empty (has no children and no value). Here we are using Haskell's record
+syntax which gives us functions for extracting data. This is not usual way for implementing node in binary tree (we can go pretty well with usual data type definition as above) but we show this to demonstrate record syntax. </p>
+<div class="highlight"><pre><span></span><code><span class="k">data</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="nf">left</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">Node</span><span class="p">,</span>
+<span class="w">        </span><span class="nf">right</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">Node</span><span class="p">,</span>
+<span class="w">        </span><span class="k">value</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="nc">Int</span>
+<span class="w">    </span><span class="err">}</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">EmptyNode</span>
+
+<span class="n">tolist</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">Int</span><span class="o">]</span>
+<span class="n">tolist</span><span class="w"> </span><span class="n">EmptyNode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[]</span>
+<span class="n">tolist</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">let</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tolist</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nf">left</span><span class="w"> </span><span class="n">n</span>
+<span class="w">               </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tolist</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nf">right</span><span class="w"> </span><span class="n">n</span>
+<span class="w">               </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">value</span><span class="w"> </span><span class="n">n</span>
+<span class="w">           </span><span class="ow">in</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">r</span>
+
+<span class="n">append</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Node</span>
+<span class="n">append</span><span class="w"> </span><span class="n">EmptyNode</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="n">EmptyNode</span><span class="w"> </span><span class="n">EmptyNode</span><span class="w"> </span><span class="n">x</span>
+<span class="n">append</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">value</span><span class="w"> </span><span class="n">n</span>
+<span class="w">                 </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">right</span><span class="w"> </span><span class="n">n</span>
+<span class="w">                 </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">left</span><span class="w"> </span><span class="n">n</span>
+<span class="w">             </span><span class="ow">in</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="p">(</span><span class="n">append</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="p">(</span><span class="n">append</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">v</span>
+
+
+<span class="n">fromlist</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">TreeNode</span>
+<span class="n">fromlist</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span>
+<span class="n">fromlist</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="w"> </span><span class="n">l</span>
+<span class="w">               </span><span class="ow">in</span><span class="w"> </span><span class="n">fromlist</span><span class="w"> </span><span class="p">(</span><span class="n">tail</span><span class="w"> </span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">append</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">bstsort</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">Int</span><span class="o">]</span>
+<span class="n">bstsort</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tolist</span><span class="w"> </span><span class="p">(</span><span class="n">fromlist</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="n">EmptyNode</span><span class="p">)</span>
+</code></pre></div>
+
+<h1>Monads</h1>
+<p>In pure functional programming languages, you cannot change state. This is core concept and very powerful one. 
+The problem is that our real world needs functionality to change state. Computer architecture is built on idea to change state. 
+Even basic operations such as printing to console output require to change state (state of console in this example). </p>
+<p>The way to change state in functional languages is by using monads. Monads are actually mathematical objects which are applied 
+to computer science. </p>
+<p>Basically, monad is data type which "surrounds" another type with additional information which is carried through computation. For every monad, we have to define 
+two functions: return and bind. </p>
+<p>Function return takes our pure type and returns wrapped type. By using this function, we can convert pure types to our wrapped 
+types which hold state. In terms of computation, return does not influence computation.</p>
+<p>When we have functions that take one type and return another, it becomes impossible to do composition in standard way. We can
+solve this by using bind. Bind function takes our wrapped type and function which takes pure type and returns wrapped type. Bind returns
+wrapped type and does following: unwraps our first argument and passes it to function, then "merges" result of a function 
+with passed argument and returns it. This is best illustrated with simple example. Let's make type Debuggable which is basically 
+integer with list of strings which represents debug info. We first make type Debuggable and then implement bind and ret. Other 
+functions are implemented the same way as inc which increases number by one and stores message in a log. </p>
+<div class="highlight"><pre><span></span><code><span class="k">data</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="p">(</span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="n">[Char</span><span class="o">]</span><span class="err">]</span><span class="p">)</span><span class="w"> </span><span class="n">deriving</span><span class="w"> </span><span class="p">(</span><span class="n">Show</span><span class="p">)</span>
+
+
+<span class="n">ret</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span>
+<span class="n">ret</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="err">[]</span><span class="p">)</span>
+
+<span class="n">bind</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="nc">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Debuggable</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Debuggable</span>
+<span class="n">bind</span><span class="w"> </span><span class="p">(</span><span class="n">Debuggable</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+<span class="n">inc</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Debuggable</span><span class="w">  </span>
+<span class="n">inc</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;Number increased by one&quot;</span><span class="o">]</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Note how we do unwrapping and wrapping in bind. There we return our result with concatenated list of debug info from a given parameter
+and additional info provided by calling function. </p>
+<p>We are deriving Show here to make our type printable on console. Now we can do something like this: </p>
+<div class="highlight"><pre><span></span><code>*Main&gt; ret 5 
+Debuggable (5,[])
+*Main&gt; inc 5 
+Debuggable (6,[&quot;Number increased by one&quot;])
+*Main&gt; bind (ret 5) inc 
+Debuggable (6,[&quot;Number increased by one&quot;])
+*Main&gt; bind (bind (ret 5) inc) inc
+Debuggable (7,[&quot;Number increased by one&quot;,&quot;Number increased by one&quot;])
+*Main&gt;
+</code></pre></div>
+
+<p>Haskell has its own way of defining monads by implementing these operators such that Haskell understands them correctly as monads. </p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">Control.Applicative</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="n">Otherwise</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">can</span><span class="s1">&#39;t do the Applicative instance.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Control.Monad</span><span class="w"> </span><span class="p">(</span><span class="n">liftM</span><span class="p">,</span><span class="w"> </span><span class="n">ap</span><span class="p">)</span>
+
+<span class="n">data</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="p">[[</span><span class="n">Char</span><span class="p">]])</span><span class="w"> </span><span class="n">deriving</span><span class="w"> </span><span class="p">(</span><span class="n">Show</span><span class="p">)</span>
+<span class="o">--</span><span class="w"> </span><span class="n">needed</span><span class="w"> </span><span class="n">since</span><span class="w"> </span><span class="n">newer</span><span class="w"> </span><span class="n">versions</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">GHC</span>
+<span class="n">instance</span><span class="w"> </span><span class="n">Functor</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="n">where</span>
+<span class="w">  </span><span class="n">fmap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">liftM</span>
+
+<span class="n">instance</span><span class="w"> </span><span class="n">Applicative</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="n">where</span>
+<span class="w">  </span><span class="n">pure</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">return</span>
+<span class="w">  </span><span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ap</span>
+<span class="o">------------------------</span>
+
+<span class="n">instance</span><span class="w"> </span><span class="n">Monad</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="n">where</span><span class="w"> </span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="p">[])</span>
+<span class="w">  </span><span class="p">(</span><span class="o">&gt;&gt;=</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Debuggable</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="n">where</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+<span class="n">inc</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="nb">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="nb">Int</span>
+<span class="n">inc</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Number increased by one&quot;</span><span class="p">])</span>
+</code></pre></div>
+
+<p>Now we can do something like this:</p>
+<div class="highlight"><pre><span></span><code><span class="o">*</span><span class="n">Main</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="p">(</span><span class="err">\</span><span class="n">x</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="kr">return</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="n">inc</span><span class="p">)</span>
+<span class="n">Debuggable</span><span class="w"> </span><span class="p">(</span><span class="mi">7</span><span class="p">,[</span><span class="s">&quot;Number increased by one&quot;</span><span class="p">,</span><span class="s">&quot;Number increased by one&quot;</span><span class="p">])</span>
+<span class="o">*</span><span class="n">Main</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p>You can see how we use bind operator here. Haskell has syntatic sugar for this and it's called do-notation</p>
+<div class="highlight"><pre><span></span><code><span class="n">inc2</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Debuggable</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span>
+<span class="n">inc2</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">do</span><span class="w"> </span>
+<span class="w">  </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">inc</span><span class="w"> </span><span class="n">num</span>
+<span class="w">  </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">inc</span><span class="w"> </span><span class="n">x</span><span class="w"> </span>
+<span class="w">  </span><span class="n">return</span><span class="w"> </span><span class="n">y</span>
+</code></pre></div>
+
+<h1>Unit Monad</h1>
+<p>This is just unit wrapping around type, nothing special: </p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">Control.Applicative</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="n">Otherwise</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">can</span><span class="s1">&#39;t do the Applicative instance.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Control.Monad</span><span class="w"> </span><span class="p">(</span><span class="n">liftM</span><span class="p">,</span><span class="w"> </span><span class="n">ap</span><span class="p">)</span>
+
+<span class="n">data</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">deriving</span><span class="w"> </span><span class="p">(</span><span class="n">Show</span><span class="p">)</span>
+
+<span class="n">instance</span><span class="w"> </span><span class="n">Functor</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="n">where</span>
+<span class="w">  </span><span class="n">fmap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">liftM</span>
+
+<span class="n">instance</span><span class="w"> </span><span class="n">Applicative</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="n">where</span>
+<span class="w">  </span><span class="n">pure</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">return</span>
+<span class="w">  </span><span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ap</span>
+
+<span class="n">instance</span><span class="w"> </span><span class="n">Monad</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="n">where</span><span class="w"> </span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="n">x</span>
+<span class="w">  </span><span class="p">(</span><span class="o">&gt;&gt;=</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Unit</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span>
+</code></pre></div>
+
+<h1>Maybe Monad</h1>
+<p>Useful if you have something which can be "null" or undefined. Value of this type can be something useful or nothing. </p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">Control.Applicative</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="n">Otherwise</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">can</span><span class="s1">&#39;t do the Applicative instance.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Control.Monad</span><span class="w"> </span><span class="p">(</span><span class="n">liftM</span><span class="p">,</span><span class="w"> </span><span class="n">ap</span><span class="p">)</span>
+
+<span class="n">data</span><span class="w"> </span><span class="n">Maybe</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Just</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Nothing</span>
+
+<span class="n">instance</span><span class="w"> </span><span class="n">Functor</span><span class="w"> </span><span class="n">Maybe</span><span class="w"> </span><span class="n">where</span>
+<span class="w">  </span><span class="n">fmap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">liftM</span>
+
+<span class="n">instance</span><span class="w"> </span><span class="n">Applicative</span><span class="w"> </span><span class="n">Maybe</span><span class="w"> </span><span class="n">where</span>
+<span class="w">  </span><span class="n">pure</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">return</span>
+<span class="w">  </span><span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ap</span>
+
+<span class="n">instance</span><span class="w"> </span><span class="n">Monad</span><span class="w"> </span><span class="n">Maybe</span><span class="w"> </span><span class="n">where</span><span class="w"> </span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Just</span><span class="w"> </span><span class="n">x</span>
+<span class="w">  </span><span class="p">(</span><span class="o">&gt;&gt;=</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Nothing</span><span class="p">)</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Nothing</span>
+</code></pre></div>
+
+<h1>IO Monad</h1>
+<p>This monad can handle IO operations. In Haskell this monad is special because it changes state of world only with IO object 
+provided to main function. Main function is the first function which is run when you compile your program and run it as 
+executable without interactive mode. HAHAHAHA I know what you are thinking, we are there babies! We are going to make Hello World!</p>
+<p>you can compile your program with:</p>
+<div class="highlight"><pre><span></span><code>ghc hello.hs -o hello -dynamic
+</code></pre></div>
+
+<p>and run it with:</p>
+<div class="highlight"><pre><span></span><code>./hello
+</code></pre></div>
+
+<p>and here it is:</p>
+<div class="highlight"><pre><span></span><code>main :: IO ()
+main = putStrLn &quot;Hello world!&quot;
+</code></pre></div>
+
+<p>Let's make small i/o program! </p>
+<div class="highlight"><pre><span></span><code><span class="n">main</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="nf">IO </span><span class="p">()</span>
+<span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">do</span>
+<span class="w">  </span><span class="n">putStrLn</span><span class="w"> </span><span class="s">&quot;Enter your name&quot;</span>
+<span class="w">  </span><span class="n">name</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">getLine</span>
+<span class="w">  </span><span class="n">putStrLn</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="s">&quot;Your name is &quot;</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">name</span>
+</code></pre></div>
+
+<h1>Appendix 1: data types</h1>
+<p>you can create data types like so:</p>
+<div class="highlight"><pre><span></span><code>data Person = Person {
+    firstName :: String,
+    lastName :: String,
+    age :: Int
+}
+</code></pre></div>
+
+<p>and then you can get data from Person value like this:</p>
+<div class="highlight"><pre><span></span><code>fullName p = (firstName p) ++ (lastName p)
+</code></pre></div>
+
+<p>or create new value:</p>
+<div class="highlight"><pre><span></span><code>john = Person {firstName = &quot;John&quot;, lastName = &quot;Johnson&quot;, age=55}
+</code></pre></div>
+
+<h1>Appendix 2: Interesting links</h1>
+<p>https://downloads.haskell.org/~ghc/latest/docs/html/libraries/</p>
+<p>https://hackage.haskell.org/</p>
+<p>https://robots.thoughtbot.com/a-rest-api-with-haskell-and-snap</p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2017-12-24T12:15:00+01:00" pubdate>Sun 24 December 2017</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

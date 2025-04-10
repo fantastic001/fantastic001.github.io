@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Šta je GDB i kako se koristi? - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Šta je GDB i kako se koristi?" />
+	<meta name="date" content="2017-05-12 12:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2017-05-12 12:15:00+01:00" />
+	<meta property="og:title" content="Šta je GDB i kako se koristi?" />
+	<meta property="og:url" content="/2017-05-12-gdb.html" />
+	<meta property="og:description" content="Svako ko e ikada, bar malo, bavio programiranjem zna da prvi kod koji napišete nikada ne radi. Ako vam se desi da odmah proradi ili pišete nešto sitno ili mislite da vam radi a zapravo ne radi. Kada napišemo našu prvu verziju bilo kog programa, potrebno je da uočimo greške …" />
+	<meta name="description" content="Svako ko e ikada, bar malo, bavio programiranjem zna da prvi kod koji napišete nikada ne radi. Ako vam se desi da odmah proradi ili pišete nešto sitno ili mislite da vam radi a zapravo ne radi. Kada napišemo našu prvu verziju bilo kog programa, potrebno je da uočimo greške …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Šta je GDB i kako se koristi?</h1>
+			<p>Svako ko e ikada, bar malo, bavio programiranjem zna da prvi kod koji napišete nikada ne radi. Ako vam se desi da odmah proradi 
+ili pišete nešto sitno ili mislite da vam radi a zapravo ne radi. Kada napišemo našu prvu verziju bilo kog programa, potrebno je 
+da uočimo greške i da ih ispravimo. Proces traženja greške se naziva debagovanje i obavlja se alatom koji se naziva dibager (debuger).</p>
+<p>Jedan od takvih alata je i GDB. On je konzolni alat (pokreće se iz komandne linije) i služi traženju grešaka u vašem programu. Ako ste već radili u komandnoj liniji (npr kompajlirali ručno pomoću GCC-a ili koristili neki konzolni editor kao što su Nano i Vim), 
+onda vam je princip rada ovakvih programa poznat. Ako niste, možete se upoznati detaljnije sa ovim načinom rada <a href="http://linuxcommand.org/">ovde gde je opisan rad na Linuksovoj komandnoj liniji</a>.</p>
+<p>U ovom članku neće detaljno biti opisan rad u komandnoj liniji i biće pretpostavljeno da znate da napišete jednostavan program 
+u programskom jeziku C kao i da taj napisani kod znate da kompajlirate upotrebom GCC kompajlera. </p>
+<p>Prikazaćemo rad GDB-a kroz primere i objasniti neke njegove mogućnosti kako bismo lakše uočili greške u našem programu.</p>
+<p>Pre nego što koristimo GDB, potrebno je da naš program kompajliramo sa potrebnim flagovima za GDB. To radimo upotrebom -g opcije prosleđene GCC-u na sledeći način:</p>
+<div class="highlight"><pre><span></span><code>gcc program.c -o izlazni_fajl -g
+</code></pre></div>
+
+<p>Sada možemo pokrenuti GDB na sledeći način:</p>
+<div class="highlight"><pre><span></span><code>gdb izlazni_fajl
+</code></pre></div>
+
+<p>Da bismo bolje razumeli kako radi GDB, uzmimo za primer program koji računa faktorijel rekurzivno ali koji ima grešku u sebi:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">fact</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">fact</span><span class="p">(</span><span class="n">n</span><span class="mi">-1</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fact</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Ovde odmah vidimo grešku jer je trivijalna ali hajde da to pokušamo da uvidimo i upotrebom GDB-a.</p>
+<p>Dakle, prvo kompajliramo naš program sa -g opcijom prosleđenom GCC-u a zatim pokrenemo GDB na gore-opisani način. Trebalo bi da dobijete nešto slično ovome:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">GNU</span><span class="w"> </span><span class="nx">gdb</span><span class="w"> </span><span class="p">(</span><span class="nx">GDB</span><span class="p">)</span><span class="w"> </span><span class="m m-Double">7.12.1</span>
+<span class="nx">Copyright</span><span class="w"> </span><span class="p">(</span><span class="nx">C</span><span class="p">)</span><span class="w"> </span><span class="mi">2017</span><span class="w"> </span><span class="nx">Free</span><span class="w"> </span><span class="nx">Software</span><span class="w"> </span><span class="nx">Foundation</span><span class="p">,</span><span class="w"> </span><span class="nx">Inc</span><span class="p">.</span>
+<span class="nx">License</span><span class="w"> </span><span class="nx">GPLv3</span><span class="o">+</span><span class="p">:</span><span class="w"> </span><span class="nx">GNU</span><span class="w"> </span><span class="nx">GPL</span><span class="w"> </span><span class="nx">version</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nx">later</span><span class="w"> </span><span class="p">&lt;</span><span class="nx">http</span><span class="p">:</span><span class="c1">//gnu.org/licenses/gpl.html&gt;</span>
+<span class="nx">This</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">free</span><span class="w"> </span><span class="nx">software</span><span class="p">:</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">are</span><span class="w"> </span><span class="nx">free</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">change</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="nx">redistribute</span><span class="w"> </span><span class="nx">it</span><span class="p">.</span>
+<span class="nx">There</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">NO</span><span class="w"> </span><span class="nx">WARRANTY</span><span class="p">,</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">extent</span><span class="w"> </span><span class="nx">permitted</span><span class="w"> </span><span class="nx">by</span><span class="w"> </span><span class="nx">law</span><span class="p">.</span><span class="w">  </span><span class="nx">Type</span><span class="w"> </span><span class="s">&quot;show copying&quot;</span>
+<span class="k">and</span><span class="w"> </span><span class="s">&quot;show warranty&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">details</span><span class="p">.</span>
+<span class="nx">This</span><span class="w"> </span><span class="nx">GDB</span><span class="w"> </span><span class="nx">was</span><span class="w"> </span><span class="nx">configured</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="s">&quot;x86_64-pc-linux-gnu&quot;</span><span class="p">.</span>
+<span class="nx">Type</span><span class="w"> </span><span class="s">&quot;show configuration&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">configuration</span><span class="w"> </span><span class="nx">details</span><span class="p">.</span>
+<span class="nx">For</span><span class="w"> </span><span class="nx">bug</span><span class="w"> </span><span class="nx">reporting</span><span class="w"> </span><span class="nx">instructions</span><span class="p">,</span><span class="w"> </span><span class="nx">please</span><span class="w"> </span><span class="nx">see</span><span class="p">:</span>
+<span class="p">&lt;</span><span class="nx">http</span><span class="p">:</span><span class="c1">//www.gnu.org/software/gdb/bugs/&gt;.</span>
+<span class="nx">Find</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">GDB</span><span class="w"> </span><span class="nx">manual</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="nx">other</span><span class="w"> </span><span class="nx">documentation</span><span class="w"> </span><span class="nx">resources</span><span class="w"> </span><span class="nx">online</span><span class="w"> </span><span class="nx">at</span><span class="p">:</span>
+<span class="p">&lt;</span><span class="nx">http</span><span class="p">:</span><span class="c1">//www.gnu.org/software/gdb/documentation/&gt;.</span>
+<span class="nx">For</span><span class="w"> </span><span class="nx">help</span><span class="p">,</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="s">&quot;help&quot;</span><span class="p">.</span>
+<span class="nx">Type</span><span class="w"> </span><span class="s">&quot;apropos word&quot;</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">search</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">commands</span><span class="w"> </span><span class="nx">related</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="s">&quot;word&quot;</span><span class="o">...</span>
+<span class="nx">Reading</span><span class="w"> </span><span class="nx">symbols</span><span class="w"> </span><span class="nx">from</span><span class="w"> </span><span class="nx">a</span><span class="p">.</span><span class="nx">out</span><span class="o">...</span><span class="nx">done</span><span class="p">.</span>
+<span class="p">(</span><span class="nx">gdb</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sada možemo početi izvršavanje našeg programa liniju po liniju i to radimo tako što kucamo komandu start:</p>
+<div class="highlight"><pre><span></span><code>(gdb) start
+</code></pre></div>
+
+<p>i dobijamo nešto slično ovome:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">Temporary</span><span class="w"> </span><span class="nt">breakpoint</span><span class="w"> </span><span class="nt">1</span><span class="w"> </span><span class="nt">at</span><span class="w"> </span><span class="nt">0x40052f</span><span class="o">:</span><span class="w"> </span><span class="nt">file</span><span class="w"> </span><span class="nt">program</span><span class="p">.</span><span class="nc">c</span><span class="o">,</span><span class="w"> </span><span class="nt">line</span><span class="w"> </span><span class="nt">13</span><span class="o">.</span>
+<span class="nt">Starting</span><span class="w"> </span><span class="nt">program</span><span class="o">:</span><span class="w"> </span><span class="o">/</span><span class="nt">me</span><span class="o">/</span><span class="nt">home</span><span class="o">/</span><span class="nt">stefan</span><span class="o">/</span><span class="nt">a</span><span class="p">.</span><span class="nc">out</span>
+
+<span class="nt">Temporary</span><span class="w"> </span><span class="nt">breakpoint</span><span class="w"> </span><span class="nt">1</span><span class="o">,</span><span class="w"> </span><span class="nt">main</span><span class="w"> </span><span class="o">()</span><span class="w"> </span><span class="nt">at</span><span class="w"> </span><span class="nt">program</span><span class="p">.</span><span class="nc">c</span><span class="p">:</span><span class="nd">13</span>
+<span class="nt">13</span><span class="w">      </span><span class="nt">int</span><span class="w"> </span><span class="nt">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">fact</span><span class="o">(</span><span class="nt">5</span><span class="o">);</span>
+</code></pre></div>
+
+<p>Kao što vidimo, linija koju nam GDB izbaci je linija koja tek treba da se izvrši. Dakle, linija koja će se tek izvršiti je:</p>
+<div class="highlight"><pre><span></span><code>    13              int f = fact(5);
+</code></pre></div>
+
+<p>Da bismo je izvršili, kucamo komandu next ili skraćeno n:</p>
+<div class="highlight"><pre><span></span><code><span class="ss">(</span><span class="nv">gdb</span><span class="ss">)</span><span class="w"> </span><span class="k">next</span><span class="w"> </span>
+<span class="mi">14</span><span class="w">      </span><span class="nv">printf</span><span class="ss">(</span><span class="s2">&quot;%d\n&quot;</span>,<span class="w"> </span><span class="nv">f</span><span class="ss">)</span><span class="c1">;</span>
+<span class="ss">(</span><span class="nv">gdb</span><span class="ss">)</span>
+</code></pre></div>
+
+<p>Šta se sada desilo? Pa kako se naša linija izvršila, promenljivoj f je dodeljen rezultat funkcije fact. Da bismo odštampali vrednost promenljive f, koristimo komandu print ili skraćeno p:</p>
+<div class="highlight"><pre><span></span><code>(gdb) p f 
+$1 = 0
+(gdb)
+</code></pre></div>
+
+<p>Kao što vidimo, vrednost promenljive f je 0 što se ne poklapa sa očekivanom vrednošću jer znamo da faktorijel od 5 nije nula. Dakle, greška se desila negde u liniji koju smo izvršili, tačnije, greška se dešava u funkciji koju smo napisali. Da bismo "ušli" u našu funkciju, umesto komande next treba koristiti komandu step (skraćeno s) i time izvršavamo ono unutar funkcije. Pošto smo tu liniju već izvršili, moramo pokrenuti naš program ponovo. To radimo tako što izađemo iz GDB-a komandom quit i pokrenemo GDB na isti način kao ranije:</p>
+<div class="highlight"><pre><span></span><code>(gdb) quit
+A debugging session is active.
+
+    Inferior 1 [process 11459] will be killed.
+
+Quit anyway? (y or n) y
+</code></pre></div>
+
+<p>pokretanjem ponovo GDB-a i pokretanjem programa sa komandom start, dolazimo ponovo do sledeće situacije:</p>
+<div class="highlight"><pre><span></span><code><span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">start</span><span class="w"> </span>
+<span class="nt">Temporary</span><span class="w"> </span><span class="nt">breakpoint</span><span class="w"> </span><span class="nt">1</span><span class="w"> </span><span class="nt">at</span><span class="w"> </span><span class="nt">0x40052f</span><span class="o">:</span><span class="w"> </span><span class="nt">file</span><span class="w"> </span><span class="nt">program</span><span class="p">.</span><span class="nc">c</span><span class="o">,</span><span class="w"> </span><span class="nt">line</span><span class="w"> </span><span class="nt">13</span><span class="o">.</span>
+<span class="nt">Starting</span><span class="w"> </span><span class="nt">program</span><span class="o">:</span><span class="w"> </span><span class="o">/</span><span class="nt">me</span><span class="o">/</span><span class="nt">home</span><span class="o">/</span><span class="nt">stefan</span><span class="o">/</span><span class="nt">a</span><span class="p">.</span><span class="nc">out</span>
+
+<span class="nt">Temporary</span><span class="w"> </span><span class="nt">breakpoint</span><span class="w"> </span><span class="nt">1</span><span class="o">,</span><span class="w"> </span><span class="nt">main</span><span class="w"> </span><span class="o">()</span><span class="w"> </span><span class="nt">at</span><span class="w"> </span><span class="nt">program</span><span class="p">.</span><span class="nc">c</span><span class="p">:</span><span class="nd">13</span>
+<span class="nt">13</span><span class="w">      </span><span class="nt">int</span><span class="w"> </span><span class="nt">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">fact</span><span class="o">(</span><span class="nt">5</span><span class="o">);</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">step</span>
+<span class="nt">fact</span><span class="w"> </span><span class="o">(</span><span class="nt">n</span><span class="o">=</span><span class="nt">5</span><span class="o">)</span><span class="w"> </span><span class="nt">at</span><span class="w"> </span><span class="nt">program</span><span class="p">.</span><span class="nc">c</span><span class="p">:</span><span class="nd">6</span>
+<span class="nt">6</span><span class="w">       </span><span class="nt">if</span><span class="w"> </span><span class="o">(</span><span class="nt">n</span><span class="o">==</span><span class="nt">0</span><span class="o">)</span><span class="w"> </span><span class="nt">return</span><span class="w"> </span><span class="nt">0</span><span class="o">;</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span>
+</code></pre></div>
+
+<p>Sada se izvršava linija po liniju u datoj funkciji. Kako je ova funkcija rekurzivna, ovo radimo dok ne uvidimo gde je greška:</p>
+<div class="highlight"><pre><span></span><code><span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">p</span><span class="w"> </span><span class="nt">n</span><span class="w"> </span>
+<span class="o">$</span><span class="nt">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">5</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">n</span>
+<span class="nt">7</span><span class="w">       </span><span class="nt">int</span><span class="w"> </span><span class="nt">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nt">fact</span><span class="o">(</span><span class="nt">n-1</span><span class="o">);</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">s</span>
+<span class="nt">fact</span><span class="w"> </span><span class="o">(</span><span class="nt">n</span><span class="o">=</span><span class="nt">4</span><span class="o">)</span><span class="w"> </span><span class="nt">at</span><span class="w"> </span><span class="nt">program</span><span class="p">.</span><span class="nc">c</span><span class="p">:</span><span class="nd">6</span>
+<span class="nt">6</span><span class="w">       </span><span class="nt">if</span><span class="w"> </span><span class="o">(</span><span class="nt">n</span><span class="o">==</span><span class="nt">0</span><span class="o">)</span><span class="w"> </span><span class="nt">return</span><span class="w"> </span><span class="nt">0</span><span class="o">;</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">n</span>
+<span class="nt">7</span><span class="w">       </span><span class="nt">int</span><span class="w"> </span><span class="nt">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nt">fact</span><span class="o">(</span><span class="nt">n-1</span><span class="o">);</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">s</span>
+<span class="nt">fact</span><span class="w"> </span><span class="o">(</span><span class="nt">n</span><span class="o">=</span><span class="nt">3</span><span class="o">)</span><span class="w"> </span><span class="nt">at</span><span class="w"> </span><span class="nt">program</span><span class="p">.</span><span class="nc">c</span><span class="p">:</span><span class="nd">6</span>
+<span class="nt">6</span><span class="w">       </span><span class="nt">if</span><span class="w"> </span><span class="o">(</span><span class="nt">n</span><span class="o">==</span><span class="nt">0</span><span class="o">)</span><span class="w"> </span><span class="nt">return</span><span class="w"> </span><span class="nt">0</span><span class="o">;</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">n</span>
+<span class="nt">7</span><span class="w">       </span><span class="nt">int</span><span class="w"> </span><span class="nt">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nt">fact</span><span class="o">(</span><span class="nt">n-1</span><span class="o">);</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">s</span>
+<span class="nt">fact</span><span class="w"> </span><span class="o">(</span><span class="nt">n</span><span class="o">=</span><span class="nt">2</span><span class="o">)</span><span class="w"> </span><span class="nt">at</span><span class="w"> </span><span class="nt">program</span><span class="p">.</span><span class="nc">c</span><span class="p">:</span><span class="nd">6</span>
+<span class="nt">6</span><span class="w">       </span><span class="nt">if</span><span class="w"> </span><span class="o">(</span><span class="nt">n</span><span class="o">==</span><span class="nt">0</span><span class="o">)</span><span class="w"> </span><span class="nt">return</span><span class="w"> </span><span class="nt">0</span><span class="o">;</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">p</span><span class="w"> </span><span class="nt">n</span><span class="w"> </span>
+<span class="o">$</span><span class="nt">2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">2</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">n</span>
+<span class="nt">7</span><span class="w">       </span><span class="nt">int</span><span class="w"> </span><span class="nt">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nt">fact</span><span class="o">(</span><span class="nt">n-1</span><span class="o">);</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">s</span>
+<span class="nt">fact</span><span class="w"> </span><span class="o">(</span><span class="nt">n</span><span class="o">=</span><span class="nt">1</span><span class="o">)</span><span class="w"> </span><span class="nt">at</span><span class="w"> </span><span class="nt">program</span><span class="p">.</span><span class="nc">c</span><span class="p">:</span><span class="nd">6</span>
+<span class="nt">6</span><span class="w">       </span><span class="nt">if</span><span class="w"> </span><span class="o">(</span><span class="nt">n</span><span class="o">==</span><span class="nt">0</span><span class="o">)</span><span class="w"> </span><span class="nt">return</span><span class="w"> </span><span class="nt">0</span><span class="o">;</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">p</span><span class="w"> </span><span class="nt">n</span><span class="w"> </span>
+<span class="o">$</span><span class="nt">3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">1</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">n</span>
+<span class="nt">7</span><span class="w">       </span><span class="nt">int</span><span class="w"> </span><span class="nt">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nt">fact</span><span class="o">(</span><span class="nt">n-1</span><span class="o">);</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">s</span>
+<span class="nt">fact</span><span class="w"> </span><span class="o">(</span><span class="nt">n</span><span class="o">=</span><span class="nt">0</span><span class="o">)</span><span class="w"> </span><span class="nt">at</span><span class="w"> </span><span class="nt">program</span><span class="p">.</span><span class="nc">c</span><span class="p">:</span><span class="nd">6</span>
+<span class="nt">6</span><span class="w">       </span><span class="nt">if</span><span class="w"> </span><span class="o">(</span><span class="nt">n</span><span class="o">==</span><span class="nt">0</span><span class="o">)</span><span class="w"> </span><span class="nt">return</span><span class="w"> </span><span class="nt">0</span><span class="o">;</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">p</span><span class="w"> </span><span class="nt">n</span><span class="w"> </span>
+<span class="o">$</span><span class="nt">4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">0</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">n</span>
+<span class="nt">9</span><span class="w">   </span><span class="err">}</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">n</span>
+<span class="nt">8</span><span class="w">       </span><span class="nt">return</span><span class="w"> </span><span class="nt">res</span><span class="o">;</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span><span class="w"> </span><span class="nt">p</span><span class="w"> </span><span class="nt">res</span>
+<span class="o">$</span><span class="nt">5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">0</span>
+<span class="o">(</span><span class="nt">gdb</span><span class="o">)</span>
+</code></pre></div>
+
+<p>Posle debagovanja uočavamo da ako je n jednako nuli, da funkcija vraća nulu pa samim tim množenje sa nulom je uvek nula. </p>
+<p>Razmotrimo sada slučaj kada želimo da program debagujemo samo u jednom njegovom delu, bez izvršavanja liniju po liniju od samog početka. Za ovo nam služi breakpoint. Dakle, kada pokrenemo GDB, umesto start kucamo break n gde je n broj linije gde želimo da se izvršavanje zaustavi. Kada to uradimo pokrenemo izvršavanje sa run. </p>
+<p>Na primer, razmotrimo sledeći program:</p>
+<div class="highlight"><pre><span></span><code><span class="n">#include</span><span class="w"> </span><span class="o">&lt;</span><span class="n">stdio</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;</span>
+
+
+<span class="nc">int</span><span class="w"> </span><span class="n">main</span><span class="p">()</span><span class="w"> </span>
+<span class="err">{</span>
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="n">scanf</span><span class="p">(</span><span class="ss">&quot; %d&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">fib</span><span class="o">[</span><span class="n">100</span><span class="o">]</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="n">fib</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="n">fib</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="err">{</span>
+<span class="w">        </span><span class="n">fib</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fib</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">fib</span><span class="o">[</span><span class="n">i-2</span><span class="o">]</span><span class="p">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="ss">&quot;%d\n&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fib</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>Ovaj program iterativno računa n-ti Fibonačijev broj. Kada otvorimo GDB i kada uradimo break na liniji gde treba ispisati rešenje, i kada tu ispišemo vrednosti fib[5] i fib[4], uočavamo sledeće:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">gdb</span><span class="p">)</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="mi">17</span><span class="w"> </span>
+<span class="n">Breakpoint</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="mh">0x4005dc</span><span class="err">:</span><span class="w"> </span><span class="k">file</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="w"> </span><span class="mf">17.</span>
+<span class="p">(</span><span class="n">gdb</span><span class="p">)</span><span class="w"> </span><span class="n">run</span><span class="w"> </span>
+<span class="n">Starting</span><span class="w"> </span><span class="nl">program</span><span class="p">:</span><span class="w"> </span><span class="o">/</span><span class="n">me</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">stefan</span><span class="o">/</span><span class="n">a</span><span class="p">.</span><span class="k">out</span><span class="w"> </span>
+<span class="mi">5</span>
+
+<span class="n">Breakpoint</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">main</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="n">program</span><span class="p">.</span><span class="nl">c</span><span class="p">:</span><span class="mi">17</span>
+<span class="mi">17</span><span class="w">      </span><span class="n">printf</span><span class="p">(</span><span class="ss">&quot;%d\n&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fib</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">);</span>
+<span class="p">(</span><span class="n">gdb</span><span class="p">)</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">fib</span><span class="o">[</span><span class="n">5</span><span class="o">]</span>
+<span class="err">$</span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32767</span>
+<span class="p">(</span><span class="n">gdb</span><span class="p">)</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">fib</span><span class="o">[</span><span class="n">4</span><span class="o">]</span>
+<span class="err">$</span><span class="mi">2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="p">(</span><span class="n">gdb</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Dakle, fib[4] je u redu dok je fib[5] neka čudna vrednost koja se ne poklapa sa očekivanom, iz ovoga zaključujemo da nam računanje Fibonačijevog broja radi za 0 1 2 3 i 4 ali ne radi za 5. Kada probamo neki drugi ulaz, na primer 7, uočavamo da nam računanje radi za 0 1 2 3 4 5 i 6 ali da ne radi za 7. Greška je u uslovu zaustavljanja for ciklusa pa to ispravimo da je uslov i&lt;=n i time otklanjamo grešku. </p>
+<p>Iz ovog primera vidimo da GDB lepo radi i kada koristimo funkcije poput scanf i printf i da upotrebom scanf funkcije, normalno unosimo željeni ulaz i kad pritisnemo Enter, GDB normalno nastavlja sa radom. </p>
+<p>Ovim je demonstrirano neko osnovno korišćenje GDB-a. Za više informacija, postoji dobra dokumentacija a možete krenuti tako što u konzolu kucate sledeće:</p>
+<div class="highlight"><pre><span></span><code>man gdb
+</code></pre></div>
+
+<p>Za one koji preferiraju više grafičko okruženje, postoji grafički wrapper za GDB koji se zove DDD. Nisam se upuštao u upotrebu dotičnog jer meni lično GDB radi posao ali vidim da ga asistenti na faksu dosta koriste tako da ne verujem da je preterano loš. </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2017-05-12T12:15:00+01:00" pubdate>Fri 12 May 2017</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

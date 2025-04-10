@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>ScaPy - analiza protokola upotrebom Python-a - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="ScaPy - analiza protokola upotrebom Python-a" />
+	<meta name="date" content="2017-05-08 17:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2017-05-08 17:15:00+01:00" />
+	<meta property="og:title" content="ScaPy - analiza protokola upotrebom Python-a" />
+	<meta property="og:url" content="/2017-05-08-scapy.html" />
+	<meta property="og:description" content="ScaPy je biblioteka za Python koja pruža sastavljanje paketa od "parčića". Na primer, možemo IP deo spojiti sa TCP delom i na kraju konkretan sadržaj paketa i to poslati serveru. Pored ovoga, ova biblioteka nam pruža i mogućnost "slušanja" dolazećih poruka i odgovaranje na njih. U nastavku teksta je dato …" />
+	<meta name="description" content="ScaPy je biblioteka za Python koja pruža sastavljanje paketa od "parčića". Na primer, možemo IP deo spojiti sa TCP delom i na kraju konkretan sadržaj paketa i to poslati serveru. Pored ovoga, ova biblioteka nam pruža i mogućnost "slušanja" dolazećih poruka i odgovaranje na njih. U nastavku teksta je dato …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>ScaPy - analiza protokola upotrebom Python-a</h1>
+			<p>ScaPy je biblioteka za Python koja pruža sastavljanje paketa od "parčića". Na primer, možemo IP deo spojiti sa TCP delom i na kraju konkretan sadržaj paketa i to poslati serveru. Pored ovoga, ova biblioteka nam pruža i mogućnost "slušanja"
+dolazećih poruka i odgovaranje na njih.</p>
+<p>U nastavku teksta je dato nekoliko primera upotrebe biblioteke.</p>
+<p>Uključivanje paketa</p>
+<p>pre svega mala napomena, da bismo koristili naredne funkcionalnosti, moramo imati administratorske privilegije. Možda ovo 
+može da se izbegne na neki način ali meni nije uspelo, ako neko uspe, napišite komentar. :) </p>
+<p>Uključivanje biblioteke se radi na sledeći način:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">scapy.all</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="o">*</span>
+</code></pre></div>
+
+<p>Sastavljanje paketa</p>
+<p>Ako želimo da sastavimo neki paket koji u svom IP delu sadrži adresu odredišta, u svom TCP delu sadrži odredišni port 
+sa sadržajem datim kao string, to možemo učiniti na sledeći način:</p>
+<div class="highlight"><pre><span></span><code>pkt = IP(dst=&quot;192.168.4.5&quot;)/TCP(dport=55)/&quot;Poruka&quot;
+</code></pre></div>
+
+<p>Ovaj paket možemo poslati na sledeći način</p>
+<div class="highlight"><pre><span></span><code><span class="k">send</span><span class="ss">(</span><span class="nv">pkt</span><span class="ss">)</span>
+</code></pre></div>
+
+<p>a ako želimo da pošaljemo paket i da odmah dobijemo odgovor, to možemo ovako:</p>
+<div class="highlight"><pre><span></span><code>ans, unans = sr(pkt)
+</code></pre></div>
+
+<p>promenljiva ans sadrži listu odgovora od servera.</p>
+<p>Nadzor protoka</p>
+<p>Ako želimo da vršimo nadzor protoka, možemo koristiti funkciju sniff. Prvo implementiramo callback funkciju koja će se izvršiti svaki put kad željeni paket prođe filter odnosno kad stigne do nas. </p>
+<p>Naredni primer ilustruje nadzor svih ARP paketa:</p>
+<div class="highlight"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">arp_monitor_callback</span><span class="p">(</span><span class="n">pkt</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">ARP</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">pkt</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">pkt</span><span class="o">[</span><span class="n">ARP</span><span class="o">]</span><span class="p">.</span><span class="n">op</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">#who</span><span class="o">-</span><span class="n">has</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">is</span><span class="o">-</span><span class="k">at</span>
+<span class="w">        </span><span class="n">op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;&quot;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">pkt</span><span class="o">[</span><span class="n">ARP</span><span class="o">]</span><span class="p">.</span><span class="n">op</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="err">:</span><span class="w"> </span>
+<span class="w">            </span><span class="n">op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;Who has &quot;</span>
+<span class="w">        </span><span class="k">else</span><span class="err">:</span>
+<span class="w">            </span><span class="n">op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;Is at&quot;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">pkt</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="ss">&quot;%ARP.hwsrc% %ARP.psrc%&quot;</span><span class="p">)</span>
+
+<span class="n">sniff</span><span class="p">(</span><span class="n">prn</span><span class="o">=</span><span class="n">arp_monitor_callback</span><span class="p">,</span><span class="w"> </span><span class="k">filter</span><span class="o">=</span><span class="ss">&quot;arp&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">store</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Drugi primer ilustruje nadzor svega na portu 80</p>
+<div class="highlight"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">tcp_func</span><span class="p">(</span><span class="n">pkt</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">TCP</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">pkt</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">pkt</span><span class="o">[</span><span class="n">TCP</span><span class="o">]</span><span class="p">.</span><span class="n">dport</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">80</span><span class="err">:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">pkt</span><span class="p">)</span>
+
+<span class="n">sniff</span><span class="p">(</span><span class="n">prn</span><span class="o">=</span><span class="n">tcp_func</span><span class="p">,</span><span class="w"> </span><span class="k">filter</span><span class="o">=</span><span class="ss">&quot;tcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">store</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Za više</p>
+<p>ScaPy ima jako dobru dokumentaciju pa tako može se dosta primera videti. Ovde je obrađena najtrivijalnija upotreba. 
+Ipak, ovo je meni bilo dovoljno da radi ARP poisoning recimo. Happy coding.</p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2017-05-08T17:15:00+01:00" pubdate>Mon 08 May 2017</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

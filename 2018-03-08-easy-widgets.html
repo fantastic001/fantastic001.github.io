@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Easy widgets library for Python based on URWID - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Easy widgets library for Python based on URWID" />
+	<meta name="date" content="2018-03-08 15:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-03-08 15:15:00+01:00" />
+	<meta property="og:title" content="Easy widgets library for Python based on URWID" />
+	<meta property="og:url" content="/2018-03-08-easy-widgets.html" />
+	<meta property="og:description" content="Recently I have been developing python library for handling interface in console. The best solution I have found was URWID which is used in WICD interface (WiFi manager in console). I wasn't satisfied enough with library and I started developing from URWID base to make something easier to use and …" />
+	<meta name="description" content="Recently I have been developing python library for handling interface in console. The best solution I have found was URWID which is used in WICD interface (WiFi manager in console). I wasn't satisfied enough with library and I started developing from URWID base to make something easier to use and …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Easy widgets library for Python based on URWID</h1>
+			<p>Recently I have been developing python library for handling interface in console. The best solution I have found 
+was URWID which is used in WICD interface (WiFi manager in console). I wasn't satisfied enough with library 
+and I started developing from URWID base to make something easier to use and in this article I will 
+explain basic usage of that library. </p>
+<h1>Installation</h1>
+<p>You can install library via pip, just run:</p>
+<div class="highlight"><pre><span></span><code>pip install easy_widgets
+</code></pre></div>
+
+<p>or you can download it from <a href="https://github.com/fantastic001/easy_widgets.git">GitHub</a>. </p>
+<h1>Basic usage</h1>
+<p>First of all, you have to import and initialize library: </p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">easy_widgets</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="o">*</span>
+<span class="n">Application</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="c1"># whole code goes here</span>
+
+<span class="n">Application</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre></div>
+
+<p>and then you can insert whole code between initialization and 
+run lines. </p>
+<h1>Adding main menu</h1>
+<p>There's <code>Menu</code> class which can be used for creating menus in applications. This class is subclass of <code>Widget</code> which means it has 
+<code>show()</code> method. Convention is that all classes which end with <code>Box</code> are dialogs and they are shown with <code>exec()</code> method while 
+other widgets are shown with <code>show()</code> method. As you can guess, Box objects are shown like dialogs, keeping parent widgets behind them. In conclusion widgets are shown on whole screen while dialogs are shown only on part of screen keeping parent visible as well. </p>
+<p><code>Menu</code> is of type widget and can be shown with <code>show()</code> method. This class also has method <code>addOption</code> which receives function accepting one argument (urwid button instance) and title of item in menu. </p>
+<p>The following example illustrates how to use Menu class. </p>
+<div class="highlight"><pre><span></span><code>m = Menu(&quot;The main menu&quot;)
+m.addOption(&quot;Do something&quot;, lambda btn: do_something())
+m.addOption(&quot;Exit&quot;, lambda btn: Application.exit())
+
+m.show()
+</code></pre></div>
+
+<h1>Message box</h1>
+<p>Message box is dialog which is suited for showing messages, you can show it like this:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">MessageBox</span><span class="ss">(</span><span class="s2">&quot;Title&quot;</span>,<span class="w"> </span><span class="s2">&quot;description&quot;</span><span class="ss">)</span>
+<span class="nv">msg</span>.<span class="k">exec</span><span class="ss">()</span>
+</code></pre></div>
+
+<p>or you can add it to main menu:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">m</span>.<span class="nv">addOption</span><span class="ss">(</span><span class="s2">&quot;Show message box&quot;</span>,<span class="w"> </span><span class="nv">lambda</span><span class="w"> </span><span class="nv">b</span>:<span class="w"> </span><span class="k">MessageBox</span><span class="ss">(</span><span class="s2">&quot;Msg&quot;</span>,<span class="w"> </span><span class="s2">&quot;This is message box&quot;</span><span class="ss">)</span>.<span class="k">exec</span><span class="ss">())</span>
+</code></pre></div>
+
+<h1>Input of text</h1>
+<p>Text input object is widget object which is aimed to be used 
+for text input, it accepts function which is called with entered 
+text as its argument, for example:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">TextInput</span><span class="ss">(</span><span class="s2">&quot;What is your name&quot;</span>,<span class="w"> </span><span class="nv">lambda</span><span class="w"> </span><span class="nv">ans</span>:<span class="w"> </span><span class="k">MessageBox</span><span class="ss">(</span><span class="s2">&quot;Hello&quot;</span>,<span class="w"> </span><span class="s2">&quot;Hello %s&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nv">ans</span><span class="ss">)</span>.<span class="k">exec</span><span class="ss">())</span>.<span class="k">show</span><span class="ss">()</span>
+</code></pre></div>
+
+<h1>Wizzards</h1>
+<p>Wizzard is special object for making wizzards such that you can easily make some kind of setup script, for example wizzard which will print person's name specified number of times:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">easy_widgets</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="o">*</span>
+
+<span class="n">Application</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="n">menu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Menu</span><span class="p">(</span><span class="s2">&quot;Just exit now&quot;</span><span class="p">)</span>
+<span class="n">menu</span><span class="o">.</span><span class="n">addOption</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">lambda</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="n">p</span><span class="p">:</span><span class="w"> </span><span class="n">Application</span><span class="o">.</span><span class="n">exit</span><span class="p">())</span>
+
+
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="n">times</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">setName</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="k">global</span><span class="w"> </span><span class="n">name</span><span class="w"> </span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setTimes</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="k">global</span><span class="w"> </span><span class="n">times</span><span class="w"> </span>
+<span class="w">    </span><span class="n">times</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span>
+
+<span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Wizzard</span><span class="p">(</span><span class="n">menu</span><span class="p">)</span><span class="w">\</span>
+<span class="w">    </span><span class="o">.</span><span class="n">withChoices</span><span class="p">(</span><span class="s2">&quot;Select number&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;times&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;one&quot;</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;two&quot;</span><span class="p">)])</span><span class="w">\</span>
+<span class="w">    </span><span class="o">.</span><span class="n">withInput</span><span class="p">(</span><span class="s2">&quot;Enter your name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="p">)</span><span class="w">\</span>
+<span class="w">    </span><span class="o">.</span><span class="n">withParam</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">setName</span><span class="p">)</span><span class="w">\</span>
+<span class="w">    </span><span class="o">.</span><span class="n">withParam</span><span class="p">(</span><span class="s2">&quot;times&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">setTimes</span><span class="p">)</span>
+
+
+<span class="n">w</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">Application</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">times</span><span class="p">)</span>
+</code></pre></div>
+
+<h1>Conclusion</h1>
+<p>This is small library which lets you make awesome stuff quickly and easily. There are many other features, please see <code>test.py</code> and <code>test_wizzard.py</code> for more examples. This library is also used in Mako's curses client. </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-03-08T15:15:00+01:00" pubdate>Thu 08 March 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

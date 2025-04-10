@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Jekyll Web - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Jekyll Web" />
+	<meta name="date" content="2019-10-29 12:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2019-10-29 12:15:00+01:00" />
+	<meta property="og:title" content="Jekyll Web" />
+	<meta property="og:url" content="/2019-10-29-jekyll-web.html" />
+	<meta property="og:description" content="Jekyll web is web application made in Django to manage static Jekyll sites from web admin interface. The main purpose of this web application is to enable people not familiar with Jekyll and command line tools to manage Jekyll sites. Right now, this includes only post management but in the …" />
+	<meta name="description" content="Jekyll web is web application made in Django to manage static Jekyll sites from web admin interface. The main purpose of this web application is to enable people not familiar with Jekyll and command line tools to manage Jekyll sites. Right now, this includes only post management but in the …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Jekyll Web</h1>
+			<p>Jekyll web is web application made in Django to manage static Jekyll sites from web admin interface.</p>
+<p>The main purpose of this web application is to enable people not familiar with Jekyll and command line tools to manage Jekyll sites. Right now, this includes only post management
+but in  the future it is planned to have automatic build for building and deploying site as well as management of other things like style, page layout and pages. </p>
+<p>Installation and setup</p>
+<p>Installation is simple, you can download source and host it with any web server you want: https://github.com/fantastic001/jekyll-web</p>
+<p>When you download sources, you can use it just like any other Django application. The only two things you will have to do:</p>
+<ol>
+<li>Set up users in sqlite.db database</li>
+<li>Specify path to directory where Jekyll static site is located. </li>
+</ol>
+<h1>Set up users</h1>
+<p>you can do this by using manage.py provided by Django. Go to source and execute:</p>
+<div class="highlight"><pre><span></span><code>python manage.py migrate
+python manage.py createsuperuser
+</code></pre></div>
+
+<p>and you will be prompted with options to create administrator. From there, you will be able to access admin panel to add new users. If you are the only one managing web site, you are okay with just admin user. </p>
+<h1>Set up Jekyll static site path</h1>
+<p>In <code>jekyll_web/jekyll_web/settings.py</code> you will be able to set up path to directory where contents of jekyll static page sources are located. The variable name you will have to set up is: <code>JEKYLL_PATH</code>.</p>
+<p>Example of settings is:</p>
+<div class="highlight"><pre><span></span><code>JEKYLL_PATH = &quot;/home/me/myjekyllsite/&quot;
+</code></pre></div>
+
+<p>Running and usage</p>
+<p>Too test if everything works, run:</p>
+<div class="highlight"><pre><span></span><code>python manage.py runserver
+</code></pre></div>
+
+<p>and go too URL which you will get in console. You will be redirected to browser and will see welcome message. You can log in by clicking "Log In" in upper-left corner and entering your user credentials which you set up previously. Then, you will be able to access article list and create new article features on upper-left corner.</p>
+<p>Conclusion</p>
+<p>Right now, it is still poor with features but in the future it is planned to have more supported features. Even though, you will be able to add posts, edit and remove them. Please submit any bugs in Issues tab on GitHub page of project linked above. </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2019-10-29T12:15:00+01:00" pubdate>Tue 29 October 2019</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

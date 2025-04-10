@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Neke strukture podataka - hip - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Neke strukture podataka - hip" />
+	<meta name="date" content="2017-05-10 22:00:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2017-05-10 22:00:00+01:00" />
+	<meta property="og:title" content="Neke strukture podataka - hip" />
+	<meta property="og:url" content="/2017-05-10-data-structures-heap.html" />
+	<meta property="og:description" content="Hip je struktura podataka koja nam omogućava da brzo i lako dođemo do maksimalnog elementa. Često se predstavlja kao stablo zbog lakšeg objašnjavanja ali se tokom implementacije koristi niz. Hip se predstavlja kao stablo na sledeći način: za svaki čvor, njegova deca su uvek manja od tog čvora. Ovakva reprezentacija …" />
+	<meta name="description" content="Hip je struktura podataka koja nam omogućava da brzo i lako dođemo do maksimalnog elementa. Često se predstavlja kao stablo zbog lakšeg objašnjavanja ali se tokom implementacije koristi niz. Hip se predstavlja kao stablo na sledeći način: za svaki čvor, njegova deca su uvek manja od tog čvora. Ovakva reprezentacija …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Neke strukture podataka - hip</h1>
+			<p>Hip je struktura podataka koja nam omogućava da brzo i lako dođemo do maksimalnog elementa. Često se predstavlja kao stablo 
+zbog lakšeg objašnjavanja ali se tokom implementacije koristi niz. Hip se predstavlja kao stablo na sledeći način: za svaki čvor, njegova deca su uvek manja od tog čvora. Ovakva reprezentacija podataka nam omogućava da nam na vrhu stabla (korenu stabla) uvek bude najveći element. Slično, možemo i obrnuti situaciju, da za svaki čvor su njegova deca manja od tog čvora. U ovom slučaju dobijamo strukturu
+gde nam je na vrhu uvek najmanji element. U implementaciji, za izvedbu hipa koristimo niz tako da nam element a(i) bude čvor a elementi 
+a(2i+1) i a(2i + 2) su njegova deca. Isto tako, ako imamo čvor a(i) onda njegovom roditelju pristupamo kao elementu a((i-1)/2).</p>
+<p>Hip nam omogućava dodavanje elemenata u O(n log n) vremenu kao i brisanje u O(n log n) vremenu. Ipak, ako želimo najveći (najmanji) element onda to možemo dobiti u O(1) vremenu, mnogo brže nego u listi gde moramo proći kroz celu listu da bismo našli najveći element. 
+U hipu da bismo našli najveći element, dovoljno je da pristupimo njegovom čvoru, tačnije elementu a(0) jer znamo da su svi ostali sigurno manji od njega. </p>
+<p>Kako koristimo niz da u njemu čuvamo naše podatke, ovo znači da od bilo kog niza možemo napraviti hip. Kako se ovo izvodi? Pretpostavimo da želimo da napravimo hip u nizu od indeksa i pa do kraja. Ovo radimo na sledeći način:</p>
+<ol>
+<li>Vidimo koji je najveći element od elemenata a(i), a(2i) i a(2i+1), uzmemo njegov indeks i nazovemo ga j </li>
+<li>zamenimo elemente na indeksima i i j </li>
+<li>pozovemo funkciju za izradu hipa rekurzivno za dati niz sa početnim indeksom j</li>
+</ol>
+<p>Da od celog niza napravimo hip, potrebno je da krenemo od n/2-tog elementa i sve do početka niza pozivamo funkciju za izradu hipa.</p>
+<p>U pseudokodu bi to izgledalo ovako:</p>
+<div class="highlight"><pre><span></span><code><span class="k">func</span><span class="w"> </span><span class="n">max_heapify</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">):</span>
+<span class="w">    </span><span class="n">l</span><span class="p">,</span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+<span class="w">    </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">l</span><span class="p">),</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+<span class="w">    </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">:</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">:</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">:</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span>
+<span class="w">    </span><span class="n">swap</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+<span class="w">    </span><span class="n">max_heapify</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">)</span>
+
+<span class="k">func</span><span class="w"> </span><span class="n">build_heap</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+<span class="w">    </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="o">.</span><span class="n">size</span><span class="w"> </span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="w"> </span><span class="n">downto</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span>
+<span class="w">        </span><span class="n">max_heapify</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Funkcija za određivanje maksimalnog elementa bi onda u tom slučaju bila ovako:</p>
+<div class="highlight"><pre><span></span><code><span class="k">func</span><span class="w"> </span><span class="n">maximum</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Pored toga, imamo u funkciju za brisanje maksimalnog elementa:</p>
+<div class="highlight"><pre><span></span><code><span class="k">func</span><span class="w"> </span><span class="n">max_extract</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+<span class="w">    </span><span class="nb">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="o">.</span><span class="n">size</span><span class="w"> </span>
+<span class="w">    </span><span class="n">swap</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="n">A</span><span class="o">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="o">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">max_heapify</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">max</span>
+</code></pre></div>
+
+<p>za ubacivanje elementa u hip:</p>
+<div class="highlight"><pre><span></span><code><span class="k">func</span><span class="w"> </span><span class="n">insert</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="n">A</span><span class="o">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="o">.</span><span class="n">size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">A</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">size</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span>
+<span class="w">    </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="o">.</span><span class="n">size</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="n">i</span><span class="o">&gt;</span><span class="mi">1</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">        </span><span class="n">swap</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="o">/</span><span class="mi">2</span>
+</code></pre></div>
+
+<p>Dakle ova funkcija ubaci element na dno hipa i podiže ga gore sve dok mu je trenutni roditelj manji od datog elementa.</p>
+<p>Sada e može lako implementirati i jedan algoritam za sortiranje koji je baziran na upotrebi hipa (heapsort). On se svodi na sledeće:</p>
+<ol>
+<li>Želimo da sortiramo niz A</li>
+<li>Napravimo niz B koji će nam biti rezultat sortiranja</li>
+<li>Napravimo hip od niza A(1...n) </li>
+<li>radimo extract sve dok ne ispraznimo hip A, maksimalne elemente ubacujemo u niz B </li>
+</ol>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2017-05-10T22:00:00+01:00" pubdate>Wed 10 May 2017</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

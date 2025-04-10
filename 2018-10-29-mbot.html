@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Creating Facebook Messenger bots made simple - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Creating Facebook Messenger bots made simple" />
+	<meta name="date" content="2018-10-29 10:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-10-29 10:15:00+01:00" />
+	<meta property="og:title" content="Creating Facebook Messenger bots made simple" />
+	<meta property="og:url" content="/2018-10-29-mbot.html" />
+	<meta property="og:description" content="Every day there are more and more chat bots which are useful for various businesses and even individuals. Imagine that you have created simple app with few options and you do not want (or you are too lazy) to make frontend (or even REST API) for it. You have limited …" />
+	<meta name="description" content="Every day there are more and more chat bots which are useful for various businesses and even individuals. Imagine that you have created simple app with few options and you do not want (or you are too lazy) to make frontend (or even REST API) for it. You have limited …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Creating Facebook Messenger bots made simple</h1>
+			<p>Every day there are more and more chat bots which are useful for various businesses and even individuals. Imagine that you have created simple app with few options and you do not want (or you are too lazy) to make frontend (or even REST API) for it. You have limited number of users which are willing to use your app and are happy with simple things that do not require install or registration. Chat bots come handy in this situation. In this article, I will explain how to set up your own chat bot on Facebook Messenger with library I have developed. Currently library only supports text messages which is enough in most applications but in the future I plan to introduce more functionality. </p>
+<h1>Installation</h1>
+<p>Library is Python library which you can download <a href="https://github.com/fantastic001/mbot">here</a>.</p>
+<p>To install it simply run:</p>
+<div class="highlight"><pre><span></span><code>python setup.py install
+</code></pre></div>
+
+<p>Make sure your user have proper privileges or to run it inside virtualenv. </p>
+<p>Now we can make simple "hello world" bot. Just create your Python script with the following code:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">src</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyBot</span><span class="p">(</span><span class="n">WebHookServer</span><span class="p">):</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">handle_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">sender_id</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">timestamp</span><span class="p">):</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="p">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;hello!&quot;</span>
+<span class="n">TOKEN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="n">VERIFY_TOKEN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="n">MyBot</span><span class="p">(</span><span class="n">TOKEN</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="o">=</span><span class="mi">563</span><span class="p">,</span><span class="w"> </span><span class="n">verify_token</span><span class="o">=</span><span class="n">VERIFY_TOKEN</span><span class="p">)</span><span class="o">.</span><span class="n">serve</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Let's analyse what have we done here. First of all, we subclass WebHookServer and implement function <code>on_message</code>. This is function which is called when our bot receives message and provides access to ID of sender, text of message and timestamp of message. Function should return response to message. If it returns None or "" then bot won't respond to given message. If function returns some string, that string will be response from our bot. As simple as that!</p>
+<p>Then we have defined two variables, token and verify token. They will be set properly when we register our bot on Messenger developer panel. In the end, we run our bot as web server. When we register our bot to Messenger, every message will be passed to this server and server will respond in a form of HTTP request to Messenger. </p>
+<h1>Registration to Messenger</h1>
+<p>Now we have to register our bot to Messenger. First of all, we need to set up web server properly to use SSL and to correctly route to our bot instance. I will give example of nginx configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="w">        </span><span class="nt">location</span><span class="w"> </span><span class="o">/</span><span class="nt">webhook</span><span class="o">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">Host</span><span class="w"> </span><span class="err">$host</span><span class="p">;</span>
+<span class="w">            </span><span class="err">proxy_pass</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0.0.1</span><span class="o">:</span><span class="mi">563</span><span class="o">/</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+</code></pre></div>
+
+<p>As you can see, we just need to redirect requests from <code>/webhook</code> location on our web server to internal bot running on specified port. We also need to set up HTTPS, please see 
+<a href="https://www.nginx.com/blog/using-free-ssltls-certificates-from-lets-encrypt-with-nginx/">here</a>. </p>
+<p>Now we have to register our bot, so go to <a href="https://developers.facebook.com/docs/messenger-platform/">Developer console</a> and go to "My apps" and and click on "New app". If you are not registered to developer console, you will need to do it first. When creating app, you will enter URL to your webhook and your verification token. Also you will see your token and you need to update these two variables in code and re-run app. After that, you will be prompted from developer console to verify your application. You just click to verify and library will handle verification for you. After that, you will be able to chat with your bot. :)</p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-10-29T10:15:00+01:00" pubdate>Mon 29 October 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

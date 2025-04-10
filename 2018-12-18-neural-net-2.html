@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Neural networks are not too hard to understand theoretically - part 2 - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Neural networks are not too hard to understand theoretically - part 2" />
+	<meta name="date" content="2018-12-18 20:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-12-18 20:15:00+01:00" />
+	<meta property="og:title" content="Neural networks are not too hard to understand theoretically - part 2" />
+	<meta property="og:url" content="/2018-12-18-neural-net-2.html" />
+	<meta property="og:description" content="In previous article, I have described background between neural network training. Here I will just further investigate special types of neural networks. Neural networks with one hidden layer Here we have neural network with one hidden layer where we have P nodes: $$ y_p = \sigma (\sum_{i=1}^N w^{(1 …" />
+	<meta name="description" content="In previous article, I have described background between neural network training. Here I will just further investigate special types of neural networks. Neural networks with one hidden layer Here we have neural network with one hidden layer where we have P nodes: $$ y_p = \sigma (\sum_{i=1}^N w^{(1 …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Neural networks are not too hard to understand theoretically - part 2</h1>
+			<p>In previous article, I have described background between neural network training. Here I will just further investigate 
+special types of neural networks. </p>
+<h1>Neural networks with one hidden layer</h1>
+<p>Here we have neural network with one hidden layer where we have P nodes: </p>
+<p>$$ y_p = \sigma (\sum_{i=1}^N w^{(1)}_{i,p} x_i) $$ </p>
+<p>where sigma is activation function </p>
+<p>now our output node is: </p>
+<p>$$ f_m(x) = Z(\sum_{i=1}^P w^{(2)}_{i,m} y_i) $$ </p>
+<p>where Z is called output function.</p>
+<p>Now, we can apply our gradient method to update weights: </p>
+<p>$$ \Delta w = - \alpha (\sum_{n=0}^K \sum_{m=1}^M (f_m(x_n, w) - y_{m,n}) \nabla f_m) $$ </p>
+<p>where gradients we can calculate as follows: </p>
+<p>$$ \frac{\partial f_m}{\partial w^{(1)}<em k="1">{i,j}} = Z'(\sum</em> x_l) x_i) $$ }^P w_{k,m}^{(2)} y_k) (\sum_{k=1}^P w_{k,m}^{(2)} \sigma'(\sum_{l=1}^N w^{(1)}_{l,k</p>
+<p>$$ \frac{\partial f_m}{\partial w^{(2)}<em k="1">{i,m}} = Z'(\sum</em>}^P w^{(2)<em l="1">{k,m} y_k) \sigma(\sum</em> x_l) $$ }^N w_{l,i}^{(1)</p>
+<p>And that's it! </p>
+<p>Now we have full method for determining gradient of all f's, then for determining gradient of error and finally for updating weights accordingly.</p>
+<p>Z and sigma are functions which derivatives we have to calculate. </p>
+<h1>Special case - Z and sigma are identity functions</h1>
+<p>In this case: $$ z(t) = t $$ and $$ \sigma(t) = t $$ </p>
+<p>so our derivatives are like this then: </p>
+<p>$$ \frac{\partial f_m}{\partial w^{(1)}<em k="1">{i,j}} = \sum</em> x_i $$ }^P w_{k,m}^{(2)</p>
+<p>$$ \frac{\partial f_m}{\partial w^{(2)}<em l="1">{i,m}} = \sum</em> x_l $$ }^N w_{l,i}^{(1)</p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-12-18T20:15:00+01:00" pubdate>Tue 18 December 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

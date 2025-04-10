@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>ArgumentStack - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="ArgumentStack" />
+	<meta name="date" content="2018-02-07 15:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-02-07 15:15:00+01:00" />
+	<meta property="og:title" content="ArgumentStack" />
+	<meta property="og:url" content="/2018-02-07-argumentstack.html" />
+	<meta property="og:description" content="ArgumentStack is a small python library which helps you to make argument parsing easy. It is based on nice argument structure where your arguments are structured like a tree. Nice example of this is nmcli command for network manager, for instance you can do: nmcli dev and it will list …" />
+	<meta name="description" content="ArgumentStack is a small python library which helps you to make argument parsing easy. It is based on nice argument structure where your arguments are structured like a tree. Nice example of this is nmcli command for network manager, for instance you can do: nmcli dev and it will list …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>ArgumentStack</h1>
+			<p>ArgumentStack is a small python library which helps you to make argument parsing easy. It is based on nice argument 
+structure where your arguments are structured like a tree. Nice example of this is nmcli command for network manager, for instance you can do:</p>
+<div class="highlight"><pre><span></span><code>nmcli dev
+</code></pre></div>
+
+<p>and it will list all devices, but if you do:</p>
+<div class="highlight"><pre><span></span><code>nmcli dev wifi
+</code></pre></div>
+
+<p>it will list only wifi devices which are scanned. However if you do:</p>
+<div class="highlight"><pre><span></span><code>nmcli general
+</code></pre></div>
+
+<p>it will show general status info. Similar example is Mako, if you do:</p>
+<div class="highlight"><pre><span></span><code>mako projects
+</code></pre></div>
+
+<p>it will show list of projects currently in database, but if you do:</p>
+<div class="highlight"><pre><span></span><code>mako project X subprojects
+</code></pre></div>
+
+<p>it will show X's subprojects. ArgumentStack functionality is based on adding arguments to stack and then assigning action for 
+current stack state. It supports push and pop functions for stack. For example, in nmcli part we would implement above functionality 
+like:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">ArgumentStack</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="c1"># define needed functions as actions</span>
+
+<span class="n">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ArgumentStack</span><span class="p">(</span><span class="s2">&quot;Wrong command&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1"># to constructor it is passed error message for non-existing commands</span>
+
+<span class="n">stack</span><span class="o">.</span><span class="n">pushCommand</span><span class="p">(</span><span class="s2">&quot;dev&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">assignAction</span><span class="p">(</span><span class="n">dev_status</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;device status&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1"># nmcli dev</span>
+
+<span class="n">stack</span><span class="o">.</span><span class="n">pushCommand</span><span class="p">(</span><span class="s2">&quot;wifi&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">assignAction</span><span class="p">(</span><span class="n">wifi_scanned</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;WIFI device list&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1"># nmcli dev wifi </span>
+<span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span><span class="w"> </span><span class="c1"># now state is: nmcli dev</span>
+
+<span class="n">stack</span><span class="o">.</span><span class="n">pushCommand</span><span class="p">(</span><span class="s2">&quot;ethernet&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1"># nmcli dev ethernet</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">assignAction</span><span class="p">(</span><span class="n">ethernet_status</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Ethernet status&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">popAll</span><span class="p">()</span><span class="w"> </span><span class="c1"># now state is: nmcli</span>
+
+<span class="n">stack</span><span class="o">.</span><span class="n">pushCommand</span><span class="p">(</span><span class="s2">&quot;general&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">assignAction</span><span class="p">(</span><span class="n">general_info</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;General status info&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1"># nmcli general</span>
+
+<span class="n">stack</span><span class="o">.</span><span class="n">pushVariable</span><span class="p">(</span><span class="s2">&quot;interface&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">assignAction</span><span class="p">(</span><span class="n">info_for_interface</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;info for interface&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1"># nmcli general &lt;interface&gt;</span>
+<span class="c1"># interface is passed as keyword argument to function info_for_interface</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="w"> </span><span class="c1"># argument parsing and calling apropirate functions</span>
+</code></pre></div>
+
+<p>Important note here is that our functions have to take keyword arguments such that variables can be passed (as our interface variable for general action, last state).</p>
+<p>You can make action for getting help, for instance, above stack.execute(...) call just add:</p>
+<div class="highlight"><pre><span></span><code><span class="n">stack</span><span class="p">.</span><span class="n">popAll</span><span class="p">()</span>
+<span class="n">stack</span><span class="p">.</span><span class="n">pushCommand</span><span class="p">(</span><span class="s">&quot;help&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="p">.</span><span class="n">assignAction</span><span class="p">(</span><span class="nl">lambda:</span><span class="w"> </span><span class="n">print</span><span class="p">(</span><span class="n">stack</span><span class="p">.</span><span class="n">getHelp</span><span class="p">()),</span><span class="w"> </span><span class="s">&quot;Get help&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h1>Example using lambda expressions</h1>
+<p>You can use lambda expressions if your functions are one line of code:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="ch">#!/usr/bin/python </span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="o">*</span>
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ArgumentStack</span><span class="p">(</span><span class="s2">&quot;Wrong command&quot;</span><span class="p">)</span>
+
+<span class="n">stack</span><span class="o">.</span><span class="n">pushCommand</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">pushCommand</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">assignAction</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="w"> </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hello world!&quot;</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;say hello to world&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">pushCommand</span><span class="p">(</span><span class="s2">&quot;to&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">pushVariable</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">assignAction</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello, </span><span class="si">%s</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">name</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;say hello to somebody&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">popAll</span><span class="p">()</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">pushCommand</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">assignAction</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span><span class="w"> </span><span class="nb">print</span><span class="p">(</span><span class="n">stack</span><span class="o">.</span><span class="n">getHelp</span><span class="p">()),</span><span class="w"> </span><span class="s2">&quot;Get help&quot;</span><span class="p">)</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+
+<h1>Installation</h1>
+<p>ArgumentStack can be easily installed via pip:</p>
+<div class="highlight"><pre><span></span><code>pip install ArgumentStack
+</code></pre></div>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-02-07T15:15:00+01:00" pubdate>Wed 07 February 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

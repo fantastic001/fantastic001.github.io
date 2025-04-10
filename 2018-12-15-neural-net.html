@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Neural networks are not too hard to understand theoretically - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Neural networks are not too hard to understand theoretically" />
+	<meta name="date" content="2018-12-15 10:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-12-15 10:15:00+01:00" />
+	<meta property="og:title" content="Neural networks are not too hard to understand theoretically" />
+	<meta property="og:url" content="/2018-12-15-neural-net.html" />
+	<meta property="og:description" content="Most "experts" today use neural networks like it is black box and think they are going to solve every problem they have. Deep learning and other concepts are considered as hard and advanced. Reason for this "advanced concept" thinking is because most programmers do not really understand neural networks as …" />
+	<meta name="description" content="Most "experts" today use neural networks like it is black box and think they are going to solve every problem they have. Deep learning and other concepts are considered as hard and advanced. Reason for this "advanced concept" thinking is because most programmers do not really understand neural networks as …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Neural networks are not too hard to understand theoretically</h1>
+			<p>Most "experts" today use neural networks like it is black box and think they are going to solve every problem they have. Deep learning and other concepts are considered as hard and advanced. Reason for this "advanced concept" thinking is because most programmers do not really understand neural networks as mathematical model. Neural network is just function which we fit to better represent our data. Neural network training is not different from, for instance, fitting linear function and in this article I am going to show why. </p>
+<p>So let's start from basics here: </p>
+<h1>Finding minimum of function</h1>
+<p>Let's say we have function f(x) which we need to minimize such that to find x0 that satisfies condition f(x0) &lt; f(x) for any other x near x0. We can do that by using analytical 
+methods of derivatives etc. This works for functions for which we can easily calculate roots of derivatives. If we do not know how to calculate derivatives, we need to move on 
+to numerical iterative methods. Iterative method starts with initial guess and updates that guess based on formula: $$ x_{t+1} = x_t + \Delta x (x_{t}) $$ where $$ \Delta x $$ is 
+some function depending on method. </p>
+<p>Newton's method: $$ \Delta x = - \frac{f'(x_t)}{f''(x_{t})} $$ </p>
+<p>Gradient method: $$ \Delta x = - \alpha f'(x_{t}) $$ </p>
+<p>We can extend this to more variables, then x is vector and f is multivariate scalar function. Now our iterative algorithms look like this:</p>
+<p>Newton's method: $$ \Delta x = -H^{-1}f(x_{t}) \nabla f (x_{t}) $$</p>
+<p>Gradient algorithm: $$ \Delta x = - \alpha \nabla f(x_{t}) $$ </p>
+<p>As we can see, gradient algorithm is computationally easier to calculate and is faster than Newton's algorithm. Reason for that is that gradient algorithm does not 
+calculate Hessian matrix which grows quadratically with dimensionality of x. Gradient algorithm, instead, approximates Hessian by scalar alpha. </p>
+<p>In the rest of article, we will use gradient algorithm to implement iteration of updating current variable to new state. </p>
+<h1>Function fitting</h1>
+<p>Now let's assume we have multivariate scalar function with unknown parameters. We want to estimate those parameters such that that function approximates our data. </p>
+<p>In other words, we want to minimize error: $$ E = \frac{1}{2} \sum_{n=0}^K (y_{n} - f(x_{n}, w))^2 $$ where w is vector of parameters and xn is nth training point while yn is 
+expected value of function of nth data point. Now we need to find vector w such that we minimize that error (to make f as close as possible to y's). We can apply our gradient 
+algorithm to update w. We start with some initial guess and update w as follows: </p>
+<p>$$ w_{t+1} = w_{t} - \alpha \nabla E(w_{t}) $$ </p>
+<p>now, we need to calculate gradient of our error function: </p>
+<p>$$ \nabla E = \frac{1}{2} \sum_{n=0}^K 2 (f(x_{n}, w_{t}) - y_{n}) \nabla f(x_{n}, w_{t}) $$ </p>
+<p>and that's it, we also need to calculate gradient of our function f such that our algorithm is complete and we will do that after introducing what our function f is. </p>
+<h1>Our function - neural network</h1>
+<p>Now, let's consider simple neural network with one input layer and one output layer (without hidden layer). Let's say we have N nodes in input layer and M nodes in output layer. now we have M functions to calculate: </p>
+<p>$$ f_{m} = \sum_{i=0}^N w_{i,m} x_{i} $$ </p>
+<p>oh wait....is this linear regression? Yeah....</p>
+<p>but wait again... we said earlier that our f is scalar function but here we say that neural network has M output nodes, WTF??? Well, we can still update our weights, just with slightly modified gradient of error: </p>
+<p>$$ \nabla E = \sum_{n=0}^K (f(x_{n}, w_{t}) - y_{n})\nabla f = \sum_{n=0}^K \sum_{j=0}^M (f_{j}(x_{n}, w_{t}) - y_{n,j}) \nabla f_{j} $$ </p>
+<p>Now we are back in the game, we just treat this product as scalar product and we are fine. It can be proven mathematically that this is correct assumption but here there is no need for it. </p>
+<p>Now, as we have calculated this error gradient, we just need to calculate gradient for every possible function. Well, this is easy: </p>
+<p>$$ \frac{\partial f_{j}}{\partial w_{i,j}} = x_{i} $$ </p>
+<h1>"Advanced stuff"</h1>
+<p>All other, advanced neural networks are still some kind of function f, in next article I am planning to explain this topic further by investigating more complex neural networks. </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-12-15T10:15:00+01:00" pubdate>Sat 15 December 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Python data structures - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Python data structures" />
+	<meta name="date" content="2018-12-05 10:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2018-12-05 10:15:00+01:00" />
+	<meta property="og:title" content="Python data structures" />
+	<meta property="og:url" content="/2018-12-05-python-data-structures.html" />
+	<meta property="og:description" content="Python is very simple and high level language that everyone can learn to prototype their ideas. But this does not come without a price. Because of its high level library, it is much harder to know what is implemented inside it. I know that you can now say "well you …" />
+	<meta name="description" content="Python is very simple and high level language that everyone can learn to prototype their ideas. But this does not come without a price. Because of its high level library, it is much harder to know what is implemented inside it. I know that you can now say "well you …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Python data structures</h1>
+			<p>Python is very simple and high level language that everyone can learn to prototype their ideas. But this does not come without a price. Because of its high level 
+library, it is much harder to know what is implemented inside it. I know that you can now say "well you don't need to know, that's beauty of encapsulation etc..." but when it comes to performance, you should really be careful of what data structures you use. Here in this article I am going to explore few builtin data structures in Python and explain how to implement missing ones. </p>
+<h1>Lists ... or are they?</h1>
+<p>You probably know about lists in Python, if you don't, here is example:</p>
+<div class="highlight"><pre><span></span><code>l = [1,2,3]
+</code></pre></div>
+
+<p>Pretty simple, right? You can access elements by indexing:</p>
+<div class="highlight"><pre><span></span><code>l[2] # will be 3 
+l[0] # will be 1
+</code></pre></div>
+
+<p>you can even add elements to it:</p>
+<div class="highlight"><pre><span></span><code>l.append(5)
+</code></pre></div>
+
+<p>Now the problem with these lists is that they are not actually lists! I bet computer science professors are angry at Python developers for assigning wrong names to things. Lists in Python
+are actually dynamic arrays. They are dynamic arrays of pointers to objects. In C++, one can implement this behaviour using <code>std::vector</code> for instance like this:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">std</span><span class="p">::</span><span class="nd">vector</span><span class="o">&lt;</span><span class="nt">PythonObject</span><span class="o">&gt;</span><span class="w"> </span><span class="nt">l</span><span class="o">;</span>
+<span class="nt">l</span><span class="p">.</span><span class="nc">push_back</span><span class="o">(</span><span class="nt">PythonObject</span><span class="p">::</span><span class="nd">Integer</span><span class="o">(</span><span class="nt">1</span><span class="o">));</span>
+<span class="nt">l</span><span class="p">.</span><span class="nc">push_back</span><span class="o">(</span><span class="nt">PythonObject</span><span class="p">::</span><span class="nd">Integer</span><span class="o">(</span><span class="nt">2</span><span class="o">));</span>
+<span class="nt">l</span><span class="p">.</span><span class="nc">push_back</span><span class="o">(</span><span class="nt">PythonObject</span><span class="p">::</span><span class="nd">Integer</span><span class="o">(</span><span class="nt">3</span><span class="o">));</span>
+</code></pre></div>
+
+<p>so lists in Python behave like vector in C++. Accessing elements is fast and adding elements is fast on average. When capacity of array is full, addition will double its capacity and copy contents to new array. </p>
+<h1>But what about real lists?</h1>
+<p>Well, as far as I know, there is no implementation of linked lists in Python. Please correct me if I am wrong down in comment section. Linked lists can be easily implemented and I will explain its implementation now. </p>
+<p>First of all, we will need simple class called <code>list_node</code> to represent node of our list. This object will contain value and pointer to next node.Python provides really nice
+way to implement such simple class and it is called named tuple:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="n">namedtuple</span>
+<span class="n">list_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;list_node&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;next&quot;</span><span class="p">])</span>
+<span class="n">my_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list_node</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nb">next</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This is implementation of simple node of single-linked list. </p>
+<p>This is implementation of whole container:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="n">list_node:</span>
+    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>, <span class="nb">value</span>, <span class="nb">next</span>):
+        <span class="nb">self</span>.<span class="nb">value</span> = <span class="nb">value</span>
+        <span class="nb">self</span>.<span class="nb">next</span> = <span class="nb">next</span>
+
+<span class="k">class</span> <span class="n">linked_list:</span>
+
+    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>, <span class="nb">values</span>=<span class="n">None</span>):
+        <span class="nb">self</span>.<span class="nb">head</span> = <span class="n">None</span>
+        <span class="nb">self</span>.<span class="nb">first</span> = <span class="n">None</span>
+        <span class="k">if</span> <span class="nb">values</span> <span class="k">is</span> <span class="nb">not</span> <span class="n">None:</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="nb">in</span> <span class="n">values:</span>
+                <span class="nb">self</span>.<span class="nb">append</span>(<span class="n">v</span>)
+
+    <span class="n">def</span> <span class="nb">append</span>(<span class="nb">self</span>, <span class="nb">value</span>):
+        <span class="k">if</span> <span class="nb">self</span>.<span class="nb">head</span> <span class="k">is</span> <span class="n">None:</span>
+            <span class="nb">self</span>.<span class="nb">head</span> = <span class="n">list_node</span>(<span class="nb">value</span>=<span class="nb">value</span>, <span class="nb">next</span>=<span class="n">None</span>)
+            <span class="nb">self</span>.<span class="nb">first</span> = <span class="nb">self</span>.<span class="nb">head</span>
+        <span class="n">else:</span>
+            <span class="nb">self</span>.<span class="nb">head</span>.<span class="nb">next</span> = <span class="n">list_node</span>(<span class="nb">value</span>=<span class="nb">value</span>, <span class="nb">next</span>=<span class="n">None</span>)
+            <span class="nb">self</span>.<span class="nb">head</span> = <span class="nb">self</span>.<span class="nb">head</span>.<span class="nb">next</span>
+
+    <span class="n">def</span> <span class="n">__iter__</span>(<span class="nb">self</span>):
+        <span class="n">curr</span> = <span class="nb">self</span>.<span class="nb">first</span>
+        <span class="k">while</span> <span class="n">curr</span> <span class="k">is</span> <span class="nb">not</span> <span class="n">None:</span>
+            <span class="nb">yield</span> <span class="n">curr</span>.<span class="nb">value</span>
+            <span class="n">curr</span> = <span class="n">curr</span>.<span class="nb">next</span>
+</code></pre></div>
+
+<p>and now you can do something like:</p>
+<div class="highlight"><pre><span></span><code>l = linked_list([1,2,3])
+l.append(4)
+for v in l:
+    print(v)
+</code></pre></div>
+
+<p>From here, we can implement double-linked list:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="n">list_node:</span>
+    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>, <span class="nb">value</span>, <span class="nb">next</span>, <span class="n">prev</span>):
+        <span class="nb">self</span>.<span class="nb">value</span> = <span class="nb">value</span>
+        <span class="nb">self</span>.<span class="nb">next</span> = <span class="nb">next</span>
+        <span class="nb">self</span>.<span class="n">prev</span> = <span class="n">prev</span>
+
+<span class="k">class</span> <span class="n">linked_list:</span>
+
+    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>, <span class="nb">values</span>=<span class="n">None</span>):
+        <span class="nb">self</span>.<span class="nb">head</span> = <span class="n">None</span>
+        <span class="nb">self</span>.<span class="nb">first</span> = <span class="n">None</span>
+        <span class="k">if</span> <span class="nb">values</span> <span class="k">is</span> <span class="nb">not</span> <span class="n">None:</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="nb">in</span> <span class="n">values:</span>
+                <span class="nb">self</span>.<span class="nb">append</span>(<span class="n">v</span>)
+
+    <span class="n">def</span> <span class="nb">append</span>(<span class="nb">self</span>, <span class="nb">value</span>):
+        <span class="k">if</span> <span class="nb">self</span>.<span class="nb">head</span> <span class="k">is</span> <span class="n">None:</span>
+            <span class="nb">self</span>.<span class="nb">head</span> = <span class="n">list_node</span>(<span class="nb">value</span>=<span class="nb">value</span>, <span class="nb">next</span>=<span class="n">None</span>, <span class="n">prev</span>=<span class="n">None</span>)
+            <span class="nb">self</span>.<span class="nb">first</span> = <span class="nb">self</span>.<span class="nb">head</span>
+        <span class="n">else:</span>
+            <span class="nb">self</span>.<span class="nb">head</span>.<span class="nb">next</span> = <span class="n">list_node</span>(<span class="nb">value</span>=<span class="nb">value</span>, <span class="nb">next</span>=<span class="n">None</span>, <span class="n">prev</span>=<span class="nb">self</span>.<span class="nb">head</span>)
+            <span class="nb">self</span>.<span class="nb">head</span> = <span class="nb">self</span>.<span class="nb">head</span>.<span class="nb">next</span>
+
+    <span class="n">def</span> <span class="n">__iter__</span>(<span class="nb">self</span>):
+        <span class="n">curr</span> = <span class="nb">self</span>.<span class="nb">first</span>
+        <span class="k">while</span> <span class="n">curr</span> <span class="k">is</span> <span class="nb">not</span> <span class="n">None:</span>
+            <span class="nb">yield</span> <span class="n">curr</span>.<span class="nb">value</span>
+            <span class="n">curr</span> = <span class="n">curr</span>.<span class="nb">next</span>
+
+    <span class="n">def</span> <span class="n">pop_last</span>(<span class="nb">self</span>):
+        <span class="k">if</span> <span class="nb">self</span>.<span class="nb">head</span> <span class="k">is</span> <span class="nb">not</span> <span class="n">None:</span>
+            <span class="nb">self</span>.<span class="nb">head</span> = <span class="nb">self</span>.<span class="nb">head</span>.<span class="n">prev</span>
+            <span class="k">if</span> <span class="nb">self</span>.<span class="nb">head</span> <span class="k">is</span> <span class="n">None:</span>
+                <span class="nb">self</span>.<span class="nb">first</span> = <span class="n">None</span>
+            <span class="n">else:</span>
+                <span class="nb">self</span>.<span class="nb">head</span>.<span class="nb">next</span> = <span class="n">None</span>
+        <span class="n">else:</span>
+            <span class="n">raise</span> <span class="n">ValueError</span>(<span class="s">&quot;List is empty&quot;</span>)
+</code></pre></div>
+
+<p>Now, other data structures can be implemented from this. </p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2018-12-05T10:15:00+01:00" pubdate>Wed 05 December 2018</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Docker explained for getting things done - Stefan Nožinić</title>	
+
+	<meta name="author" content="Stefan Nožinić" />
+	<meta name="copyright" content="Stefan Nožinić" />
+	<meta property="og:site_name" content="Stefan Nožinić" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Docker explained for getting things done" />
+	<meta name="date" content="2019-09-01 18:15:00+01:00" />
+	<meta property="og:type" content="article" />
+	<meta property="og:locale" content="en" />
+	<meta property="og:published_time" content="2019-09-01 18:15:00+01:00" />
+	<meta property="og:title" content="Docker explained for getting things done" />
+	<meta property="og:url" content="/2019-09-01-docker.html" />
+	<meta property="og:description" content="I have read a lot of guides on how to use Docker and lot of them start explaining Docker complicated way. From writing Dockerfiles and with docker-compose. The goal of this article is to explain Docker the easy way, such that someone can use it as soon as possible. I …" />
+	<meta name="description" content="I have read a lot of guides on how to use Docker and lot of them start explaining Docker complicated way. From writing Dockerfiles and with docker-compose. The goal of this article is to explain Docker the easy way, such that someone can use it as soon as possible. I …" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1 class="huge"><a href="">Stefan Nožinić</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Docker explained for getting things done</h1>
+			<p>I have read a lot of guides  on how to use Docker and lot of them start explaining Docker complicated way. From writing Dockerfiles and with docker-compose. The goal of this article is to 
+explain Docker the easy way, such that someone can use it as soon as possible. I mean, at the end, Docker is just yet another tool and we should not spend rest of our lives masteerring it. </p>
+<p>So, here we go:</p>
+<h1>Docker container vs Docker image</h1>
+<p>In short, Docker images are like classes, like base systems etc.. They are immutable and they cannot be changed in any way. They are "as it is". On the other hand, containers are instances of images. They can be changed (its file system structure for instance).</p>
+<p>Every container can expose some ports, share file system structure with host etc....</p>
+<h1>Basic commands to get you started ASAP</h1>
+<p>The most minimalistic image is busybox. It is image which requires very small amount of memory and other resources but it comes with few tools with limited functionality. Just basic UNIX commands and nothing more. Let's create container from that image:</p>
+<div class="highlight"><pre><span></span><code>docker run --name example -it busybox
+</code></pre></div>
+
+<p>so, in run command, we create container with name "example" and run it. You can see that we did not specify command which will be executed on container. If we do not specify command, default command for image will be executed (in this case: /bin/sh). We also pass interactive flag (-i) to enable binding to host stdout, stderr and stdin. Also, we pass -t flag to emulate pseudo-tty. </p>
+<p>you can specify explicitly command like this:</p>
+<div class="highlight"><pre><span></span><code>docker run --name example -it busybox /bin/sh
+</code></pre></div>
+
+<p>More complex images can be found at https://hub.docker.com/</p>
+<p>Now, when we have started container, we can see it running by executing:</p>
+<div class="highlight"><pre><span></span><code>docker ps
+</code></pre></div>
+
+<p>To execute new command in already running container, call:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">docker</span><span class="w"> </span><span class="k">exec</span><span class="w"> </span><span class="nv">example</span><span class="w"> </span><span class="nv">your</span><span class="o">-</span><span class="nv">command</span>
+</code></pre></div>
+
+<p>To enable interactive and ptty mode (for /bin/bash for instance), you can specify -it flag. </p>
+<p>Now, when was container starter? Well, when we have run <code>docker run</code>. This command creates and starts container immediately.If we want step by step process, it would go like this:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">docker</span><span class="w"> </span><span class="nv">create</span><span class="w"> </span>–<span class="nv">name</span><span class="w"> </span><span class="nv">someImage</span>
+<span class="nv">docker</span><span class="w"> </span><span class="nv">start</span><span class="w"> </span><span class="nv">myContainer</span>
+<span class="nv">docker</span><span class="w"> </span><span class="k">exec</span><span class="w"> </span><span class="o">-</span><span class="nv">it</span><span class="w"> </span><span class="nv">myContainer</span><span class="w"> </span><span class="nv">bash</span>
+</code></pre></div>
+
+<p>Also, you can create image from existing container (such that it can be used to make other containers):</p>
+<div class="highlight"><pre><span></span><code>docker commit myccontainer myimage:latest
+</code></pre></div>
+
+<p>and also you can publish image to Docker Hub such that community can use it. </p>
+<p>When you create image, you can put it into tarball to send to a friend and restore it from tarball</p>
+<div class="highlight"><pre><span></span><code><span class="n">docker</span><span class="w"> </span><span class="n">save</span><span class="w"> </span><span class="n">mmyImage</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">myImage</span><span class="o">.</span><span class="n">tar</span>
+<span class="n">docker</span><span class="w"> </span><span class="nb">load</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">myImage</span><span class="o">.</span><span class="n">tar</span>
+</code></pre></div>
+
+<h1>Conclusion</h1>
+<p>This was very short article to get you started using docker without need to write your own Dockerfile. You can search Docker Hub for already existing images. </p>
+<p>Good luck and happy development. :)</p>
+
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		</div>
+<div class="meta wrapper">
+	<time datetime="2019-09-01T18:15:00+01:00" pubdate>Sun 01 September 2019</time>
+	<ul class="tag clearfix">
+		<li><a href="/category/misc.html">misc</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">		© 2017 Stefan Nožinić
+<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+</body>
+</html>
